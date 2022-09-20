@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import functools as ft
 import multiprocessing as mp
-
+url="https://en.wikipedia.org/wiki/Special:Random"
 
 def find_info(htmlPage, tag):
     if htmlPage is None:
@@ -19,13 +19,13 @@ def find_info(htmlPage, tag):
         return htmlPage[start:end]
     elif tag=="datepub":
         tempSplit=htmlPage.split("datePublished\":\"")
-        if len(tempSplit)>0:
+        if len(tempSplit)>1:
             tempStr=tempSplit[1]
             return tempStr[:10]
         return "Date published not found"
     elif tag=="datemod":
         tempSplit=htmlPage.split("dateModified\":\"")
-        if len(tempSplit)>0:
+        if len(tempSplit)>1:
             tempStr=tempSplit[1]
             return tempStr[:10]
         return "Date most recently modified not found."
@@ -39,14 +39,14 @@ def find_html(purl):
 
 
 def readWebpage(pageCount):
+    c=0
     for i in range(pageCount):
-        url="https://en.wikipedia.org/wiki/Special:Random"
+        c+=1
         pageHtml=find_html(url)
         print(find_info(pageHtml, "title"))
         print(find_info(pageHtml, "datepub"))
         print(find_info(pageHtml, "datemod"))
         print("Num loop: "+str(i))
-    return 0
 
 if __name__ =="__main__":
     pool = mp.Pool(mp.cpu_count())
@@ -55,5 +55,6 @@ if __name__ =="__main__":
         pageCounts.append(50)
     print("running")
     print("Number of available processors: ", mp.cpu_count())
-    results=pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+    pool.map(readWebpage, [pageNum for pageNum in pageCounts])
     pool.close()
+    print(results)
