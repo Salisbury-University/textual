@@ -5,6 +5,30 @@ import functools as ft
 import multiprocessing as mp
 url="https://en.wikipedia.org/wiki/Special:Random"
 
+def get_metadata(htmlPage):
+    info=[]
+    openTag="<title>"
+    closedTag="</title>"
+    if htmlPage is None:
+        return info
+    if openTag not in htmlPage or closedTag not in htmlPage:
+        info.append("title not found")
+    else:
+        index=htmlPage.find(openTag)
+        start=index+len(openTag)
+        end=htmlPage.find(closedTag)
+        info.append(htmlPage[start:end])
+    tempSplitPub=htmlPage.split("datePublished\":\"")
+    if len(tempSplitPub)>1:
+        tempPub=tempSplitPub[1]
+        info.append(tempPub[:10])
+    tempSplitMod=htmlPage.split("dateModified\":\"")
+    if len(tempSplitMod)>1:
+        tempMod=tempSplitMod[1]
+        info.append(tempPub[:10])
+    return info
+
+
 def find_info(htmlPage, tag):
     if htmlPage is None:
         return "web page not found"
@@ -30,6 +54,7 @@ def find_info(htmlPage, tag):
             return tempStr[:10]
         return "Date most recently modified not found."
 
+
 def find_html(purl):
     page=urlopen(purl)
     html_bytes=page.read()
@@ -37,15 +62,14 @@ def find_html(purl):
     return html
     
 
-
 def readWebpage(pageCount):
     c=0
     for i in range(pageCount):
         c+=1
         pageHtml=find_html(url)
-        print(find_info(pageHtml, "title"))
-        print(find_info(pageHtml, "datepub"))
-        print(find_info(pageHtml, "datemod"))
+        metadata=get_metadata(pageHtml)
+        for data in metadata:
+            print(data)
         print("Num loop: "+str(i))
 
 if __name__ =="__main__":
