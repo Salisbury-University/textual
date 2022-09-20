@@ -25,11 +25,11 @@ def get_metadata(htmlPage):
     tempSplitMod=htmlPage.split("dateModified\":\"")
     if len(tempSplitMod)>1:
         tempMod=tempSplitMod[1]
-        info.append(tempPub[:10])
+        info.append(tempMod[:10])
     return info
 
 
-def find_info(htmlPage, tag):
+def find_info(htmlPage, tag):  # not being used now
     if htmlPage is None:
         return "web page not found"
     if "date" not in tag:
