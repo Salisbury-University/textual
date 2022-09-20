@@ -57,4 +57,3 @@ if __name__ =="__main__":
     print("Number of available processors: ", mp.cpu_count())
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
     pool.close()
-    print(results)
