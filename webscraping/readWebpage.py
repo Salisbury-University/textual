@@ -73,7 +73,7 @@ def readWebpage(pageCount):
         print("Num loop: "+str(i))
 
 if __name__ =="__main__":
-    if mp.cpu_count()>=2:
+    if mp.cpu_count()>=4:
         pool=mp.Pool(int(mp.cpu_count())//2)
     else:
         pool=mp.Pool(mp.cpu_count())
