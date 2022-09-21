@@ -60,20 +60,39 @@ def find_html(purl):
     html_bytes=page.read()
     html = html_bytes.decode("utf-8")
     return html
-    
+
+def get_text(html):
+        soup = BeautifulSoup(html, 'lxml')
+        for script_tag in soup(["script", "style"]):
+            script_tag.decompose()
+        text = soup.get_text()
+        return text
+
+def open_file(file_name):
+    f = open(file_name, "w")
+    return f
+
+def close_file(file_name):
+    file_name.close()
 
 def readWebpage(pageCount):
     c=0
+    output_file = open_file("output.txt")
     for i in range(pageCount):
         c+=1
         pageHtml=find_html(url)
+        text = get_text(pageHtml)
+        text = text.split('\n')
         metadata=get_metadata(pageHtml)
         for data in metadata:
             print(data)
+        output_file.writelines(text)
+        # print(text) 
         print("Num loop: "+str(i))
+    output_file.close()
 
 if __name__ =="__main__":
-    if mp.cpu_count()>=2:
+    if mp.cpu_count()>=4:
         pool=mp.Pool(int(mp.cpu_count())//2)
     else:
         pool=mp.Pool(mp.cpu_count())
