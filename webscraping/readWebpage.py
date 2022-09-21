@@ -73,9 +73,12 @@ def readWebpage(pageCount):
         print("Num loop: "+str(i))
 
 if __name__ =="__main__":
-    pool = mp.Pool(mp.cpu_count())
+    if mp.cpu_count()>=2:
+        pool=mp.Pool(int(mp.cpu_count())//2)
+    else:
+        pool=mp.Pool(mp.cpu_count())
     pageCounts=[]
-    for i in range(mp.cpu_count()):
+    for i in range(mp.cpu_count()//2):
         pageCounts.append(50)
     print("running")
     print("Number of available processors: ", mp.cpu_count())
