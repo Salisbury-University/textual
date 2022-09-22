@@ -7,7 +7,7 @@ import threading
 from collections import Counter
 url="https://en.wikipedia.org/wiki/Special:Random"
 
-blocklist = ['[document]',
+inlist = ['[document]',
                 'noscript',
                 'header',
                 'html',
@@ -85,7 +85,7 @@ def get_text(html):
         #    script_tag.decompose()
         text = soup.find_all(text=True)
         for t in text:
-            if t.parent.name not in blocklist:
+            if t.parent.name not in inlist:
                 page_text += t
         return page_text
 
@@ -108,11 +108,12 @@ def remove_empty(input_lines):
 #Count the frequency of each word in the document
 def freq_count(input_text):
     word_list = input_text.split()
+    [i.lower() for i in word_list]
     output_text = ''
    
     unique_words = set(word_list)
     for words in unique_words:
-        output_text += 'Frequency of ' + words + 'is : ' + str(word_list.count(words)) + '\n'
+        output_text += 'Frequency of ' + words + ': ' + str(word_list.count(words)) + '\n'
 
     return output_text
 
