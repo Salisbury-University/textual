@@ -21,6 +21,7 @@ inlist = ['[document]',
 #Lock to avoid race condition when writing to the output file
 global_lock = threading.Lock()
 
+#Get the metadata from the HTML page
 def get_metadata(htmlPage):
     info=[]
     openTag="<title>"
@@ -149,6 +150,7 @@ def readWebpage(pageCount):
         print("Num loop: "+str(i)) 
 
 if __name__ =="__main__":
+    #Open the output file
     output_file = open_file("output.txt")
     if mp.cpu_count()>=4:
         pool=mp.Pool(int(mp.cpu_count())//2)
@@ -162,4 +164,5 @@ if __name__ =="__main__":
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
     pool.close()
     print("Done... output saved to file")
+    #Close output file
     output_file.close()
