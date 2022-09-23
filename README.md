@@ -25,7 +25,7 @@
 
 ## Repository Structure 
 
-    *(This may not be how it appears currently.)*
+    _(This may not be how it appears currently.)_
 
     /src/ -> stores all of our source files 
     /src/webscraping -> maintains all of our webscraping files 
@@ -41,14 +41,14 @@
     all of these sources will be instrumental in creating our repository of
     information.
 
-    The difficulty comes in identifying whether the sources are *technically* in
+    The difficulty comes in identifying whether the sources are _technically_ in
     the public domain, since a lot of the Internet, although freely available, is
     under some sort of copywriting protection. 
 
     The other part of this phase will be creating a parallelized Python webscraper
     that will read the webpage. The information we are currently looking at is the
     texts of various webpages, but also metadata such as the data, time, original
-    source, location, and *tags*, which are less rigidly defined in our current
+    source, location, and _tags_ , which are less rigidly defined in our current
     state.
 
     Using these, we can classify documents to make their storage in our database a
