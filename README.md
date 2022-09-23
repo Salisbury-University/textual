@@ -10,6 +10,25 @@
 
     This project is broken up into three phrases: 
 
+## Current Status 
+
+### **Sprint One**: 19 September 2022 - XX October 2022
+
+    In the first sprint we will primarily focus on research, which includes looking into more sources to scrape, reviewing Python, learning functional programming, and working to understand the scope of our project. 
+
+    We will also begin to develop a preliminary webscraper so we can get a feel for the different portions of the website we will need to analyze. It will also give us a first crack at parallelizing a program of this scale for the fastest scraping. 
+
+## Repository Structure 
+
+    *(This may not be how it appears currently.)*
+
+    /src/ -> stores all of our source files 
+    /src/webscraping -> maintains all of our webscraping files 
+    /src/backend -> maintains the backend files
+    /src/frontend -> maintains the front end files
+    
+## The Project Breakdown 
+
 ### **Phase One:** Information Acquisition
 
     We will be gathering a large number of public domain sources for scraping. Think of websites like Wikipedia, Project Gutenberg, or the Internet Archive; all of these sources will be instrumental in creating our repository of information.
@@ -34,19 +53,3 @@
 
     Eventually, this project will encompass more languages than just English, but for the time being, we will focus on English. The sheer number of resources available to us in English is irreplaceable. 
 
-## Current Status 
-
-### **Sprint One**: 19 September 2022 - XX October 2022
-
-    In the first sprint we will primarily focus on research, which includes looking into more sources to scrape, reviewing Python, learning functional programming, and working to understand the scope of our project. 
-
-    We will also begin to develop a preliminary webscraper so we can get a feel for the different portions of the website we will need to analyze. It will also give us a first crack at parallelizing a program of this scale for the fastest scraping. 
-
-## Repository Structure 
-
-    *(This may not be how it appears currently.)*
-
-    /src/ -> stores all of our source files 
-    /src/webscraping -> maintains all of our webscraping files 
-    /src/backend -> maintains the backend files
-    /src/frontend -> maintains the front end files
