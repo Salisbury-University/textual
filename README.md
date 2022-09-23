@@ -8,7 +8,7 @@
 
     This project seeks to create a database for textual analysis of the English Language through the scraping of a large amount of public domain data. 
 
-    This project is broken up into three phrases: 
+    This project is broken up into three phrases.
 
 ## Current Status 
 
