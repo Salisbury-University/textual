@@ -152,10 +152,7 @@ def readWebpage(pageCount):
 if __name__ =="__main__":
     #Open the output file
     output_file = open_file("output.txt")
-    if mp.cpu_count()>=4:
-        pool=mp.Pool(int(mp.cpu_count())//2)
-    else:
-        pool=mp.Pool(mp.cpu_count())
+    pool=mp.Pool(mp.cpu_count()-1)
     pageCounts=[]
     for i in range(mp.cpu_count()//2):
         pageCounts.append(50)
