@@ -28,7 +28,7 @@ global_lock = threading.Lock()
 #Save the HTML content of a page to a separate file
 def save_html(html, page_name):
     #Open a file with the name HTML_'name of page'.txt
-    str = "HTML_" + page_name + ".txt"
+    str = "HTML_" + page_name + ".html"
     file = open_file(str)
     
     #Write to the output file and close it
@@ -175,7 +175,7 @@ if __name__ =="__main__":
     #Write the pages to the list
     pageCounts=[]
     for i in range(mp.cpu_count()//2):
-        pageCounts.append(1)
+        pageCounts.append(50)
     
     #Print information to the console to inform the user
     print("running")
