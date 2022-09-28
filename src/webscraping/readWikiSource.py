@@ -12,8 +12,8 @@ from string import punctuation
 #Import Regex
 import re
 
-#Constant to 
-URL="https://en.wikisource.org/wiki/The_Tragedy_in_Dartmoor_Terrace"
+#Constant to Random Page
+URL="https://en.wikisource.org/wiki/Special:RandomRootpage/Main"
 
 #List of scripts to be removed
 inlist = ['[document]',
@@ -74,11 +74,12 @@ def get_metadata(htmlPage):
         tempMod=tempSplitMod[1]
         info.append(tempMod[:10])
 
+    #Find the date of the document
     tempTextDate = htmlPage.split("<span id=\"header_year_text\">")
     if len(tempTextDate) > 1:
         tempText = tempTextDate[1]
-        tempText = (tempText[:11])
-        tempText = re.sub("&.*;\(", "", tempText)
+        tempText = re.sub("\)[\S\s]*", "", tempText)
+        tempText = re.sub("&.*;\(", "", tempText)  
         info.append(tempText)
 
     return info
@@ -204,12 +205,12 @@ if __name__ =="__main__":
     
     #Write the pages to the list
     pageCounts=[]
-    for i in range(mp.cpu_count()//4):
-        pageCounts.append(1)
+    for i in range(mp.cpu_count()//2):
+        pageCounts.append(20)
     
     #Print information to the console to inform the user
-    print("running")
-    print("Number of available processors: ", mp.cpu_count()//4)
+    print("Running")
+    print("Number of available processors: ", mp.cpu_count()//2)
 
     #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
