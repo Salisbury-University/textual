@@ -6,6 +6,9 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 
+#All punctuation characters
+from string import punctuation
+
 #Constant to 
 URL="https://en.wikipedia.org/wiki/Special:Random"
 
@@ -24,6 +27,16 @@ inlist = ['[document]',
 
 #Lock to avoid race condition when writing to the output file
 global_lock = threading.Lock()
+
+#Removes leading and trailing punctuation from a string
+def clean_string(input_string):
+    #Remove all leading punctuation
+    input_string = input_string.lstrip(punctuation)
+    #Remove all trailing punctuation
+    input_string = input_string.rstrip(punctuation)
+
+    #Return the cleaned string
+    return input_string
 
 #Save the HTML content of a page to a separate file
 def save_html(html, page_name):
@@ -122,13 +135,19 @@ def remove_empty(input_lines):
 #Count the frequency of each word in the document
 def freq_count(input_text):
     word_list = input_text.split()
-    [i.lower() for i in word_list]
+
+    #Remove leading and trailing punctuation
+    word_list = [clean_string(word) for word in word_list]
+
+    #Output string
     output_text = ''
    
+    #Get the count for each word
     unique_words = set(word_list)
     for words in unique_words:
         output_text += 'Frequency of ' + words + ': ' + str(word_list.count(words)) + '\n'
 
+    #Return the frequency
     return output_text
 
 #Read the content of the page and print to a file
