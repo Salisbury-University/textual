@@ -5,8 +5,14 @@ import functools as ft
 import multiprocessing as mp
 import threading
 from collections import Counter
-url="https://en.wikipedia.org/wiki/Special:Random"
 
+#All punctuation characters
+from string import punctuation
+
+#Constant to 
+URL="https://en.wikipedia.org/wiki/Special:Random"
+
+#List of scripts to be removed
 inlist = ['[document]',
                 'noscript',
                 'header',
@@ -18,8 +24,29 @@ inlist = ['[document]',
                 'style',
                 'script',
                 'footer']
+
 #Lock to avoid race condition when writing to the output file
 global_lock = threading.Lock()
+
+#Removes leading and trailing punctuation from a string
+def clean_string(input_string):
+    #Remove all leading punctuation
+    input_string = input_string.lstrip(punctuation)
+    #Remove all trailing punctuation
+    input_string = input_string.rstrip(punctuation)
+
+    #Return the cleaned string
+    return input_string
+
+#Save the HTML content of a page to a separate file
+def save_html(html, page_name):
+    #Open a file with the name HTML_'name of page'.txt
+    str = "HTML_" + page_name + ".html"
+    file = open_file(str)
+    
+    #Write to the output file and close it
+    file.writelines(html)
+    file.close()
 
 #Get the metadata from the HTML page
 def get_metadata(htmlPage):
@@ -44,7 +71,6 @@ def get_metadata(htmlPage):
         tempMod=tempSplitMod[1]
         info.append(tempMod[:10])
     return info
-
 
 def find_info(htmlPage, tag):  # not being used now
     if htmlPage is None:
@@ -109,13 +135,19 @@ def remove_empty(input_lines):
 #Count the frequency of each word in the document
 def freq_count(input_text):
     word_list = input_text.split()
-    [i.lower() for i in word_list]
+
+    #Remove leading and trailing punctuation
+    word_list = [clean_string(word) for word in word_list]
+
+    #Output string
     output_text = ''
    
+    #Get the count for each word
     unique_words = set(word_list)
     for words in unique_words:
         output_text += 'Frequency of ' + words + ': ' + str(word_list.count(words)) + '\n'
 
+    #Return the frequency
     return output_text
 
 #Read the content of the page and print to a file
@@ -123,13 +155,18 @@ def readWebpage(pageCount):
     c=0 
     for i in range(pageCount):
         c+=1
-        pageHtml=find_html(url)
+        pageHtml=find_html(URL)
         #Get the text from the HTML page, remove empty lines, and count the frequency of each word
         text = get_text(pageHtml)
         text = remove_empty(text)
         
-        #Print the page metadata to the screen
+        #Get metadata from the HTML file
         metadata=get_metadata(pageHtml)
+
+        #Save page source to a separate file
+        save_html(pageHtml, metadata[0])
+
+        #Print the page metadata to the screen
         for data in metadata:
             print(data)
 
@@ -153,13 +190,22 @@ if __name__ =="__main__":
     #Open the output file
     output_file = open_file("output.txt")
     pool=mp.Pool(mp.cpu_count()//2+1)
+    
+    #Write the pages to the list
     pageCounts=[]
     for i in range(mp.cpu_count()//2):
         pageCounts.append(50)
+    
+    #Print information to the console to inform the user
     print("running")
-    print("Number of available processors: ", mp.cpu_count())
+    print("Number of available processors: ", mp.cpu_count()//2)
+
+    #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+    
+    #Stop threads and write output to console
     pool.close()
     print("Done... output saved to file")
+
     #Close output file
     output_file.close()
