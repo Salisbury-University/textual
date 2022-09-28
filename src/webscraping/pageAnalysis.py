@@ -3,6 +3,9 @@ from flashtext import KeywordProcessor
 import pandas as pd
 import csv 
 
+# inspiration/help:
+# https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
+
 # keywords for each "category"
 # can be changed at any time/fine tuned, but this is just for initial testing.
 
