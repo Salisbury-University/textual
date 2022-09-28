@@ -5,6 +5,7 @@ import functools as ft
 import multiprocessing as mp
 import threading
 from collections import Counter
+import pageAnalysis
 url="https://en.wikipedia.org/wiki/Special:Random"
 
 inlist = ['[document]',
@@ -123,7 +124,8 @@ def readWebpage(pageCount):
     c=0 
     for i in range(pageCount):
         c+=1
-        pageHtml=find_html(url)
+        pageHtml=find_html(url)    
+
         #Get the text from the HTML page, remove empty lines, and count the frequency of each word
         text = get_text(pageHtml)
         text = remove_empty(text)
