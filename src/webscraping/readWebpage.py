@@ -5,8 +5,11 @@ import functools as ft
 import multiprocessing as mp
 import threading
 from collections import Counter
-url="https://en.wikipedia.org/wiki/Special:Random"
 
+#Constant to 
+URL="https://en.wikipedia.org/wiki/Special:Random"
+
+#List of scripts to be removed
 inlist = ['[document]',
                 'noscript',
                 'header',
@@ -18,8 +21,19 @@ inlist = ['[document]',
                 'style',
                 'script',
                 'footer']
+
 #Lock to avoid race condition when writing to the output file
 global_lock = threading.Lock()
+
+#Save the HTML content of a page to a separate file
+def save_html(html, page_name):
+    #Open a file with the name HTML_'name of page'.txt
+    str = "HTML_" + page_name + ".txt"
+    file = open_file(str)
+    
+    #Write to the output file and close it
+    file.writelines(html)
+    file.close()
 
 #Get the metadata from the HTML page
 def get_metadata(htmlPage):
@@ -44,7 +58,6 @@ def get_metadata(htmlPage):
         tempMod=tempSplitMod[1]
         info.append(tempMod[:10])
     return info
-
 
 def find_info(htmlPage, tag):  # not being used now
     if htmlPage is None:
@@ -123,13 +136,18 @@ def readWebpage(pageCount):
     c=0 
     for i in range(pageCount):
         c+=1
-        pageHtml=find_html(url)
+        pageHtml=find_html(URL)
         #Get the text from the HTML page, remove empty lines, and count the frequency of each word
         text = get_text(pageHtml)
         text = remove_empty(text)
         
-        #Print the page metadata to the screen
+        #Get metadata from the HTML file
         metadata=get_metadata(pageHtml)
+
+        #Save page source to a separate file
+        save_html(pageHtml, metadata[0])
+
+        #Print the page metadata to the screen
         for data in metadata:
             print(data)
 
@@ -153,13 +171,22 @@ if __name__ =="__main__":
     #Open the output file
     output_file = open_file("output.txt")
     pool=mp.Pool(mp.cpu_count()//2+1)
+    
+    #Write the pages to the list
     pageCounts=[]
     for i in range(mp.cpu_count()//2):
-        pageCounts.append(50)
+        pageCounts.append(1)
+    
+    #Print information to the console to inform the user
     print("running")
-    print("Number of available processors: ", mp.cpu_count())
+    print("Number of available processors: ", mp.cpu_count()//2)
+
+    #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+    
+    #Stop threads and write output to console
     pool.close()
     print("Done... output saved to file")
+
     #Close output file
     output_file.close()
