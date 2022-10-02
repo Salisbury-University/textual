@@ -57,8 +57,7 @@ consumer_keywords):
     for word in consumer_keywords:
         keyword_processor3.add_keyword(word)
     
-    return keyword_processor0, keyword_processor1, keyword_processor2,
-    keyword_processor3 
+    return keyword_processor0, keyword_processor1, keyword_processor2, keyword_processor3 
 
 
 # matching_val() -> finds the percentage of matching keywords
@@ -72,41 +71,43 @@ def matching_val(num_total, num_appearing):
 
 
 # determine_category() -> computes the likely category of each input html
-# parameters -> html (a string of html that will be analyzed) 
+# parameters -> html (a string of html that will be analyzed), keyword_processors for each category
 # returns -> the category of the html
 
-def determine_category(html): 
+def determine_category(html, keyword_processor0, keyword_processor1, keyword_processor2, keyword_processor3): 
 
-    text = str(html) 
+		text = str(html) 
 
-    # extracts the keywords relevant to each catgeory based on the text
+		# extracts the keywords relevant to each catgeory based on the text
 
-    y0 = len(keyword_processor0.extract_keywords(text))
-    y1 = len(keyword_processor1.extract_keywords(text))
-    y2 = len(keyword_processor2.extract_keywords(text))
-    y3 = len(keyword_processor3.extract_keywords(text))
+		y0 = len(keyword_processor0.extract_keywords(text))
+		y1 = len(keyword_processor1.extract_keywords(text))	
+		y2 = len(keyword_processor2.extract_keywords(text))
+		y3 = len(keyword_processor3.extract_keywords(text))
 
-    total_matches = 0 
+		print("y0: %d, y1: %d, y2: %d, y3: %d" % (y0, y1, y2, y3))
+
+		total_matches = 0 
 
     # computes the percentage of matching values
 
-    tech_percent = float(matching_val(y0, y1))
-    history_percent = float(matching_val(y0, y2))
-    consumer_percent = float(matching_val(y0, y3))
+		tech_percent = float(matching_val(y0, y1))
+		history_percent = float(matching_val(y0, y2))
+		consumer_percent = float(matching_val(y0, y3))
 
     # if statement to determine the most likely category 
 
-    if y0 == 0: 
-        category='None'
-    else: 
-        if tech_percent >= history_percent and tech_percentage >= consumer_percentage: 
-            catgeory = "technology"
-        elif history_percent >= technology_percent and history_percent >= consumer_percent: 
-            category = "history" 
-        elif consumer_percent >= technology_percent and consumer_percent >= history_percent: 
-            category = "consumer" 
+		if y0 == 0: 
+				category='None'
+		else:     
+				if tech_percent >= history_percent and tech_percent >= consumer_percent: 
+						category = "technology"
+				elif history_percent >= tech_percent and history_percent >= consumer_percent: 
+						category = "history" 
+				elif consumer_percent >= tech_percent and consumer_percent >= history_percent: 
+						category = "consumer" 
 
-    return category
+		return category
 
 
 # insert_csv() -> inserts the categorized data in a csv file
@@ -429,41 +430,33 @@ def train(training, output, categories, hidden_neurons=10, alpha=1, epochs=1000,
 
 if __name__ == "__main__": 
 
+		# list for the htmls and categorized_data
+		
+		htmls = []
+		categorized_data = [] 
+
+		htmls.append("Welcome to my technology discussion where I discuss new products like computers.")
+
+		# gather the KeywordProcessor() objects
+
 		processed_keywords =  process_keywords(all_keywords, tech_keywords, hist_keywords, consume_keywords)
 
-			
+		# iterate through all of the htmls and build the csv file 
 
+		for text in htmls: 
+		
+				cat = determine_category(text, processed_keywords[0], processed_keywords[1], processed_keywords[2], processed_keywords[3])
 
+				categorized_data.extend((cat, text)) 
 
+		# insert the data into the csv file
 
+		insert_csv(categorized_data)
 
+		# word_categories_files = create_words_list(create_training_data(clean_data('categories.csv')))
 
+	
 
+		
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
