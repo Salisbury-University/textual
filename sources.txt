@@ -3,3 +3,4 @@ https://www.gutenberg.org/
 https://nijianmo.github.io/amazon/index.html
 https://developer.twitter.com/en/docs/twitter-api/enterprise/compliance-firehose-api/overview
 https://www.reddit.com/wiki/api/
+https://www.yelp.com/dataset
