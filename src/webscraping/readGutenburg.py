@@ -32,6 +32,7 @@ def readWebpage(pageCount):
     for i in range(numIter):
         num=pageCount+i
         tempURL=URLBEGIN+str(num)+"/"+str(num)+"-h/"+str(num)+"-h.htm"
+        print(tempURL)
         pageHtml=find_html(tempURL)
         title=get_title(pageHtml)
         if len(title)<1000:
@@ -39,10 +40,10 @@ def readWebpage(pageCount):
     return 0
 
 if __name__=="__main__":
-    pool=mp.Pool(mp.cpu_count()//2+1)
+    pool=mp.Pool(1)
     count=0
     pageCounts=[]
-    for i in range(mp.cpu_count()//2+1):
+    for i in range(1):
         pageCounts.append(count*numIter+1)
         count+=1
     results=pool.map(readWebpage, [pageNum for pageNum in pageCounts])

@@ -189,16 +189,16 @@ def readWebpage(pageCount):
 if __name__ =="__main__":
     #Open the output file
     output_file = open_file("output.txt")
-    pool=mp.Pool(mp.cpu_count()//2+1)
+    pool=mp.Pool(mp.cpu_count()//4)
     
     #Write the pages to the list
     pageCounts=[]
-    for i in range(mp.cpu_count()//2):
-        pageCounts.append(50)
+    for i in range(mp.cpu_count()//4):
+        pageCounts.append(25)
     
     #Print information to the console to inform the user
     print("running")
-    print("Number of available processors: ", mp.cpu_count()//2)
+    print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
