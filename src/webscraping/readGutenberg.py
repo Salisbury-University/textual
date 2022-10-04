@@ -6,7 +6,7 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 from string import punctuation
-numIter=50
+numIter=60
 URLBEGIN="https://www.gutenberg.org/files/"
 
 def find_html(purl):
