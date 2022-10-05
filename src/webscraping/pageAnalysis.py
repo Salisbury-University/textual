@@ -5,6 +5,8 @@ import csv
 from nltk.stem.lancaster import LancasterStemmer
 import time
 import datetime
+from numpy import np
+import nltk
 
 # inspiration/help:
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
@@ -185,7 +187,7 @@ def create_words_list(training_data):
 
 				files.append((word, pattern['category']))
 				
-				if pattern['category'] not in category:
+				if pattern['category'] not in categories:
 						categories.append(pattern['category'])
     
     # stems, lowers, and removes duplicates for each word
@@ -277,11 +279,13 @@ def sigmoid_to_derivative(sigmoid_out):
 # returns -> returns the list of tokenized, cleaned words  
 
 def clean_sentence(sentence): 
-		
-		sentence_words = nltk.word_tokenize(sentence) 
-		sentence_words = [stemmer.stem(word.lower()) for word in sentence_words]
 
-		return sentence_words
+    stemmer = LancasterStemmer()
+		
+    sentence_words = nltk.word_tokenize(sentence) 
+    sentence_words = [stemmer.stem(word.lower()) for word in sentence_words]
+
+    return sentence_words
 
 
 # bag_of_words -> returns an array of the "bag of words", which is a numerical representation
