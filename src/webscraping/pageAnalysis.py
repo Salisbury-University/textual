@@ -116,14 +116,20 @@ def determine_category(html, keyword_processor0, keyword_processor1, keyword_pro
 # returns -> None
 
 def insert_csv(categorized_data): 
+	
+		df = pd.DataFrame(categorized_data) 
+		df.to_csv('categories.csv', index=False, header=False)
 
-    with open('categories.csv', 'w') as categoryFile: 
 
-        writer = csv.writer(categoryFile)
+		# with open('categories.csv', 'w') as categoryFile: 
 
-        writer.writerows(categorized_data)
+			#	writer = csv.writer(categoryFile, delimiter=",")
+	
+			#	for row in categorized_data: 
+
+			#			writer.writerow(row)
     
-    print("Data writted to categories.csv") 
+		print("Data writted to categories.csv") 
 
 
 # clean_data() -> loads and cleans the classified data, removes null values
@@ -447,9 +453,11 @@ if __name__ == "__main__":
 		
 				cat = determine_category(text, processed_keywords[0], processed_keywords[1], processed_keywords[2], processed_keywords[3])
 
-				categorized_data.extend((cat, text)) 
+				categorized_data.extend((str(cat), str(text))) 
 
 		# insert the data into the csv file
+
+		print(categorized_data)
 
 		insert_csv(categorized_data)
 
