@@ -5,7 +5,7 @@ import csv
 from nltk.stem.lancaster import LancasterStemmer
 import time
 import datetime
-from numpy import np
+import numpy as np
 import nltk
 
 # inspiration/help:
@@ -119,7 +119,8 @@ def determine_category(html, keyword_processor0, keyword_processor1, keyword_pro
 
 def insert_csv(categorized_data): 
 	
-		df = pd.DataFrame(categorized_data) 
+		df = pd.DataFrame(categorized_data)
+		df.columns=['categories', 'sources'] 
 		df.to_csv('categories.csv', index=False, header=False)
 
 
@@ -141,8 +142,8 @@ def insert_csv(categorized_data):
 def clean_data(categorized_file):
 
     data = pd.read_csv(categorized_file)
-    data = data[pd.notnull(data['tokenized_source'])]
-    data = data[data.category != "None"] 
+    data = data[pd.notnull(data["sources"])]
+    data = data[data.categories != "None"] 
 
     return data
 
@@ -465,7 +466,7 @@ if __name__ == "__main__":
 
 		insert_csv(categorized_data)
 
-		# word_categories_files = create_words_list(create_training_data(clean_data('categories.csv')))
+		word_categories_files = create_words_list(create_training_data(clean_data('categories.csv')))
 
 	
 
