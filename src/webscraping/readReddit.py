@@ -2,6 +2,8 @@ import requests
 import json
 import requests.auth
 import sys
+import pandas as pd
+import time
 
 # Read in password from separate file
 def get_pass():
@@ -41,12 +43,31 @@ def authenticate():
     headers["Authorization"] = f"bearer {TOKEN}"
     return headers
 
-# Get data from reddit location
-def get_data(headers): 
-    request_content = requests.get("https://oauth.reddit.com/" + sys.argv[1], headers=headers).json()
+# Format time into mm-dd-yyyy H:M:S
+def format_time(epoch_time):
+    #Takes time in epoch format and converts to human readable in local time
+    human_time = time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(epoch_time))
+    return human_time
 
-    for post in request_content['data']['children']:
-        print(post['data'])
+# Get data from reddit location
+def get_data(headers, subreddit): 
+    request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers).json()
+
+    #Pandas dataframe to hold data
+    subreddit_content = pd.DataFrame()
+
+    for post in request_content["data"]["children"]:
+        subreddit_content = subreddit_content.append({
+            "subreddit" : post["data"]["subreddit"],
+            "title" : post["data"]["title"],
+            "selftext" : post["data"]["selftext"],
+            "created_utc" : format_time(post["data"]["created_utc"]),
+            "link" : "https://www.reddit.com/" + post["data"]["permalink"],
+            "upvotes" : post["data"]["ups"],
+            "downvotes" : post["data"]["downs"]}
+            ignore_index=True)
+        
+
 
 if __name__ == "__main__":
     if (len(sys.argv) < 2):
@@ -55,4 +76,4 @@ if __name__ == "__main__":
 
     print(sys.argv[1])
     headers = authenticate()
-    get_data(headers)
+    get_data(headers, sys.argv[1])
