@@ -41,11 +41,15 @@ def authenticate():
     headers["Authorization"] = f"bearer {TOKEN}"
     return headers
 
-def get_data(headers):
-    
+# Get data from reddit location
+def get_data(headers): 
     request_content = requests.get("https://oauth.reddit.com/api/v1/" + "me", headers=headers).json()
 
 if __name__ == "__main__":
-    print(sys.argv[1])
+    if (len(sys.argv) < 2):
+        print("Please enter the name of a subreddit as a command line argument")
+        sys.exit()
+
+    #print(sys.argv[1])
     headers = authenticate()
     get_data(headers)
