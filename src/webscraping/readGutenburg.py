@@ -7,7 +7,7 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 from string import punctuation
-numIter=100
+numIter=10
 URLBEGIN="https://www.gutenberg.org/cache/epub"
 
 def find_html(purl):
@@ -73,9 +73,11 @@ if __name__=="__main__":
     pool=mp.Pool(mp.cpu_count())
     count=0
     pageCounts=[]
-    for i in range(mp.cpu_count()):
-        pageCounts.append(count*numIter+1)
-        count+=1
-    results=pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+    for i in range(5):
+        for i in range(mp.cpu_count()):
+            pageCounts.append(count*numIter+1)
+            count+=1
+        results=pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+        pageCounts=[]
     pool.close()
     print("Done")
