@@ -1,6 +1,7 @@
 import requests
 import json
 import requests.auth
+import sys
 
 # Read in password from separate file
 def get_pass():
@@ -41,8 +42,10 @@ def authenticate():
     return headers
 
 def get_data(headers):
-    print(requests.get("https://oauth.reddit.com/api/v1/me", headers=headers).json())
+    
+    request_content = requests.get("https://oauth.reddit.com/api/v1/" + "me", headers=headers).json()
 
 if __name__ == "__main__":
+    print(sys.argv[1])
     headers = authenticate()
     get_data(headers)
