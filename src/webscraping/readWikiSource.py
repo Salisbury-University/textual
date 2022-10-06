@@ -79,8 +79,9 @@ def get_metadata(htmlPage):
     tempTextDate = htmlPage.split("<span id=\"header_year_text\">")
     if len(tempTextDate) > 1:
         tempText = tempTextDate[1]
+        tempText = re.sub("</span>[\S\s]*", "", tempText)
+        tempText = re.sub("&.*;\(", "", tempText)
         tempText = re.sub("\)[\S\s]*", "", tempText)
-        tempText = re.sub("&.*;\(", "", tempText)  
         info.append(tempText)
 
     return info
@@ -210,16 +211,16 @@ def readWebpage(pageCount):
 if __name__ =="__main__":
     #Open the output file
     output_file = open_file("output.txt")
-    pool=mp.Pool(mp.cpu_count()//2+1)
+    pool=mp.Pool(mp.cpu_count())
     
     #Write the pages to the list
     pageCounts=[]
-    for i in range(mp.cpu_count()//2):
-        pageCounts.append(20)
+    for i in range(mp.cpu_count()):
+        pageCounts.append(50)
     
     #Print information to the console to inform the user
     print("Running")
-    print("Number of available processors: ", mp.cpu_count()//2)
+    print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
