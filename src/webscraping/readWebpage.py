@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import urllib.request
 import functools as ft
 import multiprocessing as mp
 import threading
@@ -152,39 +153,47 @@ def freq_count(input_text):
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
-    c=0 
-    for i in range(pageCount):
-        c+=1
-        pageHtml=find_html(URL)
-        #Get the text from the HTML page, remove empty lines, and count the frequency of each word
-        text = get_text(pageHtml)
-        text = remove_empty(text)
-        
-        #Get metadata from the HTML file
-        metadata=get_metadata(pageHtml)
+    c=0
+    flag=0
+    try:
+        status_code=urllib.request.urlopen(URL).getcode()
+    except urllib.error.HTTPError as err:
+        print("http",err.code, "ERROR")
+        flag=1
+    if flag==0: 
+        for i in range(pageCount):
+            c+=1
+            pageHtml=find_html(URL)
+            #Get the text from the HTML page, remove empty lines, and count the frequency of each word
+            text = get_text(pageHtml)
+            text = remove_empty(text)
+            
+            #Get metadata from the HTML file
+            metadata=get_metadata(pageHtml)
 
-        #Save page source to a separate file
-        save_html(pageHtml, metadata[0])
+            #Save page source to a separate file
+            save_html(pageHtml, metadata[0])
 
-        #Print the page metadata to the screen
-        for data in metadata:
-            print(data)
+            #Print the page metadata to the screen
+            for data in metadata:
+                print(data)
 
-        #Ensure thread synchronization to avoid race condition
-        while global_lock.locked():
-            time.sleep(0.01)
+            #Ensure thread synchronization to avoid race condition
+            while global_lock.locked():
+                time.sleep(0.01)
 
-        #If the lock is available, grab it write the metadata and frequency to the file and return the lock
-        global_lock.acquire()
-        for data in metadata:
-            output_file.write(data + '\n')
-        output_file.write('\n')
-        freq_list = freq_count(text)
-       
-        #Print the frequency for each word
-        output_file.write(freq_list + '\n')
-        global_lock.release()
-        print("Num loop: "+str(i)) 
+            #If the lock is available, grab it write the metadata and frequency to the file and return the lock
+            global_lock.acquire()
+            for data in metadata:
+                output_file.write(data + '\n')
+            output_file.write('\n')
+            freq_list = freq_count(text)
+           
+            #Print the frequency for each word
+            output_file.write(freq_list + '\n')
+            global_lock.release()
+            print("Num loop: "+str(i)) 
+    flag=0
 
 if __name__ =="__main__":
     #Open the output file
