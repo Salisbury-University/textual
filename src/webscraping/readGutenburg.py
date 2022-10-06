@@ -25,18 +25,23 @@ def get_title(htmlPage):
         index=htmlPage.find(openT)
         start=index+len(openT)
         end=htmlPage.find(closedT)
-        return htmlPage[start:end]
+        if end-start<100:
+            return htmlPage[start:end]
+        else:
+            return htmlPage[start:start+150]
 
 
 def get_date(html_page):
-    openT="Copyright, "
-    if html_page is None or openT not in html_page:
+    openT="Release Date:"
+    if html_page is None:
         return "DATE NOT FOUND"
+    elif openT not in html_page:
+        return"Copyright not found in page"
     else:
-        index=html_Page.find(openT)
+        index=html_page.find(openT)
         start=index+len(openT)
-        end=start+4
-        return htmlPage[start:end]
+        end=start+20
+        return html_page[start:end]
 
 
 def readWebpage(pageCount):
@@ -45,18 +50,20 @@ def readWebpage(pageCount):
         num=pageCount+i
         flag=0
         tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt"
-        print(tempURL)
         url_str=tempURL
         try:
             status_code=urllib.request.urlopen(url_str).getcode()
         except urllib.error.HTTPError as err:
-            print("http",err.code, "ERROR")
+            #print("http",err.code, "ERROR")
             flag=1
         if flag==0:
+            print(tempURL)
             pageHtml=find_html(tempURL)
             title=get_title(pageHtml)
             if len(title)<1000:
                 print(title)
+            else:
+                print("Title too long")
             date=get_date(pageHtml)
             print(date)
         flag=0
