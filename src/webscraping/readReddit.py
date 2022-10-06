@@ -51,7 +51,7 @@ def format_time(epoch_time):
 
 # Get data from reddit location
 def get_data(headers, subreddit): 
-    request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers).json()
+    request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100"}).json()
 
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
