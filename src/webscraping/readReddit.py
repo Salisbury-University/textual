@@ -43,13 +43,16 @@ def authenticate():
 
 # Get data from reddit location
 def get_data(headers): 
-    request_content = requests.get("https://oauth.reddit.com/api/v1/" + "me", headers=headers).json()
+    request_content = requests.get("https://oauth.reddit.com/" + sys.argv[1], headers=headers).json()
+
+    for post in request_content['data']['children']:
+        print(post['data'])
 
 if __name__ == "__main__":
     if (len(sys.argv) < 2):
         print("Please enter the name of a subreddit as a command line argument")
         sys.exit()
 
-    #print(sys.argv[1])
+    print(sys.argv[1])
     headers = authenticate()
     get_data(headers)
