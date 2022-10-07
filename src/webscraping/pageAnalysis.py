@@ -10,7 +10,7 @@ import numpy as np
 import nltk
 import json
 
-nltk.download('punkt')
+# nltk.download('punkt')
 
 # inspiration/help:
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
@@ -117,19 +117,16 @@ def determine_category(html, keyword_processor0, keyword_processor1, keyword_pro
 # insert_csv() -> inserts the categorized data in a csv file
 # parameters -> categorized_data (the data appears in a list in the format
 #   'category', 'source_html')
-# returns -> None
+# returns -> a DataFrame object
 
 def insert_csv(categorized_data): 
 
-	with open('categories.csv', 'w') as categoryFile: 
+	data = pd.DataFrame(categorized_data)
+	data.to_csv('categories.csv', index=False, sep=',')
 
-		writer = csv.DictWriter(categoryFile, ['category', 'source_html'])
-		writer.writeheader()
-
-		for row in categorized_data: 
-			writer.writerow(row)
+	data.reset_index()
     
-	print("Data writted to categories.csv") 
+	print("Data writted to categories.csv")
 
 
 # clean_data() -> loads and cleans the classified data, removes null values
@@ -140,7 +137,7 @@ def clean_data(categorized_file):
 
     data = pd.read_csv(categorized_file)
     data = data[pd.notnull(data['source_html'])]
-    data = data[data.category != "None"] 
+    data = data[data.category != 'None'] 
 
     return data
 
@@ -151,14 +148,13 @@ def clean_data(categorized_file):
 
 def create_training_data(data): 
     
-    training_data = []
+	training_data = []
 
     # for loop that iterates through the data
 
-    for index, row in data.iterrows(): 
-        training_data.append({"category":row['category'], "source_html":['text']})
-
-    return training_data
+	for index, row in data.iterrows(): 
+		training_data.append({"category":row['category'], "source_html":row['source_html']})
+	return training_data
 
 
 # create_words_list() -> tokenizes the source_html and appends each word to the
@@ -463,6 +459,11 @@ if __name__ == "__main__":
 
 	training_data = create_training_data(clean_data('categories.csv'))
 
+	words_categories_files = create_words_list(training_data)
+
+	print(words_categories_files[0])
+	print(words_categories_files[1])
+	print(words_categories_files[2])
 	
 
 		
