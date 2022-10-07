@@ -1,3 +1,4 @@
+from tkinter import W
 from bs4 import BeautifulSoup
 from flashtext import KeywordProcessor
 import pandas as pd
@@ -7,6 +8,9 @@ import time
 import datetime
 import numpy as np
 import nltk
+import json
+
+nltk.download('punkt')
 
 # inspiration/help:
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
@@ -87,8 +91,6 @@ def determine_category(html, keyword_processor0, keyword_processor1, keyword_pro
 		y2 = len(keyword_processor2.extract_keywords(text))
 		y3 = len(keyword_processor3.extract_keywords(text))
 
-		print("y0: %d, y1: %d, y2: %d, y3: %d" % (y0, y1, y2, y3))
-
 		total_matches = 0 
 
     # computes the percentage of matching values
@@ -118,21 +120,16 @@ def determine_category(html, keyword_processor0, keyword_processor1, keyword_pro
 # returns -> None
 
 def insert_csv(categorized_data): 
-	
-		df = pd.DataFrame(categorized_data)
-		df.columns=['categories', 'sources'] 
-		df.to_csv('categories.csv', index=False, header=False)
 
+	with open('categories.csv', 'w') as categoryFile: 
 
-		# with open('categories.csv', 'w') as categoryFile: 
+		writer = csv.DictWriter(categoryFile, ['category', 'source_html'])
+		writer.writeheader()
 
-			#	writer = csv.writer(categoryFile, delimiter=",")
-	
-			#	for row in categorized_data: 
-
-			#			writer.writerow(row)
+		for row in categorized_data: 
+			writer.writerow(row)
     
-		print("Data writted to categories.csv") 
+	print("Data writted to categories.csv") 
 
 
 # clean_data() -> loads and cleans the classified data, removes null values
@@ -142,8 +139,8 @@ def insert_csv(categorized_data):
 def clean_data(categorized_file):
 
     data = pd.read_csv(categorized_file)
-    data = data[pd.notnull(data["sources"])]
-    data = data[data.categories != "None"] 
+    data = data[pd.notnull(data['source_html'])]
+    data = data[data.category != "None"] 
 
     return data
 
@@ -154,7 +151,7 @@ def clean_data(categorized_file):
 
 def create_training_data(data): 
     
-    training_data = {}
+    training_data = []
 
     # for loop that iterates through the data
 
@@ -198,7 +195,7 @@ def create_words_list(training_data):
     # removes duplicates
 
 		words = list(set(words))
-		classes = list(set(words))
+		categories = list(set(categories))
 
 		return words, categories, files
 
@@ -306,7 +303,7 @@ def bag_of_words(sentence, words):
 	
 		for sentence in sentence_words:
 				for i, w in enumerate(words): 
-						if w == s: 
+						if w == sentence: 
 								bag[i] = 1
 
 		return(np.array(bag)) 
@@ -317,7 +314,7 @@ def bag_of_words(sentence, words):
 # parameters -> sentence (a string of words to act as the input), synpase_0, synapse_1
 # returns -> the output 
 
-def think(sentence, synapse_0, synpase_1):
+def think(sentence, synapse_0, synapse_1, words):
 
 		x = bag_of_words(sentence.lower(), words)
 		
@@ -327,11 +324,11 @@ def think(sentence, synapse_0, synpase_1):
 
 		# matrix multiplcation between the first and hidden layers
 
-		layer_1 = sigmoid(np.dot(first, synapse_0)) 
+		layer_1 = sigmoid(np.dot(layer_0, synapse_0)) 
 
 		# the output
 		
-		layer_2 = sigmoid(np.dot(second, synapse_1))
+		layer_2 = sigmoid(np.dot(layer_1, synapse_1))
 
 		return layer_2
 
@@ -341,9 +338,9 @@ def think(sentence, synapse_0, synpase_1):
 # 	(list of categories), hidden_neurons, alpha, epochs, drouput, dropout_percentage
 # returns -> nothing
 
-def train(training, output, categories, hidden_neurons=10, alpha=1, epochs=1000, dropout=False, dropout_percentage=0.5): 
+def train(training, output, categories, words, hidden_neurons=10, alpha=1, epochs=1000, dropout=False, dropout_percentage=0.5): 
 
-		print ("Training with %s neurons, alpha:%s, dropout:%s %s" % (hidden_neurons, str(alpha), dropout, dropout_percent if dropout else '') )
+		print ("Training with %s neurons, alpha:%s, dropout:%s %s" % (hidden_neurons, str(alpha), dropout, dropout_percentage if dropout else '') )
 	
 		# seeds the random values 	
 
@@ -356,7 +353,7 @@ def train(training, output, categories, hidden_neurons=10, alpha=1, epochs=1000,
 		# randomly assigns weights with a mean of 0 
 
 		synapse_0 = 2*np.random.random((len(training[0]), hidden_neurons)) - 1
-		synpase_1 = 2*np.random.random((hidden_neurons, len(categories))) -1 
+		synapse_1 = 2*np.random.random((hidden_neurons, len(categories))) -1 
 
 		p_syn_0_weight_up = np.zeros_like(synapse_0)
 		p_syn_1_weight_up = np.zeroes_like(synapse_1) 
@@ -377,7 +374,7 @@ def train(training, output, categories, hidden_neurons=10, alpha=1, epochs=1000,
 
 				if(dropout):
 
-						layer_1 *= np.random.binomial([np.ones((len(training),hidden_neurons))],1-dropout_percent)[0] * (1.0/(1-dropout_percent))
+						layer_1 *= np.random.binomial([np.ones((len(training),hidden_neurons))],1-dropout_percentage)[0] * (1.0/(1-dropout_percentage))
 
 						layer_2 = sigmoid(np.dot(layer_1, synapse_1))
 
@@ -413,7 +410,7 @@ def train(training, output, categories, hidden_neurons=10, alpha=1, epochs=1000,
 
 				# weight update
 
-				syn_1_weight_up = (layer_1.T.dot(later_2_delta))
+				syn_1_weight_up = (layer_1.T.dot(layer_2_delta))
 				syn_0_weight_up = (layer_0.T.dot(layer_1_delta))
 
 				if (j > 0): 
@@ -441,32 +438,30 @@ def train(training, output, categories, hidden_neurons=10, alpha=1, epochs=1000,
 
 if __name__ == "__main__": 
 
-		# list for the htmls and categorized_data
+    # list for the htmls and categorized_data
 		
-		htmls = []
-		categorized_data = [] 
+	htmls = []
+	categorized_data = []
 
-		htmls.append("Welcome to my technology discussion where I discuss new products like computers.")
+	htmls.append("Welcome to my technology discussion where I discuss new products like computers.")
+	htmls.append("History is a wonderful subject. We get to learn and do learning about the past.")
 
-		# gather the KeywordProcessor() objects
+    # gather the KeywordProcessor() objects
 
-		processed_keywords =  process_keywords(all_keywords, tech_keywords, hist_keywords, consume_keywords)
+	processed_keywords =  process_keywords(all_keywords, tech_keywords, hist_keywords, consume_keywords)
 
-		# iterate through all of the htmls and build the csv file 
+	# iterate through all of the htmls and build the csv file 
 
-		for text in htmls: 
+	for text in htmls: 
 		
-				cat = determine_category(text, processed_keywords[0], processed_keywords[1], processed_keywords[2], processed_keywords[3])
+		cat = determine_category(text, processed_keywords[0], processed_keywords[1], processed_keywords[2], processed_keywords[3])
 
-				categorized_data.extend((str(cat), str(text))) 
-
+		categorized_data.append({'category': str(cat), 'source_html': str(text)})
 		# insert the data into the csv file
 
-		print(categorized_data)
+	insert_csv(categorized_data)
 
-		insert_csv(categorized_data)
-
-		word_categories_files = create_words_list(create_training_data(clean_data('categories.csv')))
+	training_data = create_training_data(clean_data('categories.csv'))
 
 	
 
