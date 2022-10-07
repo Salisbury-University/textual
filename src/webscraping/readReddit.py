@@ -64,10 +64,18 @@ def get_data(headers, subreddit):
             "created_utc" : format_time(post["data"]["created_utc"]),
             "link" : "https://www.reddit.com/" + post["data"]["permalink"],
             "upvotes" : post["data"]["ups"],
-            "downvotes" : post["data"]["downs"]}
+            "downvotes" : post["data"]["downs"]},
             ignore_index=True)
-        
+    
+    save_as_json(subreddit_content, subreddit_content["subreddit"][0])
 
+# Convert pandas dataframe to json and save as output file
+def save_as_json(dataframe, file_name):
+    dataframe.to_json(file_name + ".json", orient="records")
+
+# Convert pandas dataframe to csv and save as output file
+def save_as_csv(dataframe, file_name):
+    dataframe.to_csv(file_name + ".csv", sep="\n", encoding="utf-8")
 
 if __name__ == "__main__":
     if (len(sys.argv) < 2):
