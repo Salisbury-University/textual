@@ -1,9 +1,22 @@
+# Date: 10/6/2022
+# Description: Use the Reddit API to collect content a specified subreddit and store as a .json or .csv file
+
 import requests
 import json
 import requests.auth
 import sys
 import pandas as pd
 import time
+
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import urllib.request
+import functools
+import multiprocessing as mp
+import threading
+from collections import Counter
+from string import punctuation
+import itertools
 
 # Read in password from separate file
 def get_pass():
@@ -71,7 +84,7 @@ def get_data(headers, subreddit):
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
-    dataframe.to_json(file_name + ".json", orient="records")
+    dataframe.to_json(file_name + ".json", orient="index")
 
 # Convert pandas dataframe to csv and save as output file
 def save_as_csv(dataframe, file_name):
@@ -82,6 +95,19 @@ if __name__ == "__main__":
         print("Please enter the name of a subreddit as a command line argument")
         sys.exit()
 
-    print(sys.argv[1])
+    subreddit_list = ["r/Music/hot", "r/StarWars/hot", "r/space/hot", "r/science/hot", "r/AskHistorians/hot", "r/cats/hot", "r/canada/hot", "r/nfl/hot", "r/formula1/hot", "r/Android/hot", "r/apple/hot", "r/programming/hot"]
     headers = authenticate()
-    get_data(headers, sys.argv[1])
+
+    #items = ((headers, subreddit) for subreddit in subreddit_list)
+    #print(items)
+    
+    partial_get_data = functools.partial(get_data, headers)
+    
+    pool=mp.Pool(mp.cpu_count())
+    
+    #results=itertools.starmap(get_data, items)
+    results=pool.map(partial_get_data, subreddit_list)
+    pool.close()
+
+    print(sys.argv[1])
+    #get_data(headers, sys.argv[1])
