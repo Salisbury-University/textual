@@ -464,8 +464,3 @@ if __name__ == "__main__":
 	print(words_categories_files[0])
 	print(words_categories_files[1])
 	print(words_categories_files[2])
-	
-
-		
-
-	
