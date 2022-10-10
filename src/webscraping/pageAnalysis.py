@@ -10,6 +10,8 @@ import numpy as np
 import nltk
 import json
 
+ERROR_THRESHOLD = 0.2
+
 # nltk.download('punkt')
 
 # inspiration/help:
@@ -352,10 +354,10 @@ def train(training, output, categories, words, hidden_neurons=10, alpha=1, epoch
 		synapse_1 = 2*np.random.random((hidden_neurons, len(categories))) -1 
 
 		p_syn_0_weight_up = np.zeros_like(synapse_0)
-		p_syn_1_weight_up = np.zeroes_like(synapse_1) 
+		p_syn_1_weight_up = np.zeros_like(synapse_1) 
 	
 		syn_0_dir_count = np.zeros_like(synapse_0)
-		syn_1_dir_count = np.zeroes_like(synapse_1) 
+		syn_1_dir_count = np.zeros_like(synapse_1) 
 
 		# iterating through all epochs
 
@@ -428,8 +430,37 @@ def train(training, output, categories, words, hidden_neurons=10, alpha=1, epoch
 
 				synapse_file = 'synapses.json' 
 
-				with open('~/src/webscraping/'+synapse_file, 'w') as out: 
+				with open(synapse_file, 'w+') as out: 
 						json.dump(synapse, out, indent=4, sort_keys=True)
+
+
+# load_data -> loads data from the synapse file
+# parameters -> synapse_file (a json file containing the training information)
+# returns -> synapse, synapse_0, synapse_1
+
+def load_data(synapse_file): 
+	
+	with open(synapse_file) as data: 
+		synapse = json.load(data)
+		synapse_0 = np.asarray(synapse['synapse0'])
+		synapse_1 = np.asarray(synapse['synapse1'])
+
+	return synapse, synapse_0, synapse_1
+
+
+# classify() -> tests an input sentence to find its category
+# parameter -> sentence (input sentence), synapse_0, synapse_1, words, categories
+# returns -> the results
+
+def classify(sentence, synapse_0, synapse_1, words, categories):
+
+	results = think(sentence, synapse_0, synapse_1, words)
+
+	results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
+	results.sort(key=lambda x: x[1], reverse=True) 
+	return_results =[[categories[r[0]],r[1]] for r in results]
+    
+	return return_results
 
 
 if __name__ == "__main__": 
@@ -451,16 +482,52 @@ if __name__ == "__main__":
 	for text in htmls: 
 		
 		cat = determine_category(text, processed_keywords[0], processed_keywords[1], processed_keywords[2], processed_keywords[3])
-
 		categorized_data.append({'category': str(cat), 'source_html': str(text)})
-		# insert the data into the csv file
+	
+	# insert the data into the csv file
 
 	insert_csv(categorized_data)
 
+	# creates the training data
+
 	training_data = create_training_data(clean_data('categories.csv'))
+
+	# gathers the words/categories/files
 
 	words_categories_files = create_words_list(training_data)
 
-	print(words_categories_files[0])
-	print(words_categories_files[1])
-	print(words_categories_files[2])
+	words = words_categories_files[0]
+	categories = words_categories_files[1]
+	files = words_categories_files[2]
+
+	# creates the tokenized bag of words
+
+	tokenized_bag = create_tokenized_words_bag(words, categories, files)
+
+	# get training data and ouput data
+
+	training = tokenized_bag[0]
+	output = tokenized_bag[1]
+
+	# TRAINING
+
+	x = np.array(training)
+	y = np.array(output)
+
+	start_time = time.time()
+
+	train(x, y, words_categories_files[1], words_categories_files[0], hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.2)
+
+	elapsed_time = time.time() - start_time
+	print ("processing time:", elapsed_time, "seconds")
+
+	# load file
+
+	loaded_data = load_data('synapse.json')
+
+	synapse = loaded_data[0]
+	synapse_0 = loaded_data[1]
+	synapse_1 = loaded_data[2]
+
+	# below you can begin testing after testing 
+
