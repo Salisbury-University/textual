@@ -4,3 +4,4 @@ https://nijianmo.github.io/amazon/index.html<br/>
 https://developer.twitter.com/en/docs/twitter-api/enterprise/compliance-firehose-api/overview<br/>
 https://www.reddit.com/wiki/api/<br/>
 https://www.yelp.com/dataset<br/>
+https://developer.twitter.com/en/products/twitter-api/academic-research</br>
