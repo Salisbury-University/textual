@@ -47,6 +47,8 @@ def get_date(html_page):
 def readWebpage(pageCount):
     print(pageCount)
     for i in range(numIter):
+        if (i%(numIter//10)==0 and i!=0):
+            print(str(i)+" iterations for processor: "+str(mp.current_process())+"==================================================================")
         num=pageCount+i
         flag=0
         tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt"
