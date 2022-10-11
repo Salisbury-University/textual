@@ -20,18 +20,43 @@ ERROR_THRESHOLD = 0.2
 # keywords for each "category"
 # can be changed at any time/fine tuned, but this is just for initial testing.
 
+# TO DO
+# 	- load a list of all key words from somewhere
+#   - brainstorm more topics
+
 tech_keywords = ['Computer', 'Storage', 'Technology', 'Business',
-'Software', 'Hardware', 'Tech', 'Gadget', 'News', 'Marketing']
+'Software', 'Hardware', 'Tech', 'Gadget', 'News', 'Marketing', 'Information', 'Science',
+'Engineering', 'Cloud', 'Agile', 'Scrum']
 hist_keywords = ['Historical', 'Learning', 'Civics', 'History', 'Past',
 'Revolutionary', 'Political', 'Archives', 'Archeology', 'Century']
 consume_keywords = ['Bought', 'Product', 'New', 'Store', 'Video', 'Article',
-'Delivery', 'Shop']
+'Delivery', 'Shop', 'Buy', 'Cost', 'Cheap']
+
 all_keywords = tech_keywords + hist_keywords + consume_keywords
 
 # a list to store all of the html files
 
 global htmls
-htmls = []                                      
+htmls = []        
+
+def load_keywords(keyword_file): 
+
+	keywords = []
+	counter = 0
+
+	with open(keyword_file) as data_file:
+		
+		reader = csv.reader(data_file, delimiter=';')
+		counter += 1
+		
+		for row in reader: 
+			
+			keywords.append(list(row))
+
+	return counter, keywords
+
+	# returns a list of the list of keywords
+	
 
 # process_keywords() -> takes in the keywords provided, uses the
 #   KeywordProcessor() class from flashtext for later use.  
@@ -466,12 +491,24 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 if __name__ == "__main__": 
 
     # list for the htmls and categorized_data
+
+	keyword_file = 'keywords.csv'
+
+	keyword_list = load_keywords(keyword_file)
+
+	num_lines = keyword_list[0]
+	keyword_list = keyword_list[1]
+
+	print(keyword_list)
+
+
 		
 	htmls = []
 	categorized_data = []
 
 	htmls.append("Welcome to my technology discussion where I discuss new products like computers.")
 	htmls.append("History is a wonderful subject. We get to learn and do learning about the past.")
+	htmls.append("I love buying and selling products so much. I bought a cheap new product.")
 
     # gather the KeywordProcessor() objects
 
@@ -516,18 +553,22 @@ if __name__ == "__main__":
 
 	start_time = time.time()
 
-	train(x, y, words_categories_files[1], words_categories_files[0], hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.2)
+	train(x, y, categories, words, hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.2)
 
 	elapsed_time = time.time() - start_time
 	print ("processing time:", elapsed_time, "seconds")
 
 	# load file
 
-	loaded_data = load_data('synapse.json')
+	loaded_data = load_data('synapses.json')
 
 	synapse = loaded_data[0]
 	synapse_0 = loaded_data[1]
 	synapse_1 = loaded_data[2]
 
-	# below you can begin testing after testing 
+	# below you can begin testing after training 
+
+	result = classify("Technology is a wonderful product with tons of related gagdets with new information.", synapse_0, synapse_1, words, categories)
+
+	print(result)
 
