@@ -9,7 +9,6 @@ from collections import Counter
 from string import punctuation
 numIter=100
 URLBEGIN="https://www.gutenberg.org/cache/epub"
-
 def find_html(purl):
     page=urlopen(purl)
     html_bytes=page.read()
@@ -46,6 +45,7 @@ def get_date(html_page):
 
 def readWebpage(pageCount):
     print(pageCount)
+    totalLen=0
     for i in range(numIter):
         if (i%(numIter//10)==0 and i!=0):
             tempPName=str(mp.current_process())
@@ -62,8 +62,10 @@ def readWebpage(pageCount):
             #print("http",err.code, "ERROR")
             flag=1
         if flag==0:
-            print(tempURL)
             pageHtml=find_html(tempURL)
+            totalLen+=(len(pageHtml))
+            #print(totalLen)
+            print(tempURL)
             title=get_title(pageHtml)
             if len(title)<1000:
                 print(title)
@@ -72,7 +74,7 @@ def readWebpage(pageCount):
             date=get_date(pageHtml)
             print(date)
         flag=0
-    return 0
+    return totalLen
 
 if __name__=="__main__":
     pool=mp.Pool(mp.cpu_count())
@@ -82,5 +84,10 @@ if __name__=="__main__":
         pageCounts.append(count*numIter+1)
         count+=1
     results=pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+    print(results)
+    totalLen=0
+    for i in results:
+        totalLen+=i
     pool.close()
+    print("Average HTML length= "+str(round(totalLen/(numIter*mp.cpu_count()),2)))
     print("Done")
