@@ -48,7 +48,10 @@ def readWebpage(pageCount):
     print(pageCount)
     for i in range(numIter):
         if (i%(numIter//10)==0 and i!=0):
-            print(str(i)+" iterations for processor: "+str(mp.current_process())+"==================================================================")
+            tempPName=str(mp.current_process())
+            tempPSplit=tempPName.split("ForkPoolWorker-")
+            tempPSplit2=tempPSplit[1].split("\' parent=")
+            print(str(i)+" iterations for processor: "+str(tempPSplit2[0])+" ========================================================================")
         num=pageCount+i
         flag=0
         tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt"
