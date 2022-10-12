@@ -1,3 +1,5 @@
+from calendar import leapdays
+from re import L
 from tkinter import W
 from bs4 import BeautifulSoup
 from flashtext import KeywordProcessor
@@ -24,39 +26,43 @@ ERROR_THRESHOLD = 0.2
 # 	- load a list of all key words from somewhere
 #   - brainstorm more topics
 
-tech_keywords = ['Computer', 'Storage', 'Technology', 'Business',
-'Software', 'Hardware', 'Tech', 'Gadget', 'News', 'Marketing', 'Information', 'Science',
-'Engineering', 'Cloud', 'Agile', 'Scrum']
-hist_keywords = ['Historical', 'Learning', 'Civics', 'History', 'Past',
-'Revolutionary', 'Political', 'Archives', 'Archeology', 'Century']
-consume_keywords = ['Bought', 'Product', 'New', 'Store', 'Video', 'Article',
-'Delivery', 'Shop', 'Buy', 'Cost', 'Cheap']
+tech = ['cybersecurity', 'internet','communication','application','technical',
+'robotics','wheel','automation','energy','applied','devices','tools','capabilities',
+'wireless','wi-fi','scientific','equipment','machinery','knowledge','software','hardware',
+'storage','tech,gadget','business']
+hist = ['historic','history','age','story','etymology','chronical','period','era',
+'biography','arts','iconology','trace','geology','milestone','background','record','ancient']
+advertisement = ['buy','sell','cheap','product','new','easy','simple','promotion',
+'pre-order','order','shipping','free','marketing','love','should']
+religion = ['religion','religious','pagan','islam','faith','christianity','church',
+'bible','muslim','convert','spiritual','doctrine','judaism','secular','evangelical','devout',
+'heathen','bigot','preach','tolerance','divinity','unbeliever']
+political = ['administration','affairs','associative','government','power','election',
+'elect','money','vote','bill','law','yea','nay','polls','money','public,office','representation',
+'state','sociopolitical','law','geopolitics','local','federal']
+scientific = ['discovery','biology','chemistry','astronomy','discovery','finding',
+'data','sources','climate','element','energy','etemology','botany','control','evolution',
+'experiment','fossil','fact','hypothesis','immunology','lab','measure','microbiology','mineral',
+'molecule','motion','observe','physical','research','science','theory','weather']
+cultural = ['culture','accomplishment','civilization','cultivation','lifestyle',
+'society','race','tradition','country','heritage','dress','crops','societies','courtesy',
+'belief','ethics','delicacy','advancement','civility','discrmination']
+nature = ['nature','trees','plants','animals','chemical','biological','reproduction',
+'weather','climate','coast','ocean','beach','desert','earth','planet','universe','life',
+'environmemt','nurture','wilderness','evolution','sun','stars']
+economy = ['money','stocks','bonds','rates','morgage','crash','DOW','S&P','fed','hikes',
+'strong','weak','buying','selling','capitalism','sector','savings','economy','budget',
+'capital','cash','bankrupt','competition','consumer','cut']
+government = ['policy','governmental','congress','house','senate','security','military',
+'weapons','debt','national','nation','united','president','vice','representative','council',
+'economy','impeach','elect','vote','campaign','money','fundraise','gerrymander']
 
-all_keywords = tech_keywords + hist_keywords + consume_keywords
+all_keywords = tech + hist + advertisement + religion + political + scientific + cultural + nature + economy + government
 
 # a list to store all of the html files
 
 global htmls
 htmls = []        
-
-def load_keywords(keyword_file): 
-
-	keywords = []
-	counter = 0
-
-	with open(keyword_file) as data_file:
-		
-		reader = csv.reader(data_file, delimiter=';')
-		counter += 1
-		
-		for row in reader: 
-			
-			keywords.append(list(row))
-
-	return counter, keywords
-
-	# returns a list of the list of keywords
-	
 
 # process_keywords() -> takes in the keywords provided, uses the
 #   KeywordProcessor() class from flashtext for later use.  
@@ -66,31 +72,65 @@ def load_keywords(keyword_file):
 # returns -> a tuple of keyword processors 0, 1, 2, and 3 representing all
 #   keywords, technology, history, and consumer. 
 
-def process_keywords(keywords, technology_keywords, history_keywords,
-consumer_keywords): 
+def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, gov): 
 
     # KeywordProcessor() objects to store keywords 
 
-    keyword_processor0 = KeywordProcessor()
-    keyword_processor1 = KeywordProcessor()
-    keyword_processor2 = KeywordProcessor()
-    keyword_processor3 = KeywordProcessor()
+	keyword_processor0 = KeywordProcessor()
+	keyword_processor1 = KeywordProcessor()
+	keyword_processor2 = KeywordProcessor()
+	keyword_processor3 = KeywordProcessor()
+	keyword_processor4 = KeywordProcessor()
+	keyword_processor5 = KeywordProcessor()
+	keyword_processor6 = KeywordProcessor()
+	keyword_processor7 = KeywordProcessor()
+	keyword_processor8 = KeywordProcessor()
+	keyword_processor9 = KeywordProcessor()
+	keyword_processor10 = KeywordProcessor()
+
 
     # each loop assigns the proper keyword to the right objects
 
-    for word in keywords: 
-        keyword_processor0.add_keyword(word)
+	for word in keywords: 
+		keyword_processor0.add_keyword(word)
 
-    for word in technology_keywords: 
-        keyword_processor1.add_keyword(word) 
+	for word in tech: 
+		keyword_processor1.add_keyword(word) 
+	
+	for word in hist: 
+		keyword_processor2.add_keyword(word)
+		
+	for word in ad:
+		keyword_processor3.add_keyword(word)
 
-    for word in history_keywords: 
-        keyword_processor2.add_keyword(word)
+	for word in reli: 
+		keyword_processor4.add_keyword(word)
 
-    for word in consumer_keywords:
-        keyword_processor3.add_keyword(word)
+	for word in poli: 
+		keyword_processor5.add_keyword(word)
+	
+	for word in sci: 
+		keyword_processor6.add_keyword(word)
+
+	for word in cul: 
+		keyword_processor7.add_keyword(word)
+
+	for word in nat: 
+		keyword_processor8.add_keyword(word)
+	
+	for word in eco: 
+		keyword_processor9.add_keyword(word)
+
+	for word in gov: 
+		keyword_processor10.add_keyword(word)
+
+	keyword_processor_list = []
+
+	keyword_processor_list.extend(keyword_processor0, keyword_processor1, keyword_processor2,
+	keyword_processor3, keyword_processor4, keyword_processor5, keyword_processor6, keyword_processor7,
+	keyword_processor8, keyword_processor9, keyword_processor10)
     
-    return keyword_processor0, keyword_processor1, keyword_processor2, keyword_processor3 
+	return keyword_processor_list
 
 
 # matching_val() -> finds the percentage of matching keywords
@@ -107,16 +147,17 @@ def matching_val(num_total, num_appearing):
 # parameters -> html (a string of html that will be analyzed), keyword_processors for each category
 # returns -> the category of the html
 
-def determine_category(html, keyword_processor0, keyword_processor1, keyword_processor2, keyword_processor3): 
+def determine_category(html, keyword_processor_list): 
 
 		text = str(html) 
 
 		# extracts the keywords relevant to each catgeory based on the text
 
-		y0 = len(keyword_processor0.extract_keywords(text))
-		y1 = len(keyword_processor1.extract_keywords(text))	
-		y2 = len(keyword_processor2.extract_keywords(text))
-		y3 = len(keyword_processor3.extract_keywords(text))
+		y0 = len(keyword_processor_list[0].extract_keywords(text))
+		y1 = len(keyword_processor_list[1].extract_keywords(text))	
+		y2 = len(keyword_processor_list[2].extract_keywords(text))
+		y3 = len(keyword_processor_list[3].extract_keywords(text))
+
 
 		total_matches = 0 
 
@@ -489,26 +530,6 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 
 
 if __name__ == "__main__": 
-
-    # list for the htmls and categorized_data
-
-	keyword_file = 'keywords.csv'
-
-	keyword_list = load_keywords(keyword_file)
-
-	num_lines = keyword_list[0]
-	keyword_list_new = keyword_list[1]
-
-	all_keywords = []
-
-	# keyword_list_new : 2D list. start indexing at 1 since the first row is the names of
-	# 	the columns. 
-
-	print(type(keyword_list_new[1][1]))
-
-	for i in range(0, len(keyword_list_new[0])): 
-		all_keywords.extend(keyword_list_new[i][1].split(","))
-
 		
 	htmls = []
 	categorized_data = []
