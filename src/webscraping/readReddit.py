@@ -73,7 +73,8 @@ def get_data(headers, subreddit):
     for post in request_content["data"]["children"]:
         post_id = post["data"]["id"]
         subreddit_header = "r/" + post["data"]["subreddit"] + "/comments/" + post_id
-         
+    
+        # Go through each post and add its data
         subreddit_content = subreddit_content.append({
             "subreddit" : post["data"]["subreddit"],
             "title" : post["data"]["title"],
@@ -84,21 +85,26 @@ def get_data(headers, subreddit):
             "downvotes" : post["data"]["downs"]},
             ignore_index=True) 
 
+        # Get the comments for the current post
         get_comments(subreddit_header) 
    
+    # Save the dataframe as a json file
     save_as_json(subreddit_content, subreddit_content["subreddit"][0])
 
 # Get comments given a post id
 def get_comments(post):
-    print("Getting comments")
-    request_comments = requests.get("https://oauth.reddit.com/" + post, headers=headers, params={"limit" : "5"}).json()
+
+    # Request comments from specific post: limit max number of comments taken, depth max steps through comment tree
+    request_comments = requests.get("https://oauth.reddit.com/" + post, headers=headers, params={"limit" : "500", "depth" : "5"}).json()
     
     #Pandas dataframe to hold data
     post_comments = pd.DataFrame()
 
+    #Iterate though each comment and add its datat to a dataframe
     for comment in request_comments[1]["data"]["children"]:
-        #print(comment["data"]["subreddit"])
+        print(post)
         
+        # Try to get comments from post, if they dont exist, throw error
         try:
             post_comments = post_comments.append({
                 "subreddit" : comment["data"]["subreddit"],
