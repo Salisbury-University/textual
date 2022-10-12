@@ -70,6 +70,11 @@ def get_data(headers, subreddit):
     subreddit_content = pd.DataFrame()
 
     for post in request_content["data"]["children"]:
+        post_id = post["data"]["id"]
+        #request_comments = requests.get("https://oauth.reddit.com/" + subreddit + "/comments/" + post_id + "/", headers=headers, params={"limit" : "5"}).json()
+
+        #print(request_comments)
+
         subreddit_content = subreddit_content.append({
             "subreddit" : post["data"]["subreddit"],
             "title" : post["data"]["title"],
