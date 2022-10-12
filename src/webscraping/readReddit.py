@@ -106,8 +106,8 @@ if __name__ == "__main__":
     #items = ((headers, subreddit) for subreddit in subreddit_list)
     #print(items)
     
-    partial_get_data = functools.partial(get_data, headers)
-    
+    # Make a partial function since using multiple parameters
+    partial_get_data = functools.partial(get_data, headers) 
     pool=mp.Pool(mp.cpu_count())
     
     #results=itertools.starmap(get_data, items)
