@@ -69,12 +69,11 @@ def get_data(headers, subreddit):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
 
+    # Iterate through each post grabbed
     for post in request_content["data"]["children"]:
         post_id = post["data"]["id"]
-        #request_comments = requests.get("https://oauth.reddit.com/" + subreddit + "/comments/" + post_id + "/", headers=headers, params={"limit" : "5"}).json()
-
-        #print(request_comments)
-
+        subreddit_header = "r/" + post["data"]["subreddit"] + "/comments/" + post_id
+         
         subreddit_content = subreddit_content.append({
             "subreddit" : post["data"]["subreddit"],
             "title" : post["data"]["title"],
@@ -83,9 +82,39 @@ def get_data(headers, subreddit):
             "link" : "https://www.reddit.com/" + post["data"]["permalink"],
             "upvotes" : post["data"]["ups"],
             "downvotes" : post["data"]["downs"]},
-            ignore_index=True)
-    
+            ignore_index=True) 
+
+        get_comments(subreddit_header) 
+   
     save_as_json(subreddit_content, subreddit_content["subreddit"][0])
+
+# Get comments given a post id
+def get_comments(post):
+    print("Getting comments")
+    request_comments = requests.get("https://oauth.reddit.com/" + post, headers=headers, params={"limit" : "5"}).json()
+    
+    #Pandas dataframe to hold data
+    post_comments = pd.DataFrame()
+
+    for comment in request_comments[1]["data"]["children"]:
+        #print(comment["data"]["subreddit"])
+        
+        try:
+            post_comments = post_comments.append({
+                "subreddit" : comment["data"]["subreddit"],
+                "author" : comment["data"]["author"],
+                "body" : comment["data"]["body"],
+                "created_utc" : format_time(comment["data"]["created_utc"]),
+                "link" : "https://www.reddit.com/" + comment["data"]["permalink"],
+                "upvotes" : comment["data"]["ups"],
+                "downvotes" : comment["data"]["downs"],
+                "parent_post" : post},
+                ignore_index=True)
+        except KeyError:
+            print("Comment not found")
+    
+    output_name = post.replace("/", "_")
+    save_as_json(post_comments, output_name + "_comments")
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
