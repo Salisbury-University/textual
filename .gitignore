@@ -5,3 +5,7 @@
 *.txt
 #Ignore html files
 *.html
+#Ignore json files
+*.json
+#Ignore CSV files
+*.csv
