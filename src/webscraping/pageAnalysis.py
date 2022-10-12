@@ -497,10 +497,17 @@ if __name__ == "__main__":
 	keyword_list = load_keywords(keyword_file)
 
 	num_lines = keyword_list[0]
-	keyword_list = keyword_list[1]
+	keyword_list_new = keyword_list[1]
 
-	print(keyword_list)
+	all_keywords = []
 
+	# keyword_list_new : 2D list. start indexing at 1 since the first row is the names of
+	# 	the columns. 
+
+	print(type(keyword_list_new[1][1]))
+
+	for i in range(0, len(keyword_list_new[0])): 
+		all_keywords.extend(keyword_list_new[i][1].split(","))
 
 		
 	htmls = []
@@ -548,6 +555,7 @@ if __name__ == "__main__":
 
 	# TRAINING
 
+	'''
 	x = np.array(training)
 	y = np.array(output)
 
@@ -571,4 +579,5 @@ if __name__ == "__main__":
 	result = classify("Technology is a wonderful product with tons of related gagdets with new information.", synapse_0, synapse_1, words, categories)
 
 	print(result)
+	'''
 
