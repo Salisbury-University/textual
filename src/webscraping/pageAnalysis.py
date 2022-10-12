@@ -1,6 +1,3 @@
-from calendar import leapdays
-from re import L
-from tkinter import W
 from bs4 import BeautifulSoup
 from flashtext import KeywordProcessor
 import pandas as pd
@@ -149,37 +146,50 @@ def matching_val(num_total, num_appearing):
 
 def determine_category(html, keyword_processor_list): 
 
-		text = str(html) 
+	text = str(html) 
 
 		# extracts the keywords relevant to each catgeory based on the text
 
-		y0 = len(keyword_processor_list[0].extract_keywords(text))
-		y1 = len(keyword_processor_list[1].extract_keywords(text))	
-		y2 = len(keyword_processor_list[2].extract_keywords(text))
-		y3 = len(keyword_processor_list[3].extract_keywords(text))
+	y0 = len(keyword_processor_list[0].extract_keywords(text))
+	y1 = len(keyword_processor_list[1].extract_keywords(text))	
+	y2 = len(keyword_processor_list[2].extract_keywords(text))
+	y3 = len(keyword_processor_list[3].extract_keywords(text))
+	y4 = len(keyword_processor_list[4].extract_keywords(text))
+	y5 = len(keyword_processor_list[5].extract_keywords(text))
+	y6 = len(keyword_processor_list[6].extract_keywords(text))
+	y7 = len(keyword_processor_list[7].extract_keywords(text))
+	y8 = len(keyword_processor_list[8].extract_keywords(text))
+	y9 = len(keyword_processor_list[9].extract_keywords(text))
+	y10 = len(keyword_processor_list[10].extract_keywords(text))
 
-
-		total_matches = 0 
+	values = [] 
 
     # computes the percentage of matching values
 
-		tech_percent = float(matching_val(y0, y1))
-		history_percent = float(matching_val(y0, y2))
-		consumer_percent = float(matching_val(y0, y3))
+	values.append(("tech", float(matching_val(y0, y1))))
+	values.append(("hist", float(matching_val(y0, y2))))
+	values.append(("ad", float(matching_val(y0, y3))))
+	values.append(("reli",  float(matching_val(y0, y4))))
+	values.append(("poli",  float(matching_val(y0, y5))))
+	values.append(("sci",  float(matching_val(y0, y6))))
+	values.append(("cul",  float(matching_val(y0, y7))))
+	values.append(("nat",  float(matching_val(y0, y8))))
+	values.append(("eco",  float(matching_val(y0, y9))))
+	values.append(("gov",  float(matching_val(y0, y10))))
 
     # if statement to determine the most likely category 
 
-		if y0 == 0: 
-				category='None'
-		else:     
-				if tech_percent >= history_percent and tech_percent >= consumer_percent: 
-						category = "technology"
-				elif history_percent >= tech_percent and history_percent >= consumer_percent: 
-						category = "history" 
-				elif consumer_percent >= tech_percent and consumer_percent >= history_percent: 
-						category = "consumer" 
-
-		return category
+	if y0 == 0: 
+		category='None'
+	else:     
+		temp = 0
+		for tup in values: 
+			if(tup[1] > temp):
+				temp = tup[1]
+				max_tup = tup
+		category = max_tup[0]
+		
+	return category
 
 
 # insert_csv() -> inserts the categorized data in a csv file
@@ -540,13 +550,15 @@ if __name__ == "__main__":
 
     # gather the KeywordProcessor() objects
 
-	processed_keywords =  process_keywords(all_keywords, tech_keywords, hist_keywords, consume_keywords)
+	#tech, hist, ad, reli, poli, sci, cul, nat, eco, gov
+
+	processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government)
 
 	# iterate through all of the htmls and build the csv file 
 
 	for text in htmls: 
 		
-		cat = determine_category(text, processed_keywords[0], processed_keywords[1], processed_keywords[2], processed_keywords[3])
+		cat = determine_category(text, processed_keywords_list)
 		categorized_data.append({'category': str(cat), 'source_html': str(text)})
 	
 	# insert the data into the csv file
