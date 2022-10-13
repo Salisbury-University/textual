@@ -11,7 +11,7 @@ import json
 
 ERROR_THRESHOLD = 0.2
 
-# nltk.download('punkt')
+nltk.download('punkt')
 
 # inspiration/help:
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
@@ -59,7 +59,22 @@ all_keywords = tech + hist + advertisement + religion + political + scientific +
 # a list to store all of the html files
 
 global htmls
-htmls = []        
+htmls = []  
+
+
+
+def load_samples(file_name): 
+
+	all_samples = []
+
+	with open(file_name, 'r') as f: 
+
+		text = f.read()
+
+	all_samples = text.split("===========")
+
+	return all_samples
+
 
 # process_keywords() -> takes in the keywords provided, uses the
 #   KeywordProcessor() class from flashtext for later use.  
@@ -123,9 +138,17 @@ def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, g
 
 	keyword_processor_list = []
 
-	keyword_processor_list.extend(keyword_processor0, keyword_processor1, keyword_processor2,
-	keyword_processor3, keyword_processor4, keyword_processor5, keyword_processor6, keyword_processor7,
-	keyword_processor8, keyword_processor9, keyword_processor10)
+	keyword_processor_list.append(keyword_processor0)
+	keyword_processor_list.append(keyword_processor1)
+	keyword_processor_list.append(keyword_processor2)
+	keyword_processor_list.append(keyword_processor3)
+	keyword_processor_list.append(keyword_processor4)
+	keyword_processor_list.append(keyword_processor5)
+	keyword_processor_list.append(keyword_processor6)
+	keyword_processor_list.append(keyword_processor7)
+	keyword_processor_list.append(keyword_processor8)
+	keyword_processor_list.append(keyword_processor9)
+	keyword_processor_list.append(keyword_processor10)
     
 	return keyword_processor_list
 
@@ -137,7 +160,10 @@ def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, g
 
 def matching_val(num_total, num_appearing): 
 
-    return (float(num_appearing)/float(num_total))*100
+	if(num_total != 0 and num_appearing != 0): 
+		return (float(num_appearing)/float(num_total))*100
+	else: 
+		return 0
 
 
 # determine_category() -> computes the likely category of each input html
@@ -161,6 +187,8 @@ def determine_category(html, keyword_processor_list):
 	y8 = len(keyword_processor_list[8].extract_keywords(text))
 	y9 = len(keyword_processor_list[9].extract_keywords(text))
 	y10 = len(keyword_processor_list[10].extract_keywords(text))
+
+	#print("y0: %d\ny1: %d\ny2: %d\ny3: %d\ny4: %d\ny5: %d\ny6: %d\ny7: %d\ny8: %d\ny9: %d\ny10: %d\n"% (y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10))
 
 	values = [] 
 
@@ -376,9 +404,9 @@ def bag_of_words(sentence, words):
 		# if the sentence word matches any value in the words then the bag value is set to 1
 	
 		for sentence in sentence_words:
-				for i, w in enumerate(words): 
-						if w == sentence: 
-								bag[i] = 1
+			for i, w in enumerate(words): 
+				if w == sentence: 
+					bag[i] = 1
 
 		return(np.array(bag)) 
 
@@ -544,9 +572,10 @@ if __name__ == "__main__":
 	htmls = []
 	categorized_data = []
 
-	htmls.append("Welcome to my technology discussion where I discuss new products like computers.")
-	htmls.append("History is a wonderful subject. We get to learn and do learning about the past.")
-	htmls.append("I love buying and selling products so much. I bought a cheap new product.")
+	samples = load_samples('plaintext.txt')
+
+	for item in samples: 
+		htmls.append(item)
 
     # gather the KeywordProcessor() objects
 
@@ -588,7 +617,6 @@ if __name__ == "__main__":
 
 	# TRAINING
 
-	'''
 	x = np.array(training)
 	y = np.array(output)
 
@@ -612,5 +640,3 @@ if __name__ == "__main__":
 	result = classify("Technology is a wonderful product with tons of related gagdets with new information.", synapse_0, synapse_1, words, categories)
 
 	print(result)
-	'''
-

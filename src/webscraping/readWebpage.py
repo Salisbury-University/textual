@@ -6,6 +6,7 @@ import functools as ft
 import multiprocessing as mp
 import threading
 from collections import Counter
+import time
 
 #All punctuation characters
 from string import punctuation
@@ -117,6 +118,16 @@ def get_text(html):
                 page_text += t
         return page_text
 
+def write_text_file(metadata, text):
+
+    with open("plaintext.txt", 'w') as f: 
+        
+        f.write(metadata[0])
+        f.write(" ")
+        f.write(text)
+
+        f.write("=====================================")
+
 #Open a new file for write only
 def open_file(file_name):
     f = open(file_name, "w")
@@ -185,6 +196,8 @@ def readWebpage(pageCount):
 
             #If the lock is available, grab it write the metadata and frequency to the file and return the lock
             global_lock.acquire()
+
+
             for data in metadata:
                 output_file.write(data + '\n')
             output_file.write('\n')
@@ -192,12 +205,13 @@ def readWebpage(pageCount):
            
             #Print the frequency for each word
             output_file.write(freq_list + '\n')
+        
             global_lock.release()
             print("Num loop: "+str(i)) 
     flag=0
 
 
-if __name__ =="__main__":
+if __name__ == "__main__":
     #Open the output file
     output_file = open_file("output.txt")
     pool=mp.Pool(mp.cpu_count()//4)
