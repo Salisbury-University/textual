@@ -65,29 +65,43 @@ def format_time(epoch_time):
 # Get data from reddit location
 def get_data(headers, subreddit): 
     request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100"}).json()
-
+ 
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
 
-    # Iterate through each post grabbed
-    for post in request_content["data"]["children"]:
-        post_id = post["data"]["id"]
-        subreddit_header = "r/" + post["data"]["subreddit"] + "/comments/" + post_id
-    
-        # Go through each post and add its data
-        subreddit_content = subreddit_content.append({
-            "subreddit" : post["data"]["subreddit"],
-            "title" : post["data"]["title"],
-            "selftext" : post["data"]["selftext"],
-            "created_utc" : format_time(post["data"]["created_utc"]),
-            "link" : "https://www.reddit.com/" + post["data"]["permalink"],
-            "upvotes" : post["data"]["ups"],
-            "downvotes" : post["data"]["downs"]},
-            ignore_index=True) 
+    # Initial post id
+    post_after = 0
+ 
+    while post_after != None:
+        # Iterate through each post grabbed
+        for post in request_content["data"]["children"]:
+            
+            # Get post id, post fullname, and subreddit title + post id
+            post_id = post["data"]["id"]
+            post_type_id = post["kind"] + "_" + post["data"]["id"]
+            subreddit_header = "r/" + post["data"]["subreddit"] + "/comments/" + post_id
+            
+            # Check if current post is the last in the subreddit
+            post_after = request_content["data"]["after"]
+            
+            # Go through each post and add its data
+            subreddit_content = subreddit_content.append({
+                "subreddit" : post["data"]["subreddit"],
+                "title" : post["data"]["title"],
+                "post_id" : post["data"]["id"],
+                "selftext" : post["data"]["selftext"],
+                "created_utc" : format_time(post["data"]["created_utc"]),
+                "link" : "https://www.reddit.com/" + post["data"]["permalink"],
+                "upvotes" : post["data"]["ups"],
+                "downvotes" : post["data"]["downs"]},
+                ignore_index=True) 
 
-        # Get the comments for the current post
-        get_comments(subreddit_header) 
-   
+            # Get the comments for the current post
+            get_comments(subreddit_header) 
+        
+        # Get post after the last from the previous fetch
+        request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100", "after" : post_type_id}).json()
+        
     # Save the dataframe as a json file
     save_as_json(subreddit_content, subreddit_content["subreddit"][0])
 
@@ -102,7 +116,6 @@ def get_comments(post):
 
     #Iterate though each comment and add its datat to a dataframe
     for comment in request_comments[1]["data"]["children"]:
-        print(post)
         
         # Try to get comments from post, if they dont exist, throw error
         try:
@@ -120,7 +133,7 @@ def get_comments(post):
             print("Comment not found")
     
     output_name = post.replace("/", "_")
-    save_as_json(post_comments, output_name + "_comments")
+    save_as_json(post_comments, output_name)
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
@@ -135,9 +148,11 @@ if __name__ == "__main__":
         print("Please enter the name of a subreddit as a command line argument")
         sys.exit()
 
-    subreddit_list = ["r/Music/hot", "r/StarWars/hot", "r/space/hot", "r/science/hot", "r/AskHistorians/hot", "r/cats/hot", "r/canada/hot", "r/nfl/hot", "r/formula1/hot", "r/Android/hot", "r/apple/hot", "r/programming/hot"]
+    # List of subreddits to search
+    # subreddit_list = ["r/Music/hot", "r/StarWars/hot", "r/space/hot", "r/science/hot", "r/AskHistorians/hot", "r/cats/hot", "r/canada/hot", "r/nfl/hot", "r/formula1/hot", "r/Android/hot", "r/apple/hot", "r/programming/hot"]
     headers = authenticate()
 
+    subreddit_list = ["r/pythonarcade/hot"]
     #items = ((headers, subreddit) for subreddit in subreddit_list)
     #print(items)
     
@@ -147,7 +162,4 @@ if __name__ == "__main__":
     
     #results=itertools.starmap(get_data, items)
     results=pool.map(partial_get_data, subreddit_list)
-    pool.close()
-
-    print(sys.argv[1])
-    #get_data(headers, sys.argv[1])
+    pool.close() 
