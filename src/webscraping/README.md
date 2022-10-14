@@ -1,5 +1,5 @@
 ### Reddit Content Scraper:
-<br/>
+
 # **Purpose:**
 <br/>
 - Collect posts and their respective comments and save their information in .json files.
