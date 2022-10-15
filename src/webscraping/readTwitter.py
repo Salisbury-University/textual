@@ -1,15 +1,9 @@
-"""
-import requests
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
-import urllib.request
-import functools as ft
+import tweepy
+import configTokens as con
 import multiprocessing as mp
 import threading
-"""
-import configTokens as con
-import tweepy
 import pandas as pd
+
 
 def getTweets(client,search,iterate=1,results=100):
     tweetList = []
@@ -32,6 +26,8 @@ def getTweets(client,search,iterate=1,results=100):
     return data
 
 if __name__ == "__main__":
+    print("Scraping Tweets...\n")
+    i = 1
     client = tweepy.Client(bearer_token=con.BEARER_TOKEN) # gives us access to the api in the program
 
     # a list of queries to search for recent tweets
@@ -50,11 +46,14 @@ if __name__ == "__main__":
                 '#breastcancerawareness lang:en -is:retweet -has:media',
                 '#iphone14 lang:en -is:retweet -has:media',
                 '#election2022 lang:en -is:retweet -has:media']
-    i = 1
+    
     for query in queries:
+        print("Searching for tweets that fit the query: '{}'".format(queries[i-1]))
         # create a file name for the csv file
         fileName = "tweets" + str(i) + ".csv"
-        i+=1
-
+        i+=1 
         data = getTweets(client,query,iterate=10) # grabs the most recent tweets
         data.to_csv(fileName,index=False) # creates the csv file
+        print("Done searching for those tweets.\n")
+
+    print('Done.\nResults saved in *.csv files.')
