@@ -87,7 +87,7 @@ def get_data(headers, subreddit):
             subreddit_header = "r/" + post["data"]["subreddit"] + "/comments/" + post_id
             
             # Print current post and iteration
-            print("Iteration: " + str(i) + " | " + subreddit_header)
+            print("Thread: " + str(mp.current_process()) + ": Iteration: " + str(i) + " | " + subreddit_header)
 
             # Check if current post is the last in the subreddit
             post_after = request_content["data"]["after"]
@@ -141,9 +141,10 @@ def get_comments(post):
     #Pandas dataframe to hold data
     post_comments = pd.DataFrame()
 
+    comment_found = False
     #Iterate though each comment and add its datat to a dataframe
     for comment in request_comments[1]["data"]["children"]:
-        
+       
         # Try to get comments from post, if they dont exist, throw error
         # (Some post may not have any comments)
 
@@ -174,10 +175,13 @@ def get_comments(post):
         except KeyError:
             # If there were no comments on that post, print an error
             print("Comment not found")
+        else:
+            comment_found = True
     
-    # Get the post id and link and save an output file under that name
-    output_name = post.replace("/", "_")
-    save_as_json(post_comments, output_name)
+    if comment_found:
+        # Get the post id and link and save an output file under that name
+        output_name = post.replace("/", "_")
+        save_as_json(post_comments, output_name)
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
