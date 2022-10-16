@@ -16,13 +16,14 @@
 # Please note: All lines of code that are commented out in the form:
 """
 <lines of code>
-""" 
+"""
 # are for testing and debugging.
 
 import spacy
 import re
 import sklearn
 import pandas as pd
+from prettytable import PrettyTable
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 #create the nlp object
@@ -34,21 +35,12 @@ suffix_regex = spacy.util.compile_suffix_regex(suffixes)
 nlp.tokenizer.suffix_search = suffix_regex.search
 
 #open and read in our text
-with open("wikifull.txt", "r") as f:
+with open("positive.txt", "r") as f:
     text = f.read()
 
 #turn the text into a doc using the nlp
 fullDoc = nlp(text)
 
-
-#Create a 2 tuple list of entity objects consisting of entities and their label (what type of entity they are)
-entityList = []
-for ent in fullDoc.ents:
-    """
-    #print(ent.text, ent.label_, " - ", spacy.explain(ent.label_))
-    """
-    entityList.append({"entity": ent.text, "entityType": ent.label})
-    
 #separate our document into a list of sentences
 sentences = list(fullDoc.sents)
 
@@ -64,62 +56,81 @@ neutral = 0
 #List to store all tokens, their dependency tags, and pos tags
 WordTagList = []
 
-#This Loop goes through every sentence in the full text
+#This Loop does a sentence by sentence analysis of the text.
 for sentence in sentences:
-    
-    #This loop goes through every word in each sentence
-    #Create a 3 tuple List of all tokens containing each word, its dependency tag and its part of speech tag
-    for word in sentence:
-        WordTagList.append({"word": word.text, "dep": word.dep_, "pos": word.pos_})
-    
+
     # polarity_scores is a method of SentimentIntensityAnalyzer
     # object gives a sentiment dictionary.
     # which contains pos, neg, neu, and compound scores.
-    
-    """ 
+     
     print("Sentence: ",sentence.text) 
-    """
     
+
     sentiment_dict = sid_obj.polarity_scores(sentence.text)
     
-    """
-     print("Overall sentiment dictionary is : ", sentiment_dict)
-     print("sentence was rated as ", sentiment_dict['neg']*100, "% Negative")
-     print("sentence was rated as ", sentiment_dict['neu']*100, "% Neutral")
-     print("sentence was rated as ", sentiment_dict['pos']*100, "% Positive")
-     print("Sentence Overall Rated As", end = " ")
-    """
-        
-    # decide sentiment as positive, negative and neutral and count each .
+    print("Overall sentiment dictionary is : ", sentiment_dict)
+    #print("sentence was rated as ", sentiment_dict['neg']*100, "% Negative")
+    #print("sentence was rated as ", sentiment_dict['neu']*100, "% Neutral")
+    #print("sentence was rated as ", sentiment_dict['pos']*100, "% Positive")
+    print("Sentence Overall Rated As", end = " ")
+    
+    # decide sentiment as positive, negative and neutral and count each sentence based on compound score.
     if sentiment_dict['compound'] >= 0.05 :
         
-        """
+        
         print("Positive")
-        """
+        
         pos += 1
-
     elif sentiment_dict['compound'] <= - 0.05 :
-        """
+        
+        
         print("Negative")
-        """
+        
         neg += 1
     else :
-        """
+        
+        
         print("Neutral")
-        """
+        
         neutral += 1
-    
-    """
-    print()
-    """
 
-"""
-#display all tokens and their tags:
-for word in WordTagList:
-print("Word:", word["word"] ," Dep: ", word["dep"]," Pos: ", word["pos"])
-"""
+    #This loop goes through every word in each sentence
+    #Create a 3 tuple List of all tokens which contains each word, its dependency tag and its part of speech tag
+    for word in sentence:
+        WordTagList.append({"word": word.text, "dep": word.dep_, "pos": word.pos_})
     
-"""
+    print()
+
 #display the number of sentences rated positive, negative, or neutral
+print()
 print("positive sentences = ", pos, " negative sentences = ", neg, " neutral sentences = " , neutral)
-"""
+print()
+
+print()
+print("Named Entities:")
+print()
+
+
+# Create a list of 2 tuple entity objects consisting of entities and their label (what type of entity they are)
+# and adds them to a table to display the results
+entityList = []
+entityTable = PrettyTable(["Entity", "Label", "Label Meaning"])
+for ent in fullDoc.ents:
+    entityList.append({"entity": ent.text, "entityType": ent.label})
+    entityTable.add_row([ent.text, ent.label_, spacy.explain(ent.label_)])
+
+# Display the results if any named entities have been recognized
+if entityList == []:
+    print("Detected no named entities")
+else:
+    print(entityTable)
+
+print()
+print("Word with Tags:")
+print()
+
+#display all tokens and their given dependency and POS tags in a table:
+wordTable = PrettyTable(['Word', 'Dep', 'Pos'])
+for word in WordTagList:
+    wordTable.add_row([word["word"], word["dep"], word["pos"]])
+print(wordTable)
