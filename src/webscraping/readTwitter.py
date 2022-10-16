@@ -41,7 +41,7 @@ if __name__ == "__main__":
         # create a file name for the csv file
         fileName = "tweets" + str(i) + ".csv"
         i+=1 
-        data = getTweets(client,query,results=10) # grabs the most recent tweets
+        data = getTweets(client,query,iterate=10) # grabs the most recent tweets
         data.to_csv(fileName,index=False) # creates the csv file
         print("Done searching for those tweets.\n")
 
