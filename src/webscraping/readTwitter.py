@@ -31,7 +31,7 @@ if __name__ == "__main__":
     i = 1
     client = tweepy.Client(bearer_token=con.BEARER_TOKEN) # gives us access to the api in the program
 
-    f = open("queries.txt","r")
+    f = open("queries.md","r")
     queries=[]
     for text in f:
         queries.append(text)
