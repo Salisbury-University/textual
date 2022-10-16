@@ -63,12 +63,12 @@ for sentence in sentences:
     # object gives a sentiment dictionary.
     # which contains pos, neg, neu, and compound scores.
      
-    print("Sentence: ",sentence.text) 
+    print("Sentence:",sentence.text) 
     
 
     sentiment_dict = sid_obj.polarity_scores(sentence.text)
     
-    print("Overall sentiment dictionary is : ", sentiment_dict)
+    print("Overall sentiment dictionary is :", sentiment_dict)
     #print("sentence was rated as ", sentiment_dict['neg']*100, "% Negative")
     #print("sentence was rated as ", sentiment_dict['neu']*100, "% Neutral")
     #print("sentence was rated as ", sentiment_dict['pos']*100, "% Positive")
