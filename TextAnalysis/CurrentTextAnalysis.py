@@ -34,9 +34,11 @@ suffixes = nlp.Defaults.suffixes + [r"[\.\,\?\!\:\;\'\"\}]"] + [r"\[\d+\]"]#[r"[
 suffix_regex = spacy.util.compile_suffix_regex(suffixes)
 nlp.tokenizer.suffix_search = suffix_regex.search
 
-#open and read in our text
-with open("positive.txt", "r") as f:
-    text = f.read()
+
+positive = "When I was a child many decades ago, an out of state aunt used to send us these every Christmas. I hadn't had them in years when I stumbled across these on Amazon. Same exact container. Same exact delicious cookies! It's so great to know that there are at least a few things in this world that don't change!"
+negative = "I bought this product after reading all the good reviews, but i am totally disappointed. The lip mask is thick so it gets all around my pillow when I sleep, and it's not moisturizing. When I wake up my lips feel dry. A total waste of money!! I don't recommend it."
+
+text = negative
 
 #turn the text into a doc using the nlp
 fullDoc = nlp(text)
@@ -63,7 +65,7 @@ for sentence in sentences:
     # object gives a sentiment dictionary.
     # which contains pos, neg, neu, and compound scores.
      
-    print("Sentence:",sentence.text) 
+    print("Sentence:", sentence.text) 
     
 
     sentiment_dict = sid_obj.polarity_scores(sentence.text)
