@@ -87,6 +87,8 @@ def readWebpage(pageCount):
         if flag==0:
             pageHtml=find_html(tempURL)
             totalLen+=(len(pageHtml))
+            if "Language: English" not in pageHtml:
+                print("Warning: Source may not be in English")
             #print(totalLen)
             print(tempURL)
             title=get_title(pageHtml)
