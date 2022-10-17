@@ -32,7 +32,7 @@ def get_title(htmlPage):
 
 def get_date(html_page):
     openT="Release Date:"
-    closedT="Language: "
+    closedT="\n"
     if html_page is None:
         return "DATE NOT FOUND"
     elif openT not in html_page or closedT not in html_page:
@@ -40,7 +40,7 @@ def get_date(html_page):
     else:
         index=html_page.find(openT)
         start=index+len(openT)
-        end=html_page.find(closedT)
+        end=html_page.find(closedT, start)
         return html_page[start:end]
 
 
@@ -57,12 +57,8 @@ def get_author(html_page):
         start=index+len(openT)
         end=html_page.find(closedT)
         end2=html_page.find(closedT2)
-        if closedT not in html_page and closedT2 not in html_page:
-            print("not in at all")
-        elif len(html_page[start:end])<len(html_page[start:end2]):
-            return html_page[start:end]
-        else:
-            return html_page[start:end2]
+        end3=html_page.find("\n", start)
+        return html_page[start:end3]
 
 
 def readWebpage(pageCount):
