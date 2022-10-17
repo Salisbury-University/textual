@@ -7,7 +7,7 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 from string import punctuation
-numIter=10
+numIter=20
 URLBEGIN="https://www.gutenberg.org/cache/epub"
 def find_html(purl):
     page=urlopen(purl)
