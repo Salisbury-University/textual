@@ -216,7 +216,7 @@ if __name__ =="__main__":
     #Write the pages to the list
     pageCounts=[]
     for i in range(mp.cpu_count()):
-        pageCounts.append(50)
+        pageCounts.append(20)
     
     #Print information to the console to inform the user
     print("Running")
