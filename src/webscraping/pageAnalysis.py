@@ -595,7 +595,7 @@ if __name__ == "__main__":
 
 	#tech, hist, ad, reli, poli, sci, cul, nat, eco, gov
 
-		processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government)
+		processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports)
 
 		# iterate through all of the htmls and build the csv file 
 
