@@ -8,6 +8,7 @@ import datetime
 import numpy as np
 import nltk
 import json
+import sys
 
 ERROR_THRESHOLD = 0.2
 
@@ -26,7 +27,7 @@ nltk.download('punkt')
 tech = ['cybersecurity', 'internet','communication','application','technical',
 'robotics','wheel','automation','energy','applied','devices','tools','capabilities',
 'wireless','wi-fi','scientific','equipment','machinery','knowledge','software','hardware',
-'storage','tech,gadget','business']
+'storage','tech','gadget','business', 'technology', 'watch', 'mobile', 'phone']
 hist = ['historic','history','age','story','etymology','chronical','period','era',
 'biography','arts','iconology','trace','geology','milestone','background','record','ancient']
 advertisement = ['buy','sell','cheap','product','new','easy','simple','promotion',
@@ -53,15 +54,15 @@ economy = ['money','stocks','bonds','rates','morgage','crash','DOW','S&P','fed',
 government = ['policy','governmental','congress','house','senate','security','military',
 'weapons','debt','national','nation','united','president','vice','representative','council',
 'economy','impeach','elect','vote','campaign','money','fundraise','gerrymander']
+sports = ['football', 'touchdown', 'score', 'extra point', 'soccer', 'goal', 'offsides', 'kick',
+'home', 'run', 'bases', 'bat', 'ball', 'puck', 'hockey', 'baseball', 'skates', 'rink', 'game', 'overtime',
+'NFL', 'points', 'bowling', 'volleyball', 'spike'] 
 
-all_keywords = tech + hist + advertisement + religion + political + scientific + cultural + nature + economy + government
+all_keywords = tech + hist + advertisement + religion + political + scientific + cultural + nature + economy + government + sports
 
-# a list to store all of the html files
-
-global htmls
-htmls = []  
-
-
+# load_samples -> reads in a text file with samples split with ==========
+# parameters -> file_name : a file name that can be read
+# returns -> a list of the samples
 
 def load_samples(file_name): 
 
@@ -71,7 +72,7 @@ def load_samples(file_name):
 
 		text = f.read()
 
-	all_samples = text.split("===========")
+	all_samples = text.split("=========")
 
 	return all_samples
 
@@ -84,9 +85,9 @@ def load_samples(file_name):
 # returns -> a tuple of keyword processors 0, 1, 2, and 3 representing all
 #   keywords, technology, history, and consumer. 
 
-def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, gov): 
+def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, gov, sport): 
 
-    # KeywordProcessor() objects to store keywords 
+  # KeywordProcessor() objects to store keywords 
 
 	keyword_processor0 = KeywordProcessor()
 	keyword_processor1 = KeywordProcessor()
@@ -99,9 +100,10 @@ def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, g
 	keyword_processor8 = KeywordProcessor()
 	keyword_processor9 = KeywordProcessor()
 	keyword_processor10 = KeywordProcessor()
+	keyword_processor11 = KeywordProcessor()
 
 
-    # each loop assigns the proper keyword to the right objects
+  # each loop assigns the proper keyword to the right objects
 
 	for word in keywords: 
 		keyword_processor0.add_keyword(word)
@@ -136,6 +138,9 @@ def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, g
 	for word in gov: 
 		keyword_processor10.add_keyword(word)
 
+	for word in sport:
+		keyword_processor11.add_keyword(word)
+
 	keyword_processor_list = []
 
 	keyword_processor_list.append(keyword_processor0)
@@ -149,6 +154,7 @@ def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, g
 	keyword_processor_list.append(keyword_processor8)
 	keyword_processor_list.append(keyword_processor9)
 	keyword_processor_list.append(keyword_processor10)
+	keyword_processor_list.append(keyword_processor11)
     
 	return keyword_processor_list
 
@@ -187,8 +193,9 @@ def determine_category(html, keyword_processor_list):
 	y8 = len(keyword_processor_list[8].extract_keywords(text))
 	y9 = len(keyword_processor_list[9].extract_keywords(text))
 	y10 = len(keyword_processor_list[10].extract_keywords(text))
+	y11 = len(keyword_processor_list[11].extract_keywords(text))
 
-	#print("y0: %d\ny1: %d\ny2: %d\ny3: %d\ny4: %d\ny5: %d\ny6: %d\ny7: %d\ny8: %d\ny9: %d\ny10: %d\n"% (y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10))
+	#print("y0: %d\ny1: %d\ny2: %d\ny3: %d\ny4: %d\ny5: %d\ny6: %d\ny7: %d\ny8: %d\ny9: %d\ny10: %d\ny11: %d\n"% (y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11))
 
 	values = [] 
 
@@ -204,6 +211,7 @@ def determine_category(html, keyword_processor_list):
 	values.append(("nat",  float(matching_val(y0, y8))))
 	values.append(("eco",  float(matching_val(y0, y9))))
 	values.append(("gov",  float(matching_val(y0, y10))))
+	values.append(("sport", float(matching_val(y0, y11))))
 
     # if statement to determine the most likely category 
 
@@ -232,7 +240,7 @@ def insert_csv(categorized_data):
 
 	data.reset_index()
     
-	print("Data writted to categories.csv")
+	print("Data written to categories.csv")
 
 
 # clean_data() -> loads and cleans the classified data, removes null values
@@ -275,7 +283,7 @@ def create_words_list(training_data):
 		words = []		
 		categories = []
 		files = [] 
-		ignore_words = ['?', ',', '.', ';', ':']
+		ignore_words = []
     
     # tokenizes each word in the source html, adds words to the list, adds files
     # to the list, and adds classes to their list
@@ -298,6 +306,10 @@ def create_words_list(training_data):
 
 		words = list(set(words))
 		categories = list(set(categories))
+
+		print(len(files), "files")
+		print(len(categories), "categories")
+		print(len(words), "unique stemmed words")
 
 		return words, categories, files
 
@@ -558,7 +570,9 @@ def load_data(synapse_file):
 
 def classify(sentence, synapse_0, synapse_1, words, categories):
 
-	results = think(sentence, synapse_0, synapse_1, words)
+	results = think(sentence, synapse_0, synapse_1, words)	
+
+	print(results)
 
 	results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
 	results.sort(key=lambda x: x[1], reverse=True) 
@@ -573,17 +587,17 @@ if __name__ == "__main__":
 	categorized_data = []
 
 	samples = load_samples('plaintext.txt')
-
+	
 	for item in samples: 
 		htmls.append(item)
 
-    # gather the KeywordProcessor() objects
+  # gather the KeywordProcessor() objects
 
 	#tech, hist, ad, reli, poli, sci, cul, nat, eco, gov
 
-	processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government)
+		processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government)
 
-	# iterate through all of the htmls and build the csv file 
+		# iterate through all of the htmls and build the csv file 
 
 	for text in htmls: 
 		
@@ -615,28 +629,40 @@ if __name__ == "__main__":
 	training = tokenized_bag[0]
 	output = tokenized_bag[1]
 
-	# TRAINING
+	if(len(sys.argv) == 2 and (sys.argv[1] == "--train" or sys.argv[1] == "-t")):
 
-	x = np.array(training)
-	y = np.array(output)
+		# TRAINING
 
-	start_time = time.time()
+		x = np.array(training)
+		y = np.array(output)
 
-	train(x, y, categories, words, hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.2)
+		start_time = time.time()
 
-	elapsed_time = time.time() - start_time
-	print ("processing time:", elapsed_time, "seconds")
+		train(x, y, categories, words, hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.2)
 
-	# load file
+		elapsed_time = time.time() - start_time
+		print ("processing time:", elapsed_time, "seconds")
 
-	loaded_data = load_data('synapses.json')
+	elif(len(sys.argv) == 2 and (sys.argv[1] == "--test" or sys.argv[1] == "-te")): 
 
-	synapse = loaded_data[0]
-	synapse_0 = loaded_data[1]
-	synapse_1 = loaded_data[2]
+		# load file
 
-	# below you can begin testing after training 
+		loaded_data = load_data('synapses.json')
 
-	result = classify("Technology is a wonderful product with tons of related gagdets with new information.", synapse_0, synapse_1, words, categories)
+		synapse = loaded_data[0]
+		synapse_0 = loaded_data[1]
+		synapse_1 = loaded_data[2]
 
-	print(result)
+		# below you can begin testing after training 
+
+		sentence_input = input("Please enter a sentence to be classified or 'N' to stop.\n")
+
+		while(sentence_input != 'N'): 
+
+			result = classify(sentence_input, synapse_0, synapse_1, words, categories)
+			print(result)
+			sentence_input = input("Please enter a sentence to be classified or 'N' to stop.\n")
+
+	else: 
+		
+		print("Unidentified command line arguments. Please use --test or --train.\n")
