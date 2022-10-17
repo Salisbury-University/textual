@@ -7,7 +7,7 @@
 # sentiment of each sentence using VADER's SentimentIntensityAnalyzer and rates the sentence as positive, negative, or neutral. 
 
 # Input:
-# Text file containing a webscraped document (Currently only tested on wikipedia articles)
+# string containing our text of interest (Currently only tested on wikipedia articles)
 
 # Result:
 # The program should create a list of tagged Entities, tagged Tokens(Words/Punctuations), and count the number of positive, 
