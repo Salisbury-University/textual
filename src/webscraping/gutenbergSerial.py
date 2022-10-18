@@ -99,10 +99,11 @@ if __name__=="__main__":
     pageCounts=[]
     for i in range(mp.cpu_count()*numIter):
         readWebpage(i);
-    print(results)
+    '''print(results)
     totalLen=0
     for i in results:
         totalLen+=i
     pool.close()
     print("Average HTML length= "+str(round(totalLen/(numIter*mp.cpu_count()),2)))
+    '''
     print("Done")
