@@ -12,7 +12,21 @@
 
 ## Current Status 
 
-### **Sprint One**: 19 September 2022 - XX October 2022
+### **Sprint Two**: 17 October 2022 - XX November 2022
+    
+    We were successful in our first sprint goals. We researched, built scrapers, and
+    prototyped and built scripts (including neural networks) to analyze and create
+    necessary metadata. We additionally reviewed fundamental ideas in Python.
+    
+    This next sprint will be focused on refining what we created in the first sprint.
+    We will also begin to look towards the future in phase 2; we will begin to scope
+    out ideas for our database design and implementation. We also need to speed up (or
+    implement) parallelization in some areas. 
+    
+    We hope to, by the end of this spint, have a prototype database and potentially
+    prototype interface with said database. 
+
+### **Sprint One**: 19 September 2022 - 17 October 2022
 
     In the first sprint we will primarily focus on research, which includes
     looking into more sources to scrape, reviewing Python, learning functional
