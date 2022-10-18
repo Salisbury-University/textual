@@ -35,7 +35,7 @@ suffix_regex = spacy.util.compile_suffix_regex(suffixes)
 nlp.tokenizer.suffix_search = suffix_regex.search
 
 #positive review about cookies from Amazon
-positive = "When I was a child many decades ago, an out of state aunt used to send us these every Christmas. I hadn't had them in years when I stumbled across these on Amazon. Same exact container. Same exact delicious cookies! It's so great to know that there are at least a few things in this world that don't change!"
+positive = "When I was a child many decades ago, an out of state aunt used to send us these every Christmas. I was very pleased to find these on Amazon. Same exact container. Same exact delicious cookies! It's so great to know that there are at least a few things in this world that don't change!"
 
 #negative review for lip masks from Amazon
 negative = "I bought this product after reading all the good reviews, but i am totally disappointed. The lip mask is thick so it gets all around my pillow when I sleep, and it's not moisturizing. When I wake up my lips feel dry. A total waste of money!! I don't recommend it."
