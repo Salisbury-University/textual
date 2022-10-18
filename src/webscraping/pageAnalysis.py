@@ -572,8 +572,6 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 
 	results = think(sentence, synapse_0, synapse_1, words)	
 
-	print(results)
-
 	results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
 	results.sort(key=lambda x: x[1], reverse=True) 
 	return_results =[[categories[r[0]],r[1]] for r in results]
@@ -586,50 +584,37 @@ if __name__ == "__main__":
 	htmls = []
 	categorized_data = []
 
-	samples = load_samples('plaintext.txt')
+	if(len(sys.argv) == 2 and (sys.argv[1] == "--train" or sys.argv[1] == "-t")):
+
+		samples = load_samples('new_plaintexts.txt')
+		
+		i = 0	
 	
-	for item in samples: 
-		htmls.append(item)
-
-  # gather the KeywordProcessor() objects
-
-	#tech, hist, ad, reli, poli, sci, cul, nat, eco, gov
+		for item in samples:
+				htmls.append(item)
+				if(i == 25):
+					break
+				i = i+1
 
 		processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports)
 
-		# iterate through all of the htmls and build the csv file 
+		for text in htmls:
+				cat = determine_category(text, processed_keywords_list)
+				categorized_data.append({'category': str(cat), 'source_html': str(text)})
 
-	for text in htmls: 
+		insert_csv(categorized_data)
+
+		training_data = create_training_data(clean_data('categories.csv'))
+		words_categories_files = create_words_list(training_data)
+		words_categories_files = create_words_list(training_data)
 		
-		cat = determine_category(text, processed_keywords_list)
-		categorized_data.append({'category': str(cat), 'source_html': str(text)})
-	
-	# insert the data into the csv file
+		words = words_categories_files[0]
+		categories = words_categories_files[1]
+		files = words_categories_files[2]
 
-	insert_csv(categorized_data)
-
-	# creates the training data
-
-	training_data = create_training_data(clean_data('categories.csv'))
-
-	# gathers the words/categories/files
-
-	words_categories_files = create_words_list(training_data)
-
-	words = words_categories_files[0]
-	categories = words_categories_files[1]
-	files = words_categories_files[2]
-
-	# creates the tokenized bag of words
-
-	tokenized_bag = create_tokenized_words_bag(words, categories, files)
-
-	# get training data and ouput data
-
-	training = tokenized_bag[0]
-	output = tokenized_bag[1]
-
-	if(len(sys.argv) == 2 and (sys.argv[1] == "--train" or sys.argv[1] == "-t")):
+		tokenized_bag = create_tokenized_words_bag(words, categories, files)
+		training = tokenized_bag[0]
+		output = tokenized_bag[1]		
 
 		# TRAINING
 
@@ -643,7 +628,15 @@ if __name__ == "__main__":
 		elapsed_time = time.time() - start_time
 		print ("processing time:", elapsed_time, "seconds")
 
-	elif(len(sys.argv) == 2 and (sys.argv[1] == "--test" or sys.argv[1] == "-te")): 
+	elif(len(sys.argv) == 2 and (sys.argv[1] == "--test" or sys.argv[1] == "-te")):
+		
+		training_data = create_training_data(clean_data('categories.csv'))
+		words_categories_files = create_words_list(training_data)
+		words_categories_files = create_words_list(training_data)
+
+		words = words_categories_files[0]
+		categories = words_categories_files[1]
+		files = words_categories_files[2] 
 
 		# load file
 
@@ -655,13 +648,30 @@ if __name__ == "__main__":
 
 		# below you can begin testing after training 
 
-		sentence_input = input("Please enter a sentence to be classified or 'N' to stop.\n")
+		sentence_input = input("Please enter a sentence to be classified.\n")
 
-		while(sentence_input != 'N'): 
+		result = classify(sentence_input, synapse_0, synapse_1, words, categories)
 
-			result = classify(sentence_input, synapse_0, synapse_1, words, categories)
-			print(result)
-			sentence_input = input("Please enter a sentence to be classified or 'N' to stop.\n")
+		counter=0
+
+		if(len(result) > 1): 
+
+			max_list = result[0]
+
+			for i in range(len(result)):
+		
+				if(result[i][1] < max_list[1]):
+		
+					max_list = result[i]
+					counter = counter + 1;
+		else: 
+			
+			print(result) 
+
+		if(counter != 0):
+
+			print(max_list[0])		
+
 
 	else: 
 		
