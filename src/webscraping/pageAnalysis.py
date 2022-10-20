@@ -587,20 +587,16 @@ if __name__ == "__main__":
 	if(len(sys.argv) == 2 and (sys.argv[1] == "--train" or sys.argv[1] == "-t")):
 
 		samples = load_samples('new_plaintexts.txt')
-		
-		i = 0	
 	
 		for item in samples:
-				htmls.append(item)
-				if(i == 25):
-					break
-				i = i+1
+			htmls.append(item)
+			
 
 		processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports)
 
 		for text in htmls:
-				cat = determine_category(text, processed_keywords_list)
-				categorized_data.append({'category': str(cat), 'source_html': str(text)})
+			cat = determine_category(text, processed_keywords_list)
+			categorized_data.append({'category': str(cat), 'source_html': str(text)})
 
 		insert_csv(categorized_data)
 
@@ -663,7 +659,7 @@ if __name__ == "__main__":
 				if(result[i][1] < max_list[1]):
 		
 					max_list = result[i]
-					counter = counter + 1;
+					counter = counter + 1
 		else: 
 			
 			print(result) 
