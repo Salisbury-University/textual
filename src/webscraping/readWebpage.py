@@ -6,6 +6,7 @@ import functools as ft
 import multiprocessing as mp
 import threading
 from collections import Counter
+import time
 
 #All punctuation characters
 from string import punctuation
@@ -153,49 +154,60 @@ def freq_count(input_text):
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
-    c=0
-    flag=0
-    try:
-        status_code=urllib.request.urlopen(URL).getcode()
-    except urllib.error.HTTPError as err:
-        print("http",err.code, "ERROR")
-        flag=1
-    if flag==0: 
-        for i in range(pageCount):
-            c+=1
-            pageHtml=find_html(URL)
+		
+		plaintext_file = open_file("plaintext.txt") 
+
+		c=0
+		flag=0
+		try:
+				status_code=urllib.request.urlopen(URL).getcode()
+		except urllib.error.HTTPError as err:
+				#print("http",err.code, "ERROR")
+				flag=1
+		if flag==0: 
+				for i in range(pageCount):
+						c+=1
+						pageHtml=find_html(URL)
             #Get the text from the HTML page, remove empty lines, and count the frequency of each word
-            text = get_text(pageHtml)
-            text = remove_empty(text)
+						text = get_text(pageHtml)
+						text = remove_empty(text)
             
             #Get metadata from the HTML file
-            metadata=get_metadata(pageHtml)
+						metadata=get_metadata(pageHtml)
 
             #Save page source to a separate file
-            save_html(pageHtml, metadata[0])
+						save_html(pageHtml, metadata[0])
 
             #Print the page metadata to the screen
-            for data in metadata:
-                print(data)
+						#for data in metadata:
+								#print(data)
 
             #Ensure thread synchronization to avoid race condition
-            while global_lock.locked():
-                time.sleep(0.01)
+						while global_lock.locked():
+								time.sleep(0.01)
 
             #If the lock is available, grab it write the metadata and frequency to the file and return the lock
-            global_lock.acquire()
-            for data in metadata:
-                output_file.write(data + '\n')
-            output_file.write('\n')
-            freq_list = freq_count(text)
+						global_lock.acquire()
+
+						plaintext_file.write(metadata[0])
+						plaintext_file.write("\n")
+						plaintext_file.write(text)
+						plaintext_file.write("\n=========\n")
+
+						for data in metadata:
+								output_file.write(data + '\n')
+						output_file.write('\n')
+						freq_list = freq_count(text)
            
             #Print the frequency for each word
-            output_file.write(freq_list + '\n')
-            global_lock.release()
-            print("Num loop: "+str(i)) 
-    flag=0
+						output_file.write(freq_list + '\n')
+        
+						global_lock.release()
+						#print("Num loop: "+str(i)) 
+		flag=0
 
-if __name__ =="__main__":
+
+if __name__ == "__main__":
     #Open the output file
     output_file = open_file("output.txt")
     pool=mp.Pool(mp.cpu_count()//4)
@@ -206,15 +218,15 @@ if __name__ =="__main__":
         pageCounts.append(25)
     
     #Print information to the console to inform the user
-    print("running")
-    print("Number of available processors: ", mp.cpu_count())
+    #print("running")
+    #print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
     
     #Stop threads and write output to console
     pool.close()
-    print("Done... output saved to file")
+    #print("Done... output saved to file")
 
     #Close output file
     output_file.close()
