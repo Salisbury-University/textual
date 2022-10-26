@@ -18,7 +18,7 @@ if __name__ == "__main__":
         # create a file name for the csv file
         fileName = "tweets" + str(i) + ".csv"
         i+=1 
-        data = tw.getTweets(client,query,1000) # grabs the most recent tweets
+        data = tw.get_tweets(client,query,1000) # grabs the most recent tweets
         data.to_csv(fileName,index=False) # creates the csv file
         print("Done searching for those tweets.\n")
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     for user in users:
         userId = client.get_user(username=user)
         print('Grabbing Tweets from @{}...'.format(user))
-        print('Tweets Received: {}'.format(tw.getUserTweets(client,user,userId.data.id)))
+        print('Tweets Received: {}'.format(tw.get_user_tweets(client,user,userId.data.id)))
         print('Finished grabbing tweets.\n')
 
     print('Done.\nTweets saved to *.csv files.')

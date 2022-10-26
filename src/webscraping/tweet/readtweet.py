@@ -14,7 +14,7 @@ CLIENT_SECRET = 'rC6BrlAUbhZE6aDl9JSzDEzOe0IlZiL6LbU9OftOQ8xhg8rgan'
 Function grabs the most recent tweets from a certain user with a specificed user ID
 (Twitter assigns a unique ID to every user and we can access their recent tweets)
 """
-def getUserTweets(client,username,userId,result_limit=1000):
+def get_user_tweets(client,username,userId,result_limit=1000):
     fileName = username + ".csv"
     tweets = []
     for response in tweepy.Paginator(client.get_users_tweets,id=userId,exclude=['retweets','replies'],
@@ -33,7 +33,7 @@ def getUserTweets(client,username,userId,result_limit=1000):
 Function gets the most recent tweets with a specific search query
        (See query formatting on twitter developer website)
 """
-def getTweets(client,search,wanted_results=100):
+def get_tweets(client,search,wanted_results=100):
     tweetList = []
     for response in tweepy.Paginator(client.search_recent_tweets,query=search,
                                  expansions='author_id',tweet_fields=['created_at','public_metrics'],
@@ -56,8 +56,12 @@ This function will grab archieved tweet instead of the most recent with a specif
                              (Requires academic research access)
                                        (Coming Soon...)
 """
+def get_archive_tweets(client,search,date_start,date_end,wanted_results=100):
+    pass
 
 """
 A function that will get comments of a specific tweet
                   (Coming Soon...)
 """
+def get_replies(client,tweet_id,wanted_results=100):
+    pass
