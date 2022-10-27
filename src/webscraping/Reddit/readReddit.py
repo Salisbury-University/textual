@@ -116,24 +116,28 @@ def get_data(headers, subreddit):
                 "downvotes" : post["data"]["downs"]},
                 ignore_index=True) 
 
+            # Save each post separately
+            # Save the dataframe as a json file
+            save_as_json(subreddit_content, "r_" + post["data"]["subreddit"] + "_" + post_id)
+
             # Increment iteration
             i += 1
 
             # Get the comments for the current post
             # Calls a separate get request using the parent id of the current post
-            get_comments(subreddit_header) 
+            get_comments(subreddit_header, subreddit_content["post_id"][0]) 
         
+            # Clear dataframe
+            subreddit_content = subreddit_content[0:0]
+
         # Get post after the current last from the previous fetch
         # The maximum allowed number of post per fetch is 100
         # By getting the id of the last post in that current iteration and searching for the next 100 post after it we can all the post from the subreddit
         # We keep doing this until there are no more post after
         request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100", "after" : post_type_id}).json()
-        
-    # Save the dataframe as a json file
-    save_as_json(subreddit_content, subreddit_content["subreddit"][0])
-
+         
 # Get comments given a post id
-def get_comments(post):
+def get_comments(post, post_id):
 
     # Request comments from specific post: limit max number of comments taken, depth max steps through comment tree
     request_comments = requests.get("https://oauth.reddit.com/" + post, headers=headers, params={"limit" : "500", "depth" : "5"}).json()
@@ -164,13 +168,13 @@ def get_comments(post):
             post_comments = post_comments.append({
                 "subreddit" : comment["data"]["subreddit"],
                 "author" : comment["data"]["author"],
-                "comment_id" : comment["kind"] + comment["data"]["id"],
+                "comment_id" : comment["kind"] + "_" + comment["data"]["id"],
                 "body" : comment["data"]["body"],
                 "created_utc" : format_time(comment["data"]["created_utc"]),
                 "link" : "https://www.reddit.com/" + comment["data"]["permalink"],
                 "upvotes" : comment["data"]["ups"],
                 "downvotes" : comment["data"]["downs"],
-                "parent_post" : post},
+                "parent_post_id" : post_id},
                 ignore_index=True)
         except KeyError:
             # If there were no comments on that post, print an error
@@ -180,8 +184,7 @@ def get_comments(post):
     
     if comment_found:
         # Get the post id and link and save an output file under that name
-        output_name = post.replace("/", "_")
-        save_as_json(post_comments, output_name)
+        save_as_json(post_comments, post_id + "_comments")
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
