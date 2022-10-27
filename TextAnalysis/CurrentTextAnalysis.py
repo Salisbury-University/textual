@@ -1,140 +1,109 @@
-#CurrentTextAnalysis.py
-
-# This Program takes in one string and uses parses it using spaCy's nlp object to parse the text and turn it into a spaCy doc.
-# The doc object contains a list of tokens determined by spaCy's tokenizer. The Program reads a string of text read from a file of any length.
-# It creates a list of all recognized entities and their corresponding entity labels determined by spaCy's NER. The program goes through every token 
-# in each sentence creating a List of each token along with its dependency tag and part of speech tag determined by spaCy. It then analyzes the 
-# sentiment of each sentence using VADER's SentimentIntensityAnalyzer and rates the sentence as positive, negative, or neutral. 
-
-# Input:
-# string containing our text of interest (Currently only tested on wikipedia articles)
-
-# Result:
-# The program should create a list of tagged Entities, tagged Tokens(Words/Punctuations), and count the number of positive, 
-# neutral, and negative sentences.
-
-# Please note: All lines of code that are commented out in the form:
-"""
-<lines of code>
-"""
-# are for testing and debugging.
+#TextAnalysisFuncts.py
 
 import spacy
-import re
+#import re <-- might not be needed but leaving it here just incase
 import sklearn
 import pandas as pd
-from prettytable import PrettyTable
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-#create the nlp object
-nlp = spacy.load("en_core_web_sm")
+# This Function creates a list of 3 tuples containing sentence, its determined sentiment, and the order it appears in text.
+def SentimentAnalysis(text):
+    #create the nlp object
+    nlp = spacy.load("en_core_web_sm")
 
-#add suffix rules to the tokenizer in our nlp object to seperate wikipedia in-text citations:
-suffixes = nlp.Defaults.suffixes + [r"[\.\,\?\!\:\;\'\"\}]"] + [r"\[\d+\]"]#[r"[\.\,\?\!\:\;\'\"\}]\[\d+\]"]
-suffix_regex = spacy.util.compile_suffix_regex(suffixes)
-nlp.tokenizer.suffix_search = suffix_regex.search
+    #add suffix rules to the tokenizer in our nlp object to seperate wikipedia in-text citations:
+    suffixes = nlp.Defaults.suffixes + [r"[\.\,\?\!\:\;\'\"\}]"] + [r"\[\d+\]"]
+    suffix_regex = spacy.util.compile_suffix_regex(suffixes)
+    nlp.tokenizer.suffix_search = suffix_regex.search
 
-#positive review about cookies from Amazon
-positive = "When I was a child many decades ago, an out of state aunt used to send us these every year on Christmas. I was very pleased to find these on Amazon. Same exact container. Same exact delicious cookies! It's so great to know that there are at least a few things in this world that don't change!"
+    #turn the text into a SpaCy doc using the nlp
+    fullDoc = nlp(text)
 
-#negative review for lip masks from Amazon
-negative = "I bought this product after reading all the good reviews, but i am totally disappointed. The lip mask is thick so it gets all around my pillow when I sleep, and it's not moisturizing. When I wake up my lips feel dry. A total waste of money!! I don't recommend it."
+    #separate our doc into a tuples of sentences
+    sentences = tuple(fullDoc.sents)
 
-text = positive
+    # Create a SentimentIntensityAnalyzer object.
+    sid_obj = SentimentIntensityAnalyzer()
 
-#turn the text into a doc using the nlp
-fullDoc = nlp(text)
+    # Where we will store each tuple of data
+    sentiments = []
+    #This Loop does a sentence by sentence analysis of the text.
+    for index, sentence in enumerate(sentences, 1):
 
-#separate our document into a list of sentences
-sentences = list(fullDoc.sents)
+        # polarity_scores is a method of SentimentIntensityAnalyzer
+        # object gives a sentiment dictionary.
+        # which contains pos, neg, neu, and compound scores.
+        
+        sentiment_dict = sid_obj.polarity_scores(sentence.text)
+        
+        # decide sentiment as positive, negative and neutral and count each sentence based on compound score.
+        if sentiment_dict['compound'] >= 0.05 :
+            result = "pos"
+            
+        elif sentiment_dict['compound'] <= - 0.05 :
+            result = "neg"
+            
+            
+        else :
+            result = "neu"
 
-# Create a SentimentIntensityAnalyzer object.
-sid_obj = SentimentIntensityAnalyzer()
-
-# counters for the number of sentences determined to have
-# positive, negative, and neutral sentiments.
-pos = 0
-neg = 0
-neutral = 0
-
-#List to store all tokens, their dependency tags, and pos tags
-WordTagList = []
-
-#This Loop does a sentence by sentence analysis of the text.
-for sentence in sentences:
-
-    # polarity_scores is a method of SentimentIntensityAnalyzer
-    # object gives a sentiment dictionary.
-    # which contains pos, neg, neu, and compound scores.
-     
-    print("Sentence:", sentence.text) 
+        thisTuple = tuple((sentence.text, result, index))
+        sentiments.append(thisTuple)
     
+    return sentiments
+        
 
-    sentiment_dict = sid_obj.polarity_scores(sentence.text)
+# This Function creates a list of 3 tuples containing words in the text, their part of speech and dependency tags
+def TagWords(text):
+    #create the nlp object
+    nlp = spacy.load("en_core_web_sm")
+
+    #add suffix rules to the tokenizer in our nlp object to seperate wikipedia in-text citations:
+    suffixes = nlp.Defaults.suffixes + [r"[\.\,\?\!\:\;\'\"\}]"] + [r"\[\d+\]"]#[r"[\.\,\?\!\:\;\'\"\}]\[\d+\]"]
+    suffix_regex = spacy.util.compile_suffix_regex(suffixes)
+    nlp.tokenizer.suffix_search = suffix_regex.search
+
+    #turn the text into a doc using the nlp
+    fullDoc = nlp(text)
+
+    #separate our document into a list of sentences
+    sentences = tuple(fullDoc.sents)
+
+    # Where we will store each tuple of data
+    wordTags = []
+
+    # This loops through all sentences in the text.
+    for sentence in sentences:
+        
+        #This loop goes through every word in each sentence
+        #Create a 3 tuple for each token which contains each word, its dependency tag and its part of speech tag
+        for word in sentence:
+            thisTuple = tuple((word.text, word.dep_, word.pos_))
+            wordTags = thisTuple
+    return wordTags
+
+
+# This Function creates a list of 2 tuples containing of entities and their label (what type of entity they are)
+def getEntities(text):
+ 
+
+    #create spaCy nlp object
+    nlp = spacy.load("en_core_web_sm")
+
+    #add suffix rules to the tokenizer in our nlp object to seperate wikipedia in-text citations as seperate tokens:
+    suffixes = nlp.Defaults.suffixes + [r"[\.\,\?\!\:\;\'\"\}]"] + [r"\[\d+\]"]#[r"[\.\,\?\!\:\;\'\"\}]\[\d+\]"]
+    suffix_regex = spacy.util.compile_suffix_regex(suffixes)
+    nlp.tokenizer.suffix_search = suffix_regex.search
+
+    #turn the text into a doc using the nlp object
+    fullDoc = nlp(text)
     
-    print("Overall sentiment dictionary is :", sentiment_dict)
-    #print("sentence was rated as ", sentiment_dict['neg']*100, "% Negative")
-    #print("sentence was rated as ", sentiment_dict['neu']*100, "% Neutral")
-    #print("sentence was rated as ", sentiment_dict['pos']*100, "% Positive")
-    print("Sentence Overall Rated As", end = " ")
-    
-    # decide sentiment as positive, negative and neutral and count each sentence based on compound score.
-    if sentiment_dict['compound'] >= 0.05 :
-        
-        
-        print("Positive")
-        
-        pos += 1
-    elif sentiment_dict['compound'] <= - 0.05 :
-        
-        
-        print("Negative")
-        
-        neg += 1
-    else :
-        
-        
-        print("Neutral")
-        
-        neutral += 1
+    #Where we will store each tuple of data
+    entities = []
 
-    #This loop goes through every word in each sentence
-    #Create a 3 tuple List of all tokens which contains each word, its dependency tag and its part of speech tag
-    for word in sentence:
-        WordTagList.append({"word": word.text, "dep": word.dep_, "pos": word.pos_})
-    
-    print()
+    for ent in fullDoc.ents:
+        thisTuple = tuple((ent.text, ent.label_))
+        entities.append(thisTuple)
 
-#display the number of sentences rated positive, negative, or neutral
-print()
-print("positive sentences = ", pos, " negative sentences = ", neg, " neutral sentences = " , neutral)
-print()
+    return entities
 
-print()
-print("Named Entities:")
-print()
-
-
-# Create a list of 2 tuple entity objects consisting of entities and their label (what type of entity they are)
-# and adds them to a table to display the results
-entityList = []
-entityTable = PrettyTable(["Entity", "Label", "Label Meaning"])
-for ent in fullDoc.ents:
-    entityList.append({"entity": ent.text, "entityType": ent.label})
-    entityTable.add_row([ent.text, ent.label_, spacy.explain(ent.label_)])
-
-# Display the results if any named entities have been recognized
-if entityList == []:
-    print("Detected no named entities")
-else:
-    print(entityTable)
-
-print()
-print("Word with Tags:")
-print()
-
-#display all tokens and their given dependency and POS tags in a table:
-wordTable = PrettyTable(['Word', 'Dep', 'Pos'])
-for word in WordTagList:
-    wordTable.add_row([word["word"], word["dep"], word["pos"]])
-print(wordTable)
