@@ -102,7 +102,6 @@ def process_keywords(keywords, tech, hist, ad, reli, poli, sci, cul, nat, eco, g
 	keyword_processor10 = KeywordProcessor()
 	keyword_processor11 = KeywordProcessor()
 
-
   # each loop assigns the proper keyword to the right objects
 
 	for word in keywords: 
