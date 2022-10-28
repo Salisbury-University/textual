@@ -9,6 +9,7 @@ import numpy as np
 import nltk
 import json
 import sys
+from keywords import tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports
 
 ERROR_THRESHOLD = 0.2
 
@@ -23,40 +24,6 @@ nltk.download('punkt')
 # TO DO
 # 	- load a list of all key words from somewhere
 #   - brainstorm more topics
-
-tech = ['cybersecurity', 'internet','communication','application','technical',
-'robotics','wheel','automation','energy','applied','devices','tools','capabilities',
-'wireless','wi-fi','scientific','equipment','machinery','knowledge','software','hardware',
-'storage','tech','gadget','business', 'technology', 'watch', 'mobile', 'phone']
-hist = ['historic','history','age','story','etymology','chronical','period','era',
-'biography','arts','iconology','trace','geology','milestone','background','record','ancient']
-advertisement = ['buy','sell','cheap','product','new','easy','simple','promotion',
-'pre-order','order','shipping','free','marketing','love','should']
-religion = ['religion','religious','pagan','islam','faith','christianity','church',
-'bible','muslim','convert','spiritual','doctrine','judaism','secular','evangelical','devout',
-'heathen','bigot','preach','tolerance','divinity','unbeliever']
-political = ['administration','affairs','associative','government','power','election',
-'elect','money','vote','bill','law','yea','nay','polls','money','public,office','representation',
-'state','sociopolitical','law','geopolitics','local','federal']
-scientific = ['discovery','biology','chemistry','astronomy','discovery','finding',
-'data','sources','climate','element','energy','etemology','botany','control','evolution',
-'experiment','fossil','fact','hypothesis','immunology','lab','measure','microbiology','mineral',
-'molecule','motion','observe','physical','research','science','theory','weather']
-cultural = ['culture','accomplishment','civilization','cultivation','lifestyle',
-'society','race','tradition','country','heritage','dress','crops','societies','courtesy',
-'belief','ethics','delicacy','advancement','civility','discrmination']
-nature = ['nature','trees','plants','animals','chemical','biological','reproduction',
-'weather','climate','coast','ocean','beach','desert','earth','planet','universe','life',
-'environmemt','nurture','wilderness','evolution','sun','stars']
-economy = ['money','stocks','bonds','rates','morgage','crash','DOW','S&P','fed','hikes',
-'strong','weak','buying','selling','capitalism','sector','savings','economy','budget',
-'capital','cash','bankrupt','competition','consumer','cut']
-government = ['policy','governmental','congress','house','senate','security','military',
-'weapons','debt','national','nation','united','president','vice','representative','council',
-'economy','impeach','elect','vote','campaign','money','fundraise','gerrymander']
-sports = ['football', 'touchdown', 'score', 'extra point', 'soccer', 'goal', 'offsides', 'kick',
-'home', 'run', 'bases', 'bat', 'ball', 'puck', 'hockey', 'baseball', 'skates', 'rink', 'game', 'overtime',
-'NFL', 'points', 'bowling', 'volleyball', 'spike'] 
 
 all_keywords = tech + hist + advertisement + religion + political + scientific + cultural + nature + economy + government + sports
 
