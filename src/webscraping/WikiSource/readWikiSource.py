@@ -1,7 +1,7 @@
+import urllib.request
 import requests
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-import urllib.request
 import functools as ft
 import multiprocessing as mp
 import threading
@@ -10,8 +10,11 @@ from collections import Counter
 #All punctuation characters
 from string import punctuation
 
-#Constant to 
-URL="https://en.wikipedia.org/wiki/Special:Random"
+#Import Regex
+import re
+
+#Constant to Random Page
+URL="https://en.wikisource.org/wiki/Special:RandomRootpage/Main"
 
 #List of scripts to be removed
 inlist = ['[document]',
@@ -71,6 +74,16 @@ def get_metadata(htmlPage):
     if len(tempSplitMod)>1:
         tempMod=tempSplitMod[1]
         info.append(tempMod[:10])
+
+    #Find the date of the document
+    tempTextDate = htmlPage.split("<span id=\"header_year_text\">")
+    if len(tempTextDate) > 1:
+        tempText = tempTextDate[1]
+        tempText = re.sub("</span>[\S\s]*", "", tempText)
+        tempText = re.sub("&.*;\(", "", tempText)
+        tempText = re.sub("\)[\S\s]*", "", tempText)
+        info.append(tempText)
+
     return info
 
 def find_info(htmlPage, tag):  # not being used now
@@ -198,15 +211,15 @@ def readWebpage(pageCount):
 if __name__ =="__main__":
     #Open the output file
     output_file = open_file("output.txt")
-    pool=mp.Pool(mp.cpu_count()//4)
+    pool=mp.Pool(mp.cpu_count())
     
     #Write the pages to the list
     pageCounts=[]
-    for i in range(mp.cpu_count()//4):
-        pageCounts.append(25)
+    for i in range(mp.cpu_count()):
+        pageCounts.append(20)
     
     #Print information to the console to inform the user
-    print("running")
+    print("Running")
     print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
