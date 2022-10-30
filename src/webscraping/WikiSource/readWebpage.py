@@ -179,8 +179,8 @@ def readWebpage(pageCount):
 						save_html(pageHtml, metadata[0])
 
             #Print the page metadata to the screen
-						#for data in metadata:
-								#print(data)
+						for data in metadata:
+								print(data)
 
             #Ensure thread synchronization to avoid race condition
 						while global_lock.locked():
@@ -188,6 +188,8 @@ def readWebpage(pageCount):
 
             #If the lock is available, grab it write the metadata and frequency to the file and return the lock
 						global_lock.acquire()
+
+						# this is used for gathering input to train my neural network
 
 						plaintext_file.write(metadata[0])
 						plaintext_file.write("\n")
@@ -203,7 +205,7 @@ def readWebpage(pageCount):
 						output_file.write(freq_list + '\n')
         
 						global_lock.release()
-						#print("Num loop: "+str(i)) 
+						print("Num loop: "+str(i)) 
 		flag=0
 
 
@@ -218,15 +220,15 @@ if __name__ == "__main__":
         pageCounts.append(25)
     
     #Print information to the console to inform the user
-    #print("running")
-    #print("Number of available processors: ", mp.cpu_count())
+    print("running")
+    print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
     pool.map(readWebpage, [pageNum for pageNum in pageCounts])
     
     #Stop threads and write output to console
     pool.close()
-    #print("Done... output saved to file")
+		print("Done... output saved to file")
 
     #Close output file
     output_file.close()
