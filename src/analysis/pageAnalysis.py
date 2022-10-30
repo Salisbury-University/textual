@@ -9,6 +9,7 @@ import numpy as np
 import nltk
 import json
 import sys
+import multiprocessing as mp
 from keywords import tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports
 
 ERROR_THRESHOLD = 0.2
@@ -17,9 +18,6 @@ nltk.download('punkt')
 
 # inspiration/help:
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
-
-# keywords for each "category"
-# can be changed at any time/fine tuned, but this is just for initial testing.
 
 # TO DO
 # 	- load a list of all key words from somewhere
@@ -340,7 +338,7 @@ def create_tokenized_words_bag(words, categories, files):
 
 def sigmoid(x): 
 
-		return 1/(1+np.exp(-x))
+	return 1/(1+np.exp(-x))
 
 
 # sigmoid_to_derivative -> converts the sigmoid value to its derivative
@@ -349,7 +347,7 @@ def sigmoid(x):
 
 def sigmoid_to_derivative(sigmoid_out):
 		
-		return sigmoid_out*(1-sigmoid_out)
+	return sigmoid_out*(1-sigmoid_out)
 
 
 # clean_sentence -> tokenizes the sentence and stems the words
@@ -499,10 +497,10 @@ def train(training, output, categories, words, hidden_neurons=10, alpha=1, epoch
 						syn_1_dir_count += np.abs(((syn_1_weight_up > 0) + 0) - ((p_syn_1_weight_up > 0) + 0))
 
 						synapse_1 += alpha * syn_1_weight_up
-						synapse_0 += alpha * syn_0_weight_up
+						synapse_1 += alpha * syn_0_weight_up
 
-						p_syn_0_weight_update = syn_0_weight_up
-						p_syn_1_weight_update = syn_1_weight_up
+						p_syn_0_weight_up = syn_0_weight_up
+						p_syn_1_weight_up = syn_1_weight_up
 
 				# get the date/time and dumps all of that information into a json dump into a json file
 
@@ -540,15 +538,41 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 
 	results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
 	results.sort(key=lambda x: x[1], reverse=True) 
-	return_results =[[categories[r[0]],r[1]] for r in results]
-    
-	return return_results
+	result =[[categories[r[0]],r[1]] for r in results]
+
+	counter=0
+
+	if(len(result) > 1): 
+
+		max_list = result[0]
+
+		for i in range(len(result)):
+		
+			if(result[i][1] < max_list[1]):
+		
+				max_list = result[i]
+				counter = counter + 1
+	else: 
+			
+		print(result) 
+
+	if(counter != 0):
+
+		print(max_list[0])	
+
+
+def open_file(file_name):
+    f = open(file_name, "w")
+    return f
 
 
 if __name__ == "__main__": 
 		
 	htmls = []
 	categorized_data = []
+
+	# new command line format: 
+	#	python3 pageAnalyis.py --test/--train --twitter/--reddit/--gutenberg/--wikisource
 
 	if(len(sys.argv) == 2 and (sys.argv[1] == "--train" or sys.argv[1] == "-t")):
 
@@ -557,7 +581,6 @@ if __name__ == "__main__":
 		for item in samples:
 			htmls.append(item)
 			
-
 		processed_keywords_list =  process_keywords(all_keywords, tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports)
 
 		for text in htmls:
@@ -585,7 +608,7 @@ if __name__ == "__main__":
 
 		start_time = time.time()
 
-		train(x, y, categories, words, hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.2)
+		train(x, y, categories, words, hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.1)
 
 		elapsed_time = time.time() - start_time
 		print ("processing time:", elapsed_time, "seconds")
@@ -593,7 +616,6 @@ if __name__ == "__main__":
 	elif(len(sys.argv) == 2 and (sys.argv[1] == "--test" or sys.argv[1] == "-te")):
 		
 		training_data = create_training_data(clean_data('categories.csv'))
-		words_categories_files = create_words_list(training_data)
 		words_categories_files = create_words_list(training_data)
 
 		words = words_categories_files[0]
@@ -610,30 +632,20 @@ if __name__ == "__main__":
 
 		# below you can begin testing after training 
 
-		sentence_input = input("Please enter a sentence to be classified.\n")
+		# get a collection of inputs to be classified and then use parallel processing to classify them
 
-		result = classify(sentence_input, synapse_0, synapse_1, words, categories)
+		texts_to_classify = [] # loading in some set of texts from the command line
+		output_file = open_file("classified.csv") 
 
-		counter=0
+		all_texts = output_file.read()
 
-		if(len(result) > 1): 
+		texts_to_classify = all_texts.split("========")
 
-			max_list = result[0]
+		pool = mp.Pool(mp.cpu_count())
 
-			for i in range(len(result)):
-		
-				if(result[i][1] < max_list[1]):
-		
-					max_list = result[i]
-					counter = counter + 1
-		else: 
-			
-			print(result) 
+		pool.apply(classify, args=(texts_to_classify, synapse_0, synapse_1, words, categories))
 
-		if(counter != 0):
-
-			print(max_list[0])		
-
+		pool.close()
 
 	else: 
 		
