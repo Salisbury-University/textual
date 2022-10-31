@@ -24,14 +24,17 @@ import itertools
 from pymongo import MongoClient
 
 # Connect to the database
-def get_database():
-
+def get_client():
     # Set up a new client to the database
     # Using database address and port number
     client = MongoClient("mongodb://10.251.12.108:30000")
     
     # Return the client
     return client
+
+# Get a database from the client
+def get_database(client):
+    return client.textual
 
 # Close the connection to the database after data has been written
 def close_database(client):
@@ -244,8 +247,11 @@ if __name__ == "__main__":
         subreddit_list.append(sys.argv[i])
         i += 1
     
+    # Get database client
+    client = get_client()
+
     # Make a partial function since using multiple parameters
-    partial_get_data = functools.partial(get_data, headers) 
+    partial_get_data = functools.partial(get_data, headers, client) 
     pool=mp.Pool(mp.cpu_count())
     
     #results=itertools.starmap(get_data, items)
