@@ -222,6 +222,14 @@ def get_comments(post, post_id):
 def save_as_json(dataframe, file_name):
     dataframe.to_json(file_name + ".json", orient="index")
 
+# Convert pandas dataframe to json
+def convert_to_json(dataframe):
+    # Convert to json
+    json_file = dataframe.to_json(orient='index')
+
+    # Return json
+    return json_file
+
 # Convert pandas dataframe to csv and save as output file
 def save_as_csv(dataframe, file_name):
     dataframe.to_csv(file_name + ".csv", sep="\n", encoding="utf-8")
