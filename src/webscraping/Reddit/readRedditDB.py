@@ -106,6 +106,10 @@ def get_data(headers, subreddit):
     # Get the specific database
     db = get_database(client)
 
+    # Get the specific collection
+
+    collection = db.RedditPosts
+
     # Initial post id
     post_after = 0
     i = 0
@@ -148,9 +152,11 @@ def get_data(headers, subreddit):
                 "downvotes" : post["data"]["downs"]},
                 ignore_index=True) 
 
-            # Save each post separately
-            # Save the dataframe as a json file
-            save_as_json(subreddit_content, "r_" + post["data"]["subreddit"] + "_" + post_id)
+            # Rather than saving as a json file, get the data frame in dict format
+            dict_dataframe = convert_to_dict(subreddit_content)
+ 
+            # Add json file to collection
+            collection.insert_one(dict_dataframe)
 
             # Increment iteration
             i += 1
@@ -222,13 +228,13 @@ def get_comments(post, post_id):
 def save_as_json(dataframe, file_name):
     dataframe.to_json(file_name + ".json", orient="index")
 
-# Convert pandas dataframe to json
-def convert_to_json(dataframe):
-    # Convert to json
-    json_file = dataframe.to_json(orient='index')
+# Convert pandas dataframe to dict
+def convert_to_dict(dataframe):
+    # Convert to dict
+    dict_file = dataframe.to_dict('dict')
 
-    # Return json
-    return json_file
+    # Return dict
+    return dict_file
 
 # Convert pandas dataframe to csv and save as output file
 def save_as_csv(dataframe, file_name):
