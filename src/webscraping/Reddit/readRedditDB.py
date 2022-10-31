@@ -285,7 +285,19 @@ if __name__ == "__main__":
         i += 1 
 
     # Prompt the user for their preference on comment saving format
-    separate_comments = input("Would you like comments saved individually or together? 0. Individual | 1. Together: ")
+    # For some reason (classic programming language weirdness) python does not have do while loops so it is emulated using break statements
+
+    # Validate the user input
+    while True:
+        # Get user input
+        separate_comments = input("Would you like comments saved individually or together? 0. Individual | 1. Together: ")
+        
+        # If the input is valid, break out
+        if separate_comments == "0" or separate_comments == "1":
+            break
+        else:
+            # Print error message if user input is not valid
+            print("Invalid input, please input a value of either 0 or 1")
 
     # Make a partial function since using multiple parameters
     partial_get_data = functools.partial(get_data, headers, separate_comments) 
