@@ -107,7 +107,6 @@ def get_data(headers, subreddit):
     db = get_database(client)
 
     # Get the specific collection
-
     collection = db.RedditPosts
 
     # Initial post id
@@ -154,8 +153,8 @@ def get_data(headers, subreddit):
 
             # Rather than saving as a json file, get the data frame in dict format
             dict_dataframe = convert_to_dict(subreddit_content)
- 
-            # Add json file to collection
+
+            # Add dict file to collection
             collection.insert_one(dict_dataframe)
 
             # Increment iteration
@@ -163,7 +162,8 @@ def get_data(headers, subreddit):
 
             # Get the comments for the current post
             # Calls a separate get request using the parent id of the current post
-            get_comments(subreddit_header, subreddit_content["post_id"][0]) 
+            # Pass the parent's database connection
+            get_comments(subreddit_header, subreddit_content["post_id"][0], db) 
         
             # Clear dataframe
             subreddit_content = subreddit_content[0:0]
@@ -175,15 +175,20 @@ def get_data(headers, subreddit):
         request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100", "after" : post_type_id}).json()
          
 # Get comments given a post id
-def get_comments(post, post_id):
+def get_comments(post, post_id, database):
 
     # Request comments from specific post: limit max number of comments taken, depth max steps through comment tree
     request_comments = requests.get("https://oauth.reddit.com/" + post, headers=headers, params={"limit" : "500", "depth" : "5"}).json()
     
-    #Pandas dataframe to hold data
+    # Pandas dataframe to hold data
     post_comments = pd.DataFrame()
 
+    # Flag used to print comments only if found
     comment_found = False
+
+    # Get RedditComment collection
+    collection = database.RedditComments
+
     #Iterate though each comment and add its datat to a dataframe
     for comment in request_comments[1]["data"]["children"]:
        
@@ -220,9 +225,13 @@ def get_comments(post, post_id):
         else:
             comment_found = True
     
-    if comment_found:
-        # Get the post id and link and save an output file under that name
-        save_as_json(post_comments, post_id + "_comments")
+    # If a comment was found under the parent post, write it to the database
+    if comment_found: 
+            # Rather than saving as a json file, get the data frame in dict format
+            dict_dataframe = convert_to_dict(post_comments)
+            
+            # Add dict file to collection
+            collection.insert_one(dict_dataframe)       
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
