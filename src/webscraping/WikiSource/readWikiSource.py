@@ -1,3 +1,12 @@
+# Date: 10/1/2022-10/31/2022
+# Description: Collect pages from the WikiSource website using HTTP requests
+# Saving format: Currently in a txt file, holds all words in a frequency array
+
+# Included libraries
+# urllib, requests: used to make HTTP requests
+# bs4: used to parse HTML
+# threading, multiprocessing, counter: used to run scraper in parallel
+
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
