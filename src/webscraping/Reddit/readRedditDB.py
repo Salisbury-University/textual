@@ -233,6 +233,10 @@ def get_comments(post, post_id, database):
             # Add dict file to collection
             collection.insert_one(dict_dataframe)       
 
+    # Clear dataframe
+    # post_comments = subreddit_content[0:0]
+
+
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
     dataframe.to_json(file_name + ".json", orient="index")
@@ -281,11 +285,13 @@ if __name__ == "__main__":
         subreddit_list.append(sys.argv[i])
         i += 1 
 
+    # Prompt the user for their preference on comment saving format
+    separate_comments = input("Would you like comments saved individually or together? 0 - Individual, 1 - Together: ")
+
     # Make a partial function since using multiple parameters
     partial_get_data = functools.partial(get_data, headers) 
     pool=mp.Pool(mp.cpu_count())
     
-    #results=itertools.starmap(get_data, items)
     # Run the multiple threads on different subreddits
     results=pool.map(partial_get_data, subreddit_list)
     pool.close() 
