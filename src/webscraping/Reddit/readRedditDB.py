@@ -33,6 +33,7 @@ def get_client():
     return client
 
 # Get a database from the client
+# In this case use the textual database
 def get_database(client):
     return client.textual
 
@@ -89,7 +90,7 @@ def format_time(epoch_time):
     return human_time
 
 # Get data from reddit location
-def get_data(headers, subreddit): 
+def get_data(headers, db, subreddit): 
     request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100"}).json()
  
     #Pandas dataframe to hold data
@@ -247,11 +248,14 @@ if __name__ == "__main__":
         subreddit_list.append(sys.argv[i])
         i += 1
     
-    # Get database client
+    # Get client
     client = get_client()
 
+    # Get the specific database
+    db = get_database(client)
+
     # Make a partial function since using multiple parameters
-    partial_get_data = functools.partial(get_data, headers, client) 
+    partial_get_data = functools.partial(get_data, headers, db) 
     pool=mp.Pool(mp.cpu_count())
     
     #results=itertools.starmap(get_data, items)
