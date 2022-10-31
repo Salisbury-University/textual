@@ -90,11 +90,21 @@ def format_time(epoch_time):
     return human_time
 
 # Get data from reddit location
-def get_data(headers, db, subreddit): 
+def get_data(headers, subreddit): 
     request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100"}).json()
  
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
+
+    # =====================================================================================================
+    # GET DATABASE, MUST BE DONE INSIDE EACH THREAD | MONGODB CLIENT CANNOT BE CONVERTED INTO LOCKED OBJECT
+    # =====================================================================================================
+
+    # Get client
+    client = get_client()
+
+    # Get the specific database
+    db = get_database(client)
 
     # Initial post id
     post_after = 0
@@ -246,16 +256,10 @@ if __name__ == "__main__":
     i = 1
     while i < len(sys.argv):
         subreddit_list.append(sys.argv[i])
-        i += 1
-    
-    # Get client
-    client = get_client()
-
-    # Get the specific database
-    db = get_database(client)
+        i += 1 
 
     # Make a partial function since using multiple parameters
-    partial_get_data = functools.partial(get_data, headers, db) 
+    partial_get_data = functools.partial(get_data, headers) 
     pool=mp.Pool(mp.cpu_count())
     
     #results=itertools.starmap(get_data, items)
