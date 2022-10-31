@@ -33,6 +33,11 @@ def get_database():
     # Return the client
     return client
 
+# Close the connection to the database after data has been written
+def close_database(client):
+    # Close database connection
+    client.close()
+
 # Read in password from separate file
 def get_pass():
     with open("redditPassword.txt", "r") as pass_file:
