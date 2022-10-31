@@ -95,31 +95,6 @@ def get_metadata(htmlPage):
 
     return info
 
-def find_info(htmlPage, tag):  # not being used now
-    if htmlPage is None:
-        return "web page not found"
-    if "date" not in tag:
-        openTag="<"+tag+">"
-        closedTag="</"+tag+">"
-        if openTag not in htmlPage or closedTag not in htmlPage:
-            return "TAG NOT FOUND"
-        index=htmlPage.find(openTag)
-        start=index+len(openTag)
-        end=htmlPage.find(closedTag)
-        return htmlPage[start:end]
-    elif tag=="datepub":
-        tempSplit=htmlPage.split("datePublished\":\"")
-        if len(tempSplit)>1:
-            tempStr=tempSplit[1]
-            return tempStr[:10]
-        return "Date published not found"
-    elif tag=="datemod":
-        tempSplit=htmlPage.split("dateModified\":\"")
-        if len(tempSplit)>1:
-            tempStr=tempSplit[1]
-            return tempStr[:10]
-        return "Date most recently modified not found."
-
 #Take a url and return the HTML page
 def find_html(purl):
     page=urlopen(purl)
