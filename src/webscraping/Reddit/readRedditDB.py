@@ -90,7 +90,7 @@ def format_time(epoch_time):
     return human_time
 
 # Get data from reddit location
-def get_data(headers, subreddit): 
+def get_data(headers, comment_preference, subreddit): 
     request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100"}).json()
  
     #Pandas dataframe to hold data
@@ -163,7 +163,7 @@ def get_data(headers, subreddit):
             # Get the comments for the current post
             # Calls a separate get request using the parent id of the current post
             # Pass the parent's database connection
-            get_comments(subreddit_header, subreddit_content["post_id"][0], db) 
+            get_comments(subreddit_header, comment_preference, subreddit_content["post_id"][0], db) 
         
             # Clear dataframe
             subreddit_content = subreddit_content[0:0]
@@ -175,7 +175,7 @@ def get_data(headers, subreddit):
         request_content = requests.get("https://oauth.reddit.com/" + subreddit, headers=headers, params={"limit" : "100", "after" : post_type_id}).json()
          
 # Get comments given a post id
-def get_comments(post, post_id, database):
+def get_comments(post, comment_preference, post_id, database):
 
     # Request comments from specific post: limit max number of comments taken, depth max steps through comment tree
     request_comments = requests.get("https://oauth.reddit.com/" + post, headers=headers, params={"limit" : "500", "depth" : "5"}).json()
@@ -236,7 +236,6 @@ def get_comments(post, post_id, database):
     # Clear dataframe
     # post_comments = subreddit_content[0:0]
 
-
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
     dataframe.to_json(file_name + ".json", orient="index")
@@ -286,10 +285,10 @@ if __name__ == "__main__":
         i += 1 
 
     # Prompt the user for their preference on comment saving format
-    separate_comments = input("Would you like comments saved individually or together? 0 - Individual, 1 - Together: ")
+    separate_comments = input("Would you like comments saved individually or together? 0. Individual | 1. Together: ")
 
     # Make a partial function since using multiple parameters
-    partial_get_data = functools.partial(get_data, headers) 
+    partial_get_data = functools.partial(get_data, headers, separate_comments) 
     pool=mp.Pool(mp.cpu_count())
     
     # Run the multiple threads on different subreddits
