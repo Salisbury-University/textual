@@ -24,6 +24,14 @@ import itertools
 from pymongo import MongoClient
 
 # Connect to the database
+def get_database():
+
+    # Set up a new client to the database
+    # Using database address and port number
+    client = MongoClient("mongodb://10.251.12.108:30000")
+    
+    # Return the client
+    return client
 
 # Read in password from separate file
 def get_pass():
