@@ -186,6 +186,9 @@ def get_comments(post, comment_preference, post_id, database):
     # Flag used to print comments only if found
     comment_found = False
 
+    # Comment format flag
+    single_comments = False
+
     # Get RedditComment collection
     collection = database.RedditComments
 
@@ -224,17 +227,31 @@ def get_comments(post, comment_preference, post_id, database):
             print("Comment not found")
         else:
             comment_found = True
+
+        # Check if user wants comments saved separately
+        if comment_preference == "0":
+            # If a comment was found under the parent post, write it to the database
+            if comment_found: 
+                # Rather than saving as a json file, get the dataframe containing the single comment into dictonary format
+                dict_dataframe = convert_to_dict(post_comments)
+            
+                # Add dict file to collection
+                collection.insert_one(dict_dataframe)      
+
+                # Clear the dataframe
+                post_comments = post_comments[0:0]
+
+                # Single comment flag set to true (Avoids duplicates later)
+                single_comments = True
     
     # If a comment was found under the parent post, write it to the database
-    if comment_found: 
+    # Check if the user specified comments to be saved singlely, if so do not write again (duplicates)
+    if comment_found and single_comments == False: 
             # Rather than saving as a json file, get the data frame in dict format
             dict_dataframe = convert_to_dict(post_comments)
             
             # Add dict file to collection
             collection.insert_one(dict_dataframe)       
-
-    # Clear dataframe
-    # post_comments = subreddit_content[0:0]
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
