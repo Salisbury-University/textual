@@ -63,5 +63,5 @@ def get_archive_tweets(client,search,date_start,date_end,wanted_results=100):
 A function that will get comments of a specific tweet
                   (Coming Soon...)
 """
-def get_replies(client,tweet_id,wanted_results=100):
+def __get_replies(client,tweet_id,wanted_results=100):
     pass
