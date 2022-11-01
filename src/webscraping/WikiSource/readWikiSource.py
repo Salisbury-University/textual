@@ -193,22 +193,30 @@ def get_dataframe(metadata, text):
             "Document Date" : metadata[3],
             "Text" : text},
             ignore_index=True)
+    
     # Return the dataframe
     return data 
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
+    
     c=0
     flag=0
     try:
         status_code=urllib.request.urlopen(URL).getcode()
     except urllib.error.HTTPError as err:
-        print("http",err.code, "ERROR")
+        print("http", err.code, "ERROR")
         flag=1
     if flag==0: 
         for i in range(pageCount):
             c+=1
             pageHtml=find_html(URL)
+
+            if pageHtml != None:
+                print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: " + URL)
+            else:
+                print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: N/A") 
+
             #Get the text from the HTML page, remove empty lines, and count the frequency of each word
             text = get_text(pageHtml)
             text = remove_empty(text)
@@ -223,7 +231,7 @@ def readWebpage(pageCount):
             #for data in metadata:
             #    print(data)
 
-            print(get_dataframe(metadata, text))
+            # print(get_dataframe(metadata, text))
 
             #Ensure thread synchronization to avoid race condition
             while global_lock.locked():
@@ -239,8 +247,8 @@ def readWebpage(pageCount):
             #Print the frequency for each word
             #output_file.write(freq_list + '\n')
             global_lock.release()
-            print("Num loop: "+str(i)) 
-    flag=0
+            # print("Num loop: "+str(i)) 
+    flag=0 
 
 if __name__ =="__main__":
     #Open the output file
