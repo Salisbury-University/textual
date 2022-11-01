@@ -199,16 +199,19 @@ def remove_empty(input_lines):
     return returned_string
 
 # Compile data in pandas dataframe
-def get_dataframe(metadata, text):
+def get_dataframe(metadata, text, html):
     # Create a dataframe to hold the metadata
     data = pd.DataFrame()
 
     # Loop through the page metadata, appending to the dataframe if available
+    # Add the page text
+    # Add the page HTML
     data = data.append({"Title" : metadata[0],
             "Date Published" : metadata[1],
             "Date Modified" : metadata[2],
             "Document Date" : metadata[3],
-            "Text" : text},
+            "Text" : text,
+            "HTML" : html},
             ignore_index=True)
     
     # Return the dataframe
@@ -253,8 +256,8 @@ def readWebpage(pageCount):
             #Get metadata from the HTML file
             metadata=get_metadata(pageHtml)
 	    
-	    # Get the page data (text) and metadata
-            page_dataframe = get_dataframe(metadata, text)
+	    # Get the page data (text), HTML, and metadata
+            page_dataframe = get_dataframe(metadata, text, pageHtml)
 
 	    # Conver the dataframe to a dictionary to allow it to be written to the database
             page_dict = convert_to_dict(page_dataframe)
