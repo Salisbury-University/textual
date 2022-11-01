@@ -69,32 +69,51 @@ def get_metadata(htmlPage):
     openTag="<title>"
     closedTag="</title>"
     if htmlPage is None:
+        info.append("N/A")
+        info.append("N/A")
+        info.append("N/A")
+        info.append("N/A")
         return info
     if openTag not in htmlPage or closedTag not in htmlPage:
-        info.append("title not found")
+        info.append("N/A")
     else:
+        # Title header
         index=htmlPage.find(openTag)
         start=index+len(openTag)
         end=htmlPage.find(closedTag)
         info.append(htmlPage[start:end])
+    
     tempSplitPub=htmlPage.split("datePublished\":\"")
+    
     if len(tempSplitPub)>1:
+        # Publishing date header
         tempPub=tempSplitPub[1]
         info.append(tempPub[:10])
+    else:
+        info.append("N/A")
+    
     tempSplitMod=htmlPage.split("dateModified\":\"")
+    
     if len(tempSplitMod)>1:
+        # Get the date most recently modified
         tempMod=tempSplitMod[1]
         info.append(tempMod[:10])
+    else:
+        info.append("N/A")
 
     #Find the date of the document
     tempTextDate = htmlPage.split("<span id=\"header_year_text\">")
     if len(tempTextDate) > 1:
+        # Parse document date from site
         tempText = tempTextDate[1]
         tempText = re.sub("</span>[\S\s]*", "", tempText)
         tempText = re.sub("&.*;\(", "", tempText)
         tempText = re.sub("\)[\S\s]*", "", tempText)
         info.append(tempText)
+    else:
+        info.append("N/A")
 
+    # Return metadata
     return info
 
 #Take a url and return the HTML page
@@ -152,20 +171,18 @@ def freq_count(input_text):
 
 # Compile data in pandas dataframe
 def get_dataframe(metadata, text):
-    data = pds.DataFrame()
+    # Create a dataframe to hold the metadata
+    data = pd.DataFrame()
 
-    #post_comments = post_comments.append({
-     #           "subreddit" : comment["data"]["subreddit"],
-      #          "author" : comment["data"]["author"],
-       #         "comment_id" : comment["kind"] + "_" + comment["data"]["id"],
-        #        "body" : comment["data"]["body"],
-         #       "created_utc" : format_time(comment["data"]["created_utc"]),
-          #      "link" : "https://www.reddit.com/" + comment["data"]["permalink"],
-           #     "upvotes" : comment["data"]["ups"],
-            #    "downvotes" : comment["data"]["downs"],
-             #   "parent_post_id" : post_id},
-              #  ignore_index=True)
-
+    # Loop through the page metadata, appending to the dataframe if available
+    data = data.append({"Title" : metadata[0],
+            "Date Published" : metadata[1],
+            "Date Modified" : metadata[2],
+            "Document Date" : metadata[3],
+            "Text" : text},
+            ignore_index=True)
+    # Return the dataframe
+    return data 
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
@@ -191,8 +208,10 @@ def readWebpage(pageCount):
             save_html(pageHtml, metadata[0])
 
             #Print the page metadata to the screen
-            for data in metadata:
-                print(data)
+            #for data in metadata:
+            #    print(data)
+
+            print(get_dataframe(metadata, text))
 
             #Ensure thread synchronization to avoid race condition
             while global_lock.locked():
@@ -200,13 +219,13 @@ def readWebpage(pageCount):
 
             #If the lock is available, grab it write the metadata and frequency to the file and return the lock
             global_lock.acquire()
-            for data in metadata:
-                output_file.write(data + '\n')
-            output_file.write('\n')
-            freq_list = freq_count(text)
+            #for data in metadata:
+            #    output_file.write(data + '\n')
+            #output_file.write('\n')
+            #freq_list = freq_count(text)
            
             #Print the frequency for each word
-            output_file.write(freq_list + '\n')
+            #output_file.write(freq_list + '\n')
             global_lock.release()
             print("Num loop: "+str(i)) 
     flag=0
