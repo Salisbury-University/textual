@@ -65,52 +65,64 @@ def save_html(html, page_name):
 
 #Get the metadata from the HTML page
 def get_metadata(htmlPage):
+    # Python list to hold metadata
     info=[]
+
+    # Opening and closing HTML title tags (these will be matched to find the header)
     openTag="<title>"
     closedTag="</title>"
-    if htmlPage is None:
-        info.append("N/A")
-        info.append("N/A")
-        info.append("N/A")
-        info.append("N/A")
-        return info
+    
+    # If the title tag was not found append n/a to the list
     if openTag not in htmlPage or closedTag not in htmlPage:
         info.append("N/A")
     else:
         # Title header
+        # Find the index of the starting and ending tag
         index=htmlPage.find(openTag)
         start=index+len(openTag)
         end=htmlPage.find(closedTag)
+
+        # Get the substring from the start of end of the opening title tag till the end of the closing title tag
         info.append(htmlPage[start:end])
     
+    # Split the text on "datePublished"
     tempSplitPub=htmlPage.split("datePublished\":\"")
     
+    # Check if dataPublished was found
     if len(tempSplitPub)>1:
         # Publishing date header
         tempPub=tempSplitPub[1]
         info.append(tempPub[:10])
     else:
+        # If not found append n/a to the list
         info.append("N/A")
     
+    # Split the text on "dateModified"
     tempSplitMod=htmlPage.split("dateModified\":\"")
     
+    # Check if dateModified was found
     if len(tempSplitMod)>1:
         # Get the date most recently modified
         tempMod=tempSplitMod[1]
         info.append(tempMod[:10])
     else:
+        # If not found append n/a to the list
         info.append("N/A")
 
-    #Find the date of the document
+    #Find the date of the document | split on "header_year_text"
     tempTextDate = htmlPage.split("<span id=\"header_year_text\">")
-    if len(tempTextDate) > 1:
-        # Parse document date from site
+    
+    # Check if document date was found
+    if len(tempTextDate) > 1: 
+        # Extract document date from the string
         tempText = tempTextDate[1]
         tempText = re.sub("</span>[\S\s]*", "", tempText)
         tempText = re.sub("&.*;\(", "", tempText)
         tempText = re.sub("\)[\S\s]*", "", tempText)
+        # Append the date to the list
         info.append(tempText)
     else:
+        # If not found append n/a to the list
         info.append("N/A")
 
     # Return metadata
