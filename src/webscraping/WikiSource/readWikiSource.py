@@ -2,11 +2,12 @@
 # Description: Collect pages from the WikiSource website using HTTP requests
 # Saving format: Currently in a txt file, holds all words in a frequency array
 
+# ================================================================================
 # Included libraries
 # urllib, requests: used to make HTTP requests
 # bs4: used to parse HTML
 # threading, multiprocessing, counter: used to run scraper in parallel
-
+# ================================================================================
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
@@ -14,6 +15,7 @@ from urllib.request import urlopen
 import functools as ft
 import multiprocessing as mp
 import threading
+import pandas as pd
 from collections import Counter
 
 #All punctuation characters
@@ -147,6 +149,23 @@ def freq_count(input_text):
 
     #Return the frequency
     return output_text
+
+# Compile data in pandas dataframe
+def get_dataframe(metadata, text):
+    data = pds.DataFrame()
+
+    #post_comments = post_comments.append({
+     #           "subreddit" : comment["data"]["subreddit"],
+      #          "author" : comment["data"]["author"],
+       #         "comment_id" : comment["kind"] + "_" + comment["data"]["id"],
+        #        "body" : comment["data"]["body"],
+         #       "created_utc" : format_time(comment["data"]["created_utc"]),
+          #      "link" : "https://www.reddit.com/" + comment["data"]["permalink"],
+           #     "upvotes" : comment["data"]["ups"],
+            #    "downvotes" : comment["data"]["downs"],
+             #   "parent_post_id" : post_id},
+              #  ignore_index=True)
+
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
