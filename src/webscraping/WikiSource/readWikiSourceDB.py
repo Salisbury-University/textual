@@ -54,9 +54,22 @@ def get_client():
     # Return the client
     return client
 
+# Convert pandas dataframe to dict
+def convert_to_dict(dataframe):
+    # Convert to dict
+    dict_file = dataframe.to_dict('dict')
+
+    # Return dict
+    return dict_file
+
 # Get the database, we are using the textual database | hardcoded currently (bad)
 def get_database(client):
     return client.textual
+
+# Important, close the database
+def close_database(client):
+    # Close the connection to the database
+    client.close()
 
 #Removes leading and trailing punctuation from a string
 def clean_string(input_string):
@@ -145,7 +158,6 @@ def get_metadata(htmlPage):
 
 #Take a url and return the HTML page
 def find_html(purl):
-
     # Check if the page exists, if not return none
     try:
         status_code=urllib.request.urlopen(purl).getcode()
@@ -186,35 +198,20 @@ def remove_empty(input_lines):
 
     return returned_string
 
-#Count the frequency of each word in the document
-def freq_count(input_text):
-    word_list = input_text.split()
-
-    #Remove leading and trailing punctuation
-    word_list = [clean_string(word) for word in word_list]
-
-    #Output string
-    output_text = ''
-   
-    #Get the count for each word
-    unique_words = set(word_list)
-    for words in unique_words:
-        output_text += 'Frequency of ' + words + ': ' + str(word_list.count(words)) + '\n'
-
-    #Return the frequency
-    return output_text
-
 # Compile data in pandas dataframe
-def get_dataframe(metadata, text):
+def get_dataframe(metadata, text, html):
     # Create a dataframe to hold the metadata
     data = pd.DataFrame()
 
     # Loop through the page metadata, appending to the dataframe if available
+    # Add the page text
+    # Add the page HTML
     data = data.append({"Title" : metadata[0],
             "Date Published" : metadata[1],
             "Date Modified" : metadata[2],
             "Document Date" : metadata[3],
-            "Text" : text},
+            "Text" : text,
+            "HTML" : html},
             ignore_index=True)
     
     # Return the dataframe
@@ -222,10 +219,21 @@ def get_dataframe(metadata, text):
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
+    # ===============================================================================================================
+    # GET DATABASE, MUST BE DONE INSIDE EACH THREAD | MONGODB CLIENT CANNOT BE CONVERTED INTO THREADED/LOCKED OBJECT
+    # ===============================================================================================================
+     
+    # Get a connection to the server
+    client = get_client()
     
-    c=0
+    # Get a database from the connection
+    database = get_database(client)
+
+    # Get a collection from the database (WikiSourceText, holds the wikisource pages)
+    collection = database.WikiSourceText
+
+    # Loop through all the pages passed from the main, this is done on each thread 
     for i in range(pageCount):
-        c+=1
         pageHtml=find_html(URL)
 
         # Flag to hold the value used to check for a page's existance
@@ -239,6 +247,7 @@ def readWebpage(pageCount):
             flag = False
         
         # Check if page was found
+        # We only want to write to the database if we found a page, thus this code will only be run if there is context on the HTML page.
         if flag == True:
             #Get the text from the HTML page, remove empty lines, and count the frequency of each word
             text = get_text(pageHtml)
@@ -246,14 +255,24 @@ def readWebpage(pageCount):
             
             #Get metadata from the HTML file
             metadata=get_metadata(pageHtml)
+	    
+	    # Get the page data (text), HTML, and metadata
+            page_dataframe = get_dataframe(metadata, text, pageHtml)
 
-            # print(get_dataframe(metadata, text))
+	    # Conver the dataframe to a dictionary to allow it to be written to the database
+            page_dict = convert_to_dict(page_dataframe)
+	
+            # Add dictionary to the collection
+            collection.insert_one(page_dict)
 
+            # Set flag back to true 
             flag = True
+    
+    # Close the connection to the database         
+    close_database(client) 
 
 if __name__ =="__main__":
-    #Open the output file
-    output_file = open_file("output.txt")
+    # Create the multithreading pool
     pool=mp.Pool(mp.cpu_count())
     
     #Write the pages to the list
@@ -269,7 +288,4 @@ if __name__ =="__main__":
     
     #Stop threads and write output to console
     pool.close()
-    print("Done... output saved to file")
-
-    #Close output file
-    output_file.close()
+    print("Done... pulled files written to MongoDB database")
