@@ -1,6 +1,8 @@
+# Project Name(s): English Contextual Baseline Database
+# Program Name: readWikiSource.py
 # Date: 10/1/2022-10/31/2022
 # Description: Collect pages from the WikiSource website using HTTP requests
-# Saving format: Currently in a txt file, holds all words in a frequency array
+# Saving format: List of data is written to the MongoDB database
 
 # ================================================================================
 # Included libraries
@@ -24,6 +26,9 @@ from string import punctuation
 #Import Regex
 import re
 
+# Used to connect to the MongoDB database
+from pymongo import MongoClient
+
 #Constant to Random Page
 URL="https://en.wikisource.org/wiki/Special:RandomRootpage/Main"
 
@@ -40,8 +45,18 @@ inlist = ['[document]',
                 'script',
                 'footer']
 
-#Lock to avoid race condition when writing to the output file
-global_lock = threading.Lock()
+# Connect to the database
+def get_client():
+    # Set up a new client to the database
+    # Using database address and port number
+    client = MongoClient("mongodb://10.251.12.108:30000")
+
+    # Return the client
+    return client
+
+# Get the database, we are using the textual database | hardcoded currently (bad)
+def get_database(client):
+    return client.textual
 
 #Removes leading and trailing punctuation from a string
 def clean_string(input_string):
@@ -220,7 +235,7 @@ def readWebpage(pageCount):
         if pageHtml != None:
             print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: " + URL)
         else:
-            print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: N/A") 
+            print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: Error, Page Not Found") 
             flag = False
         
         # Check if page was found
@@ -232,30 +247,8 @@ def readWebpage(pageCount):
             #Get metadata from the HTML file
             metadata=get_metadata(pageHtml)
 
-            #Save page source to a separate file
-            save_html(pageHtml, metadata[0])
-
-            #Print the page metadata to the screen
-            #for data in metadata:
-            #    print(data)
-
             # print(get_dataframe(metadata, text))
 
-            #Ensure thread synchronization to avoid race condition
-            while global_lock.locked():
-                time.sleep(0.01)
-
-            #If the lock is available, grab it write the metadata and frequency to the file and return the lock
-            global_lock.acquire()
-            #for data in metadata:
-            #    output_file.write(data + '\n')
-            #output_file.write('\n')
-            #freq_list = freq_count(text)
-           
-            #Print the frequency for each word
-            #output_file.write(freq_list + '\n')
-            global_lock.release()
-            # print("Num loop: "+str(i))
             flag = False
 
 if __name__ =="__main__":
@@ -268,8 +261,7 @@ if __name__ =="__main__":
     for i in range(mp.cpu_count()):
         pageCounts.append(20)
     
-    #Print information to the console to inform the user
-    print("Running")
+    #Print information to the console to inform the user on the number of threads available
     print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
