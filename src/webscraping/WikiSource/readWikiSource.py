@@ -130,6 +130,14 @@ def get_metadata(htmlPage):
 
 #Take a url and return the HTML page
 def find_html(purl):
+
+    # Check if the page exists, if not return none
+    try:
+        status_code=urllib.request.urlopen(purl).getcode()
+    except urllib.error.HTTPError as err:
+        return None 
+    
+    # Otherwise, get the HTML from the page
     page=urlopen(purl)
     html_bytes=page.read()
     html = html_bytes.decode("utf-8")
@@ -201,22 +209,22 @@ def get_dataframe(metadata, text):
 def readWebpage(pageCount):
     
     c=0
-    flag=0
-    try:
-        status_code=urllib.request.urlopen(URL).getcode()
-    except urllib.error.HTTPError as err:
-        print("http", err.code, "ERROR")
-        flag=1
-    if flag==0: 
-        for i in range(pageCount):
-            c+=1
-            pageHtml=find_html(URL)
+    for i in range(pageCount):
+        c+=1
+        pageHtml=find_html(URL)
 
-            if pageHtml != None:
-                print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: " + URL)
-            else:
-                print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: N/A") 
+        # Flag to hold the value used to check for a page's existance
+        flag = True
 
+        # Write thread id, loop iteration, and page url to the console if found
+        if pageHtml != None:
+            print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: " + URL)
+        else:
+            print("Thread: " + str(mp.current_process()) + " Loop: " + str(i) + " | Page: N/A") 
+            flag = False
+        
+        # Check if page was found
+        if flag == True:
             #Get the text from the HTML page, remove empty lines, and count the frequency of each word
             text = get_text(pageHtml)
             text = remove_empty(text)
@@ -247,8 +255,8 @@ def readWebpage(pageCount):
             #Print the frequency for each word
             #output_file.write(freq_list + '\n')
             global_lock.release()
-            # print("Num loop: "+str(i)) 
-    flag=0 
+            # print("Num loop: "+str(i))
+            flag = False
 
 if __name__ =="__main__":
     #Open the output file
