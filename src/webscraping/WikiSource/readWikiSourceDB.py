@@ -54,14 +54,6 @@ def get_client():
     # Return the client
     return client
 
-# Convert pandas dataframe to dict
-def convert_to_dict(dataframe):
-    # Convert to dict
-    dict_file = dataframe.to_dict('dict')
-
-    # Return dict
-    return dict_file
-
 # Get the database, we are using the textual database | hardcoded currently (bad)
 def get_database(client):
     return client.textual
@@ -198,23 +190,19 @@ def remove_empty(input_lines):
 
     return returned_string
 
-# Compile data in pandas dataframe
-def get_dataframe(metadata, text, html):
-    # Create a dataframe to hold the metadata
-    data = pd.DataFrame()
-
-    # Loop through the page metadata, appending to the dataframe if available
+# Compile data in dictionary
+def get_dictionary(metadata, text, html):
+    # Loop through the page metadata, appending to the dict if available
     # Add the page text
     # Add the page HTML
-    data = data.append({"Title" : metadata[0],
+    data = {"Title" : metadata[0],
             "Date Published" : metadata[1],
             "Date Modified" : metadata[2],
             "Document Date" : metadata[3],
             "Text" : text,
-            "HTML" : html},
-            ignore_index=True)
+            "HTML" : html}
     
-    # Return the dataframe
+    # Return the dictionary
     return data 
 
 #Read the content of the page and print to a file
@@ -257,10 +245,7 @@ def readWebpage(pageCount):
             metadata=get_metadata(pageHtml)
 	    
 	    # Get the page data (text), HTML, and metadata
-            page_dataframe = get_dataframe(metadata, text, pageHtml)
-
-	    # Conver the dataframe to a dictionary to allow it to be written to the database
-            page_dict = convert_to_dict(page_dataframe)
+            page_dict = get_dictionary(metadata, text, pageHtml)
 	
             # Add dictionary to the collection
             collection.insert_one(page_dict)
