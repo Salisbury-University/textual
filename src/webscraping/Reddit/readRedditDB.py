@@ -23,11 +23,30 @@ import itertools
 # Used to connect to the mongo DB
 from pymongo import MongoClient
 
+# Get authoriazation from file
+def get_credentials():
+    with open("mongopassword.txt", "r") as pass_file:
+        # Read each line from the file, splitting on newline
+        lines = pass_file.read().splitlines()
+    # Close the file and return the list of lines
+    pass_file.close()
+    return lines
+
 # Connect to the database
 def get_client():
+    # Needs to be done this way, can't push credentials to github
+    # Call the get pass function to open the file and extract the credentials
+    lines = get_credentials()
+
+    # Get the username from the file
+    username = lines[0]
+
+    # Get the password from the file
+    password = lines[1]
+
     # Set up a new client to the database
     # Using database address and port number
-    client = MongoClient("mongodb://10.251.12.108:30000")
+    client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
     
     # Return the client
     return client
@@ -139,8 +158,7 @@ def get_data(headers, comment_preference, subreddit):
             # |Upvotes: How many upvotes the post has                                    |
             # |Downvotes: How many downvotes the post has                                |
             # |--------------------------------------------------------------------------|
-            subreddit_content = subreddit_content.append({
-                "subreddit" : post["data"]["subreddit"],
+            subreddit_content = {"subreddit" : post["data"]["subreddit"],
                 "title" : post["data"]["title"],
                 "author" : post["data"]["author"],
                 "post_id" : post_type_id,
@@ -148,14 +166,10 @@ def get_data(headers, comment_preference, subreddit):
                 "created_utc" : format_time(post["data"]["created_utc"]),
                 "link" : "https://www.reddit.com/" + post["data"]["permalink"],
                 "upvotes" : post["data"]["ups"],
-                "downvotes" : post["data"]["downs"]},
-                ignore_index=True) 
-
-            # Rather than saving as a json file, get the data frame in dict format
-            dict_dataframe = convert_to_dict(subreddit_content)
+                "downvotes" : post["data"]["downs"]}
 
             # Add dict file to collection
-            collection.insert_one(dict_dataframe)
+            collection.insert_one(subreddit_content)
 
             # Increment iteration
             i += 1
@@ -165,9 +179,6 @@ def get_data(headers, comment_preference, subreddit):
             # Pass the parent's database connection
             get_comments(subreddit_header, comment_preference, subreddit_content["post_id"][0], db) 
         
-            # Clear dataframe
-            subreddit_content = subreddit_content[0:0]
-
         # Get post after the current last from the previous fetch
         # The maximum allowed number of post per fetch is 100
         # By getting the id of the last post in that current iteration and searching for the next 100 post after it we can all the post from the subreddit
@@ -211,8 +222,7 @@ def get_comments(post, comment_preference, post_id, database):
         # |Parent_Post: ID of the post this comment was made under                       |
         # |------------------------------------------------------------------------------|
         try:
-            post_comments = post_comments.append({
-                "subreddit" : comment["data"]["subreddit"],
+            post_comments = {"subreddit" : comment["data"]["subreddit"],
                 "author" : comment["data"]["author"],
                 "comment_id" : comment["kind"] + "_" + comment["data"]["id"],
                 "body" : comment["data"]["body"],
@@ -220,8 +230,7 @@ def get_comments(post, comment_preference, post_id, database):
                 "link" : "https://www.reddit.com/" + comment["data"]["permalink"],
                 "upvotes" : comment["data"]["ups"],
                 "downvotes" : comment["data"]["downs"],
-                "parent_post_id" : post_id},
-                ignore_index=True)
+                "parent_post_id" : post_id}
         except KeyError:
             # If there were no comments on that post, print an error
             print("Comment not found")
@@ -232,14 +241,8 @@ def get_comments(post, comment_preference, post_id, database):
         if comment_preference == "0":
             # If a comment was found under the parent post, write it to the database
             if comment_found: 
-                # Rather than saving as a json file, get the dataframe containing the single comment into dictonary format
-                dict_dataframe = convert_to_dict(post_comments)
-            
                 # Add dict file to collection
-                collection.insert_one(dict_dataframe)      
-
-                # Clear the dataframe
-                post_comments = post_comments[0:0]
+                collection.insert_one(post_comments)      
 
                 # Single comment flag set to true (Avoids duplicates later)
                 single_comments = True
@@ -247,11 +250,8 @@ def get_comments(post, comment_preference, post_id, database):
     # If a comment was found under the parent post, write it to the database
     # Check if the user specified comments to be saved singlely, if so do not write again (duplicates)
     if comment_found and single_comments == False: 
-            # Rather than saving as a json file, get the data frame in dict format
-            dict_dataframe = convert_to_dict(post_comments)
-            
             # Add dict file to collection
-            collection.insert_one(dict_dataframe)       
+            collection.insert_one(post_comments)       
 
 # Convert pandas dataframe to json and save as output file
 def save_as_json(dataframe, file_name):
