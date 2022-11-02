@@ -177,7 +177,7 @@ def get_data(headers, comment_preference, subreddit):
             # Get the comments for the current post
             # Calls a separate get request using the parent id of the current post
             # Pass the parent's database connection
-            get_comments(subreddit_header, comment_preference, subreddit_content["post_id"][0], db) 
+            get_comments(subreddit_header, comment_preference, subreddit_content["post_id"], db) 
         
         # Get post after the current last from the previous fetch
         # The maximum allowed number of post per fetch is 100
