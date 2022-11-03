@@ -7,41 +7,51 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 from string import punctuation
+
+#Holds the number of iterations that each processor will run
 numIter=20
+
+#Beginning of the URL that will be used to make the url of different sources
 URLBEGIN="https://www.gutenberg.org/cache/epub"
+
 def find_html(purl):
+    '''Gets the html from the provided site'''    
     page=urlopen(purl)
     html_bytes=page.read()
     html=html_bytes.decode("utf-8")
+    #decodes the html bytes into readable html code
     return html
 
 def get_title(htmlPage):
+    '''Gets the title of the provided site'''
     openT="Title:"
+    #Gutenberg saves the titles of the webpage between the title tag and the author tag
     closedT="Author:"
-    if htmlPage is None:
+    if htmlPage is None: #Runs if the html page is empty
         return "TITLE NOT FOUND"
-    else:
+    else: #Runs if the html page is not empty
         index=htmlPage.find(openT)
         start=index+len(openT)
         end=htmlPage.find(closedT)
-        if end-start<100:
+        if end-start<100:#Returns the title if the title is not too long
             return htmlPage[start:end]
-        else:
+        else:#Returns the first 150 characters if the title is too long
             return htmlPage[start:start+150]
 
 
 def get_date(html_page):
+    '''Gets the release date of the source'''
     openT="Release Date:"
     closedT="\n"
-    if html_page is None:
+    if html_page is None: #Runs if the html page is empty
         return "DATE NOT FOUND"
-    elif openT not in html_page or closedT not in html_page:
+    elif openT not in html_page or closedT not in html_page: #Runs if the tags for the data are not found in the page
         return"Date not found on page"
     else:
         index=html_page.find(openT)
         start=index+len(openT)
         end=html_page.find(closedT, start)
-        return html_page[start:end]
+        return html_page[start:end] #Returns the date of the source is one is found
 
 
 def get_author(html_page):
@@ -65,12 +75,6 @@ def readWebpage(pageCount):
     print(pageCount)
     totalLen=0
     for i in range(numIter):
-        '''if (i%(numIter//10)==0 and i!=0):
-            tempPName=str(mp.current_process())
-            tempPSplit=tempPName.split("ForkPoolWorker-")
-            tempPSplit2=tempPSplit[1].split("\' parent=")
-            print(str(i)+" iterations for processor: "+str(tempPSplit2[0])+" ========================================================================")
-        '''
         num=pageCount+i
         flag=0
         tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt"
@@ -100,6 +104,7 @@ def readWebpage(pageCount):
     return totalLen
 
 if __name__=="__main__":
+    #Creates the pool of processors to be used
     pool=mp.Pool(mp.cpu_count())
     count=0
     pageCounts=[]
