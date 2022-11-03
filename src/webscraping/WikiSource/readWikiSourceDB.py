@@ -201,7 +201,7 @@ def open_file(file_name):
 # Hash the string and return it, used for document ID
 def get_id(title):
     # Hash the string and return it, using default hash
-    return hash(title)
+    return str(hash(title))
 
 #Remove empty lines from the output string
 def remove_empty(input_lines):
