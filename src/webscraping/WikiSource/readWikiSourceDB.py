@@ -198,6 +198,11 @@ def open_file(file_name):
     f = open(file_name, "w")
     return f
 
+# Hash the string and return it, used for document ID
+def get_id(title):
+    # Hash the string and return it, using default hash
+    return hash(title)
+
 #Remove empty lines from the output string
 def remove_empty(input_lines):
     lines = input_lines.split('\n')
@@ -210,19 +215,28 @@ def remove_empty(input_lines):
     return returned_string
 
 # Compile data in dictionary
-def get_dictionary(metadata, text, html):
+def get_page_dictionary(metadata, text):
     # Loop through the page metadata, appending to the dict if available
     # Add the page text
-    # Add the page HTML
+    # Add the page ID
     data = {"Title" : metadata[0],
             "Date Published" : metadata[1],
             "Date Modified" : metadata[2],
             "Document Date" : metadata[3],
             "Text" : text,
-            "HTML" : html}
-    
+            "ID" : get_id(metadata[0])} 
     # Return the dictionary
-    return data 
+    return data
+
+# Get HTML dictionary
+def get_html_dictionary(metadata, html):
+    # Loop through the page metadata, appending to the dict if available
+    # Add the page HTML
+    # Add the page ID
+    data = {"HTML" : html,
+            "ID" : get_id(metadata[0])} 
+    # Return the dictionary
+    return data
 
 #Read the content of the page and print to a file
 def readWebpage(pageCount):
@@ -236,8 +250,9 @@ def readWebpage(pageCount):
     # Get a database from the connection
     database = get_database(client)
 
-    # Get a collection from the database (WikiSourceText, holds the wikisource pages)
-    collection = database.WikiSourceText
+    # Get a collection from the database (WikiSourceText, holds the wikisource pages, WikiSourceHTML holds html source)
+    page_collection = database.WikiSourceText
+    html_collection = database.WikiSourceHTML
 
     # Loop through all the pages passed from the main, this is done on each thread 
     for i in range(pageCount):
@@ -263,11 +278,17 @@ def readWebpage(pageCount):
             #Get metadata from the HTML file
             metadata=get_metadata(pageHtml)
 	    
-	    # Get the page data (text), HTML, and metadata
-            page_dict = get_dictionary(metadata, text, pageHtml)
+	    # Get the page data (text), and metadata in a dictionary
+            page_dict = get_page_dictionary(metadata, text)
 	
+            # Get the page HTML in a dictionary
+            html_dict = get_html_dictionary(metadata, html)
+
             # Add dictionary to the collection
-            collection.insert_one(page_dict)
+            page_collection.insert_one(page_dict)
+
+            # Add HTML to collection
+            html_collection.insert_one(html_dict)
 
             # Set flag back to true 
             flag = True
