@@ -208,11 +208,14 @@ def remove_empty(input_lines):
     lines = input_lines.split('\n')
     non_empty = [line for line in lines if line.strip() != '']
 
-    returned_string = ''
+    # Create an empty list and add lines to it
+    str_list = []
     for line in non_empty:
-        returned_string += line + '\n'
-
-    return returned_string
+        str_list.append(line)
+        str_list.append('\n')
+    
+    # Convert list to string
+    return "".join(str_list)
 
 # Compile data in dictionary
 def get_page_dictionary(metadata, text):
