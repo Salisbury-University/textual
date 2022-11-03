@@ -617,7 +617,7 @@ if __name__ == "__main__":
 
 		start_time = time.time()
 
-		train(x, y, categories, words, hidden_neurons=10, alpha=0.1, epochs=50000, dropout=True, dropout_percentage=0.1)
+		train(x, y, categories, words, hidden_neurons=20, alpha=0.15, epochs=30000, dropout=True, dropout_percentage=0.1)
 
 		elapsed_time = time.time() - start_time
 		print ("processing time:", elapsed_time, "seconds")
