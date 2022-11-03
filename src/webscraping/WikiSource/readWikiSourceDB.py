@@ -10,6 +10,7 @@
 # bs4: used to parse HTML
 # threading, multiprocessing, counter: used to run scraper in parallel
 # ================================================================================
+import zlib
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
@@ -236,7 +237,9 @@ def get_html_dictionary(metadata, html):
     # Loop through the page metadata, appending to the dict if available
     # Add the page HTML
     # Add the page ID
-    data = {"HTML" : html,
+
+    # Compress the HTML to save space, about 7x better space usage
+    data = {"HTML" : zlib.compress(html.encode()),
             "ID" : get_id(metadata[0])} 
     # Return the dictionary
     return data
