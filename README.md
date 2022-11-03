@@ -12,7 +12,7 @@
 
 ## Current Status 
 
-### **Sprint Two**: 17 October 2022 - XX November 2022
+### **Sprint Two**: 17 October 2022 - 7 November 2022
     
     We were successful in our first sprint goals. We researched, built scrapers, and
     prototyped and built scripts (including neural networks) to analyze and create
