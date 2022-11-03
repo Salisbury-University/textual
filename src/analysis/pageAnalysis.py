@@ -1,3 +1,4 @@
+from distutils import text_file
 from bs4 import BeautifulSoup
 from flashtext import KeywordProcessor
 import pandas as pd
@@ -10,11 +11,22 @@ import nltk
 import json
 import sys
 import multiprocessing as mp
+from multiprocessing import Pool
 from keywords import tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports
 
 ERROR_THRESHOLD = 0.2
 
 nltk.download('punkt')
+
+#global words_glob
+#global categories_glob
+#global syn_0_glob
+#global syn_1_glob
+
+syn_0_glob = []
+syn_1_glob = []
+words_glob = []
+categories_glob = []
 
 # inspiration/help:
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
@@ -534,7 +546,7 @@ def load_data(synapse_file):
 
 def classify(sentence, synapse_0, synapse_1, words, categories):
 
-	results = think(sentence, synapse_0, synapse_1, words)	
+	results = think(sentence, synapse_0, synapse_1, words)
 
 	results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
 	results.sort(key=lambda x: x[1], reverse=True) 
@@ -554,15 +566,15 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 				counter = counter + 1
 	else: 
 			
-		print(result) 
+		return result[0] 
 
 	if(counter != 0):
 
-		print(max_list[0])	
+		return max_list[0]
 
 
 def open_file(file_name):
-    f = open(file_name, "w")
+    f = open(file_name, 'r')
     return f
 
 
@@ -618,6 +630,9 @@ if __name__ == "__main__":
 		training_data = create_training_data(clean_data('categories.csv'))
 		words_categories_files = create_words_list(training_data)
 
+		#global words_glob
+		#global categories_glob
+
 		words = words_categories_files[0]
 		categories = words_categories_files[1]
 		files = words_categories_files[2] 
@@ -635,17 +650,33 @@ if __name__ == "__main__":
 		# get a collection of inputs to be classified and then use parallel processing to classify them
 
 		texts_to_classify = [] # loading in some set of texts from the command line
-		output_file = open_file("classified.csv") 
+		output_file = open_file("classified.txt") 
 
 		all_texts = output_file.read()
 
 		texts_to_classify = all_texts.split("========")
 
-		pool = mp.Pool(mp.cpu_count())
+		print(len(texts_to_classify))
 
-		pool.apply(classify, args=(texts_to_classify, synapse_0, synapse_1, words, categories))
+		#pool = mp.Pool(mp.cpu_count())
 
-		pool.close()
+		with Pool() as pool: 
+
+			print("Number of CPUs: ", mp.cpu_count())
+
+			args = []
+
+		# create an iterable list for the starmap functions
+
+			for text in texts_to_classify: 
+				args.append((text, synapse_0, synapse_1, words, categories))
+			
+		# print out all of the results
+
+			for result in pool.starmap(classify, args):
+				print(result)
+
+		#pool.close()
 
 	else: 
 		
