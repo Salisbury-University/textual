@@ -176,71 +176,38 @@ def readWebpage(pageCount):
         metadata=get_metadata(pageHtml)
 
             #Save page source to a separate file
-<<<<<<< Updated upstream
-						save_html(pageHtml, metadata[0])
 
-            #Print the page metadata to the screen
-						for data in metadata:
-								print(data)
-
-            #Ensure thread synchronization to avoid race condition
-						while global_lock.locked():
-								time.sleep(0.01)
-
-            #If the lock is available, grab it write the metadata and frequency to the file and return the lock
-						global_lock.acquire()
-
-						# this is used for gathering input to train my neural network
-
-						plaintext_file.write(metadata[0])
-						plaintext_file.write("\n")
-						plaintext_file.write(text)
-						plaintext_file.write("\n=========\n")
-
-						for data in metadata:
-								output_file.write(data + '\n')
-						output_file.write('\n')
-						freq_list = freq_count(text)
-           
-            #Print the frequency for each word
-						output_file.write(freq_list + '\n')
-        
-						global_lock.release()
-						print("Num loop: "+str(i)) 
-		flag=0
-=======
         save_html(pageHtml, metadata[0])
 
-        #Print the page metadata to the screen
-		#for data in metadata:
-			#print(data)
+            #Print the page metadata to the screen
+        for data in metadata:
+            print(data)
 
-        #Ensure thread synchronization to avoid race condition
+            #Ensure thread synchronization to avoid race condition
         while global_lock.locked():
             time.sleep(0.01)
 
-        #If the lock is available, grab it write the metadata and frequency to the file and return the lock
+            #If the lock is available, grab it write the metadata and frequency to the file and return the lock
         global_lock.acquire()
+
+						# this is used for gathering input to train my neural network
 
         plaintext_file.write(metadata[0])
         plaintext_file.write("\n")
         plaintext_file.write(text)
         plaintext_file.write("\n=========\n")
-       
-        '''
+
         for data in metadata:
             output_file.write(data + '\n')
             output_file.write('\n')
         freq_list = freq_count(text)
            
-        #Print the frequency for each word
+            #Print the frequency for each word
         output_file.write(freq_list + '\n')
-        '''
+        
         global_lock.release()
         print("Num loop: "+str(i)) 
     flag=0
->>>>>>> Stashed changes
-
 
 if __name__ == "__main__":
     #Open the output file
@@ -261,7 +228,7 @@ if __name__ == "__main__":
     
     #Stop threads and write output to console
     pool.close()
-		print("Done... output saved to file")
+    print("Done... output saved to file")
 
     #Close output file
     output_file.close()
