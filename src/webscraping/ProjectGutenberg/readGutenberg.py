@@ -55,14 +55,15 @@ def get_date(html_page):
 
 
 def get_author(html_page):
+    '''Gets the author of the source'''
     openT="Author:"
     closedT="Posting Date:"
     closedT2="Release Date:"
-    if html_page is None:
+    if html_page is None: #Runs if the html page is empty
         return "AUTHOR NOT FOUND"
-    elif openT not in html_page:
+    elif openT not in html_page: #Runs if the author tag is not found
         return "Author not found in page"
-    else:
+    else:#Returns the author line if the author tag is found in the page
         index=html_page.find(openT)
         start=index+len(openT)
         end=html_page.find(closedT)
@@ -72,33 +73,32 @@ def get_author(html_page):
 
 
 def readWebpage(pageCount):
+    '''Creates the URL to search and collects the metadata'''
     print(pageCount)
     totalLen=0
-    for i in range(numIter):
+    for i in range(numIter): #Runs the specified number of times
         num=pageCount+i
         flag=0
-        tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt"
+        tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt" #Creates the link for the page that will be searched
         url_str=tempURL
         try:
-            status_code=urllib.request.urlopen(url_str).getcode()
-        except urllib.error.HTTPError as err:
-            #print("http",err.code, "ERROR")
+            status_code=urllib.request.urlopen(url_str).getcode() #Makes sure that the page exists
+        except urllib.error.HTTPError as err:#Runs if the page does not exist
             flag=1
-        if flag==0:
+        if flag==0: #Only runs if the page exists
             pageHtml=find_html(tempURL)
             totalLen+=(len(pageHtml))
-            if "Language: English" not in pageHtml:
+            if "Language: English" not in pageHtml: #ProjectGutenberg sometimes has a language tag
                 print("Warning: Source may not be in English")
-            #print(totalLen)
             print(tempURL)
-            title=get_title(pageHtml)
+            title=get_title(pageHtml) #Gets the title of the webpage
             if len(title)<1000:
                 print(title)
             else:
                 print("Title too long")
-            date=get_date(pageHtml)
+            date=get_date(pageHtml) #Gets the source's publishing date
             print(date)
-            author=get_author(pageHtml)
+            author=get_author(pageHtml) #Gets the source's author
             print(author)
         flag=0
     return totalLen
@@ -108,14 +108,14 @@ if __name__=="__main__":
     pool=mp.Pool(mp.cpu_count())
     count=0
     pageCounts=[]
-    for i in range(mp.cpu_count()):
+    for i in range(mp.cpu_count()): #Creates the starting point for each of the processors
         pageCounts.append(count*numIter+1)
         count+=1
-    results=pool.map(readWebpage, [pageNum for pageNum in pageCounts])
+    results=pool.map(readWebpage, [pageNum for pageNum in pageCounts]) #Runs readWebpage on all processors
     print(results)
     totalLen=0
     for i in results:
         totalLen+=i
     pool.close()
-    print("Average HTML length= "+str(round(totalLen/(numIter*mp.cpu_count()),2)))
+    print("Average HTML length= "+str(round(totalLen/(numIter*mp.cpu_count()),2))) #Calculates the average html length for all sources
     print("Done")
