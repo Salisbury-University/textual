@@ -282,7 +282,7 @@ def readWebpage(pageCount):
             page_dict = get_page_dictionary(metadata, text)
 	
             # Get the page HTML in a dictionary
-            html_dict = get_html_dictionary(metadata, html)
+            html_dict = get_html_dictionary(metadata, pageHtml)
 
             # Add dictionary to the collection
             page_collection.insert_one(page_dict)
