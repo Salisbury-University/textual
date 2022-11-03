@@ -677,4 +677,4 @@ if __name__ == "__main__":
 
 	else: 
 		
-		print("Unidentified command line arguments. Please use --test or --train.\n")
+		print("Unidentified command line arguments. Please use --test or --train")
