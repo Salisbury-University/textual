@@ -20,6 +20,7 @@ import sys
 import multiprocessing as mp
 from multiprocessing import Pool
 import connectDB
+from math import e, log
 from keywords import tech, hist, advertisement, religion, political, scientific, cultural, nature, economy, government, sports
 
 ERROR_THRESHOLD = 0.2
@@ -357,6 +358,23 @@ def sigmoid(x):
 def sigmoid_to_derivative(sigmoid_out):
 		
 	return sigmoid_out*(1-sigmoid_out)
+
+
+# POTENTIAL SIGMOID ALTERNATIVE: softplus
+# f(x): log(e)(1 + e^x)
+# f'(x): 1/(1+e^-x)
+
+def softplus(x): 
+	
+	return log(1+np.exp(x), e)
+
+# softplus_to_derivative() -> converts the softplus value to its derivative
+# parameters -> softplus_out (output of softplus function)
+# returns -> value of derivative
+
+def softplus_to_derivative(softplus_out):
+	
+	return 1/(1 + np.exp(-softplus_out))
 
 
 # clean_sentence -> tokenizes the sentence and stems the words
