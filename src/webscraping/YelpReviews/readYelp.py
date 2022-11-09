@@ -18,6 +18,9 @@ import json
 import numpy as np
 from collections import Counter
 
+# Used to connect to the MongoDB database
+from pymongo import MongoClient
+
 # ================================================================================
 #                               DATABASE FUNTIONS
 # ================================================================================
