@@ -12,6 +12,18 @@
 
 ## Current Status 
 
+### **Sprint Three**: 7 November 2022 - XX November 2022
+
+    We were successful in our second sprint goals. We built continued to build our 
+    scrapers and refine our analysis scripts. We also got the preliminary database set up
+    (thanks to Chris!) and are beginning to push data to the database. 
+    
+    The third sprint will be focused on finishing up our remaining scrapers (for Amazon
+    and Yelp), building the database, and building a preliminary website. We need to figure
+    out how we are going to host our website, but for the time being it will be hosted locally.
+    
+    The tools that we will primarily be using are bootstrap (HTML/CSS), JavaScript, and Python. 
+
 ### **Sprint Two**: 17 October 2022 - 7 November 2022
     
     We were successful in our first sprint goals. We researched, built scrapers, and
