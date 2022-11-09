@@ -17,7 +17,9 @@ from collections import Counter
 
 # Method to pull from file (Will be implemented later)
 def pullReviews(input_str):
-    print("Hello")
+    
+    # Print current thread
+    print("Thread: " + str(mp.current_process()))
 
 # Main method
 if __name__ =="__main__":
