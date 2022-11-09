@@ -19,7 +19,7 @@ from collections import Counter
 
 # Open the file and return it
 def openFile(filename):
-    input_file = (filename)
+    input_file = open(filename)
     return input_file
 
 # Method to pull from file (Will be implemented later)
@@ -30,6 +30,9 @@ def pullReviews(input_str):
 
 # Main method
 if __name__ =="__main__":
+    # Open the JSON file
+    input_file = openFile("yelp_academic_dataset_business.json")
+    
     # Create the multithreading pool
     pool=mp.Pool(mp.cpu_count())
     
@@ -46,4 +49,7 @@ if __name__ =="__main__":
     
     #Stop threads and write output to console
     pool.close()
+
+    # Close file
+    input_file.close()
     print("Done... pulled files written to MongoDB database")
