@@ -581,7 +581,7 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 				counter = counter + 1
 	else: 
 			
-		return result[0] 
+		return result[0][0]
 
 	if(counter != 0):
 
@@ -603,7 +603,7 @@ if __name__ == "__main__":
 
 	if(len(sys.argv) == 2 and (sys.argv[1] == "--train" or sys.argv[1] == "-t")):
 
-		samples = load_samples('new_plaintexts.txt')
+		samples = load_samples('plaintext.txt')
 	
 		for item in samples:
 			htmls.append(item)
@@ -665,15 +665,13 @@ if __name__ == "__main__":
 		# get a collection of inputs to be classified and then use parallel processing to classify them
 
 		texts_to_classify = [] # loading in some set of texts from the command line
-		output_file = open_file("classified.txt") 
+		output_file = open_file("plaintext.txt") 
 
 		all_texts = output_file.read()
 
-		texts_to_classify = all_texts.split("========")
+		texts_to_classify = all_texts.split("=========")
 
 		print(len(texts_to_classify))
-
-		#pool = mp.Pool(mp.cpu_count())
 
 		with Pool() as pool: 
 
@@ -681,17 +679,15 @@ if __name__ == "__main__":
 
 			args = []
 
-		# create an iterable list for the starmap functions
+			# create an iterable list for the starmap functions
 
 			for text in texts_to_classify: 
 				args.append((text, synapse_0, synapse_1, words, categories))
 			
-		# print out all of the results
+			# print out all of the results
 
 			for result in pool.starmap(classify, args):
 				print(result)
-
-		#pool.close()
 
 	else: 
 		
