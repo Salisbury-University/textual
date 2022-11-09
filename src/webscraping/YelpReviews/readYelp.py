@@ -66,7 +66,6 @@ def openFile(filename):
 # Method to pull from file (Will be implemented later)
 def pullReviews(input_arr):
     for line in input_arr:
-        print(line["review_id"])
 
     # Print current thread
     print("Thread: " + str(mp.current_process()))
@@ -80,7 +79,7 @@ if __name__ =="__main__":
     # Iterate through the file and append the lines as dictionaries
     
     # Open the JSON file
-    with open("yelp_academic_dataset_review_35000.json") as input_file: 
+    with open("yelp_academic_dataset_review_100000.json") as input_file: 
         for line in input_file:
             # Load the line as JSON 
             json_obj = json.loads(line)
