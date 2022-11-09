@@ -8,12 +8,19 @@
 # Included libraries
 # Pandas: storing data
 # functools, threading, multiprocessing, and counter: Multiprocessing
+# JSON: reading json file
 # ================================================================================
 import functools as ft
 import multiprocessing as mp
 import threading
 import pandas as pd
+import json
 from collections import Counter
+
+# Open the file and return it
+def openFile(filename):
+    input_file = (filename)
+    return input_file
 
 # Method to pull from file (Will be implemented later)
 def pullReviews(input_str):
