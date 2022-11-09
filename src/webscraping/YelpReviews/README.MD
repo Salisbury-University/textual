@@ -1,9 +1,6 @@
-# Yelp Review data collector
+# Yelp Review Data Collector
 
-The documentation on the usage of the Yelp review dataset can be found at https://www.yelp.com/dataset
-<br/>
-The data in the dataset will be formated and pushed to our mongoDB database
-<br/>
+The documentation on the usage of the Yelp review dataset can be found at https://www.yelp.com/dataset. The data in the dataset will be formated and written to our mongoDB database.
 <br/>
 
 # Purpose
