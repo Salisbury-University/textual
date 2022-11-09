@@ -25,6 +25,7 @@ def openFile(filename):
 # Method to pull from file (Will be implemented later)
 def pullReviews(input_str):
     
+    print (input_str)
     # Print current thread
     print("Thread: " + str(mp.current_process()))
 
@@ -36,26 +37,24 @@ if __name__ =="__main__":
     # Holds review dictionaries
     reviews=[]
 
-    # Iterate through the file and append the lines to dictionaries
+    # Iterate through the file and append the lines as dictionaries
     for line in input_file:
         json_obj = json.loads(line)
         reviews.append(json_obj)
-    
-    print(reviews[0]["categories"])
 
     # Create the multithreading pool
     pool=mp.Pool(mp.cpu_count())
     
     #Write the pages to the list
-    entryCount=[]
+    reviewList=[]
     for i in range(mp.cpu_count()):
-        entryCount.append(20)
+        reviewList.append(reviews[i])
     
     #Print information to the console to inform the user on the number of threads available
     print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
-    pool.map(pullReviews, [pageNum for pageNum in entryCount])
+    pool.map(pullReviews, [reviewEntry for reviewEntry in reviewList])
     
     #Stop threads and write output to console
     pool.close()
