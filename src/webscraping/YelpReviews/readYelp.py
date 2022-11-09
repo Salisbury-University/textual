@@ -33,6 +33,16 @@ if __name__ =="__main__":
     # Open the JSON file
     input_file = openFile("yelp_academic_dataset_business.json")
     
+    # Holds review dictionaries
+    reviews=[]
+
+    # Iterate through the file and append the lines to dictionaries
+    for line in input_file:
+        dict = [line]
+        reviews.append(dict)
+    
+    print(reviews[0])
+
     # Create the multithreading pool
     pool=mp.Pool(mp.cpu_count())
     
