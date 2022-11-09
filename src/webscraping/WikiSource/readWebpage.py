@@ -196,7 +196,7 @@ def readWebpage(pageCount):
         plaintext_file.write("\n")
         plaintext_file.write(text)
         plaintext_file.write("\n=========\n")
-
+        
         for data in metadata:
             output_file.write(data + '\n')
             output_file.write('\n')
@@ -204,7 +204,7 @@ def readWebpage(pageCount):
            
             #Print the frequency for each word
         output_file.write(freq_list + '\n')
-        
+
         global_lock.release()
         print("Num loop: "+str(i)) 
     flag=0

@@ -8,6 +8,9 @@
 
 # Include libraries
 
+from distutils.command.clean import clean
+from re import A
+from tracemalloc import get_object_traceback
 from flashtext import KeywordProcessor
 import pandas as pd
 from nltk.stem.lancaster import LancasterStemmer
@@ -31,6 +34,32 @@ nltk.download('punkt')
 # https://towardsdatascience.com/industrial-classification-of-websites-by-machine-learning-with-hands-on-python-3761b1b530f1
 
 # getting all of the keywords
+
+# clean_keywords() -> takes list of keywords and returns their stemmed version
+# parameters -> keywords : a list of keywords 
+# returns -> stemmed_keywords
+
+def clean_keywords(keywords): 
+
+	stemmer = LancasterStemmer()
+
+	stemmed_keywords = [stemmer.stem(keyword.lower()) for keyword in keywords]
+
+	return stemmed_keywords
+
+# kind of weird, stems each of the keywords
+
+tech = clean_keywords(tech)
+hist = clean_keywords(hist)
+advertisement = clean_keywords(advertisement)
+religion = clean_keywords(religion)
+political = clean_keywords(political)
+scientific = clean_keywords(scientific)
+cultural = clean_keywords(cultural)
+nature = clean_keywords(nature)
+economy = clean_keywords(economy)
+government = clean_keywords(government)
+sports = clean_keywords(sports)
 
 all_keywords = tech + hist + advertisement + religion + political + scientific + cultural + nature + economy + government + sports
 
@@ -360,23 +389,6 @@ def sigmoid_to_derivative(sigmoid_out):
 	return sigmoid_out*(1-sigmoid_out)
 
 
-# POTENTIAL SIGMOID ALTERNATIVE: softplus
-# f(x): log(e)(1 + e^x)
-# f'(x): 1/(1+e^-x)
-
-def softplus(x): 
-	
-	return log(1+np.exp(x), e)
-
-# softplus_to_derivative() -> converts the softplus value to its derivative
-# parameters -> softplus_out (output of softplus function)
-# returns -> value of derivative
-
-def softplus_to_derivative(softplus_out):
-	
-	return 1/(1 + np.exp(-softplus_out))
-
-
 # clean_sentence -> tokenizes the sentence and stems the words
 # parameters -> sentence (a sentence) 
 # returns -> returns the list of tokenized, cleaned words  
@@ -565,6 +577,9 @@ def classify(sentence, synapse_0, synapse_1, words, categories):
 
 	results = [[i,r] for i,r in enumerate(results) if r>ERROR_THRESHOLD ] 
 	results.sort(key=lambda x: x[1], reverse=True) 
+
+	print(results)
+
 	result =[[categories[r[0]],r[1]] for r in results]
 
 	counter=0
