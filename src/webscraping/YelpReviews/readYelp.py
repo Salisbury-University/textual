@@ -9,6 +9,7 @@
 # Pandas: storing data
 # functools, threading, multiprocessing, and counter: Multiprocessing
 # JSON: reading json file
+# sys: used for interacting with the command line
 # ================================================================================
 import functools as ft
 import multiprocessing as mp
@@ -16,6 +17,7 @@ import threading
 import pandas as pd
 import json
 import numpy as np
+import sys
 from collections import Counter
 
 # Used to connect to the MongoDB database
@@ -89,6 +91,14 @@ def pullReviews(input_arr):
 
 # Main method
 if __name__ =="__main__":
+    # Get command line argument
+    if (len(sys.argv) < 2):
+        print("Please enter the name of a file as a command line argument")
+        sys.exit()
+
+    # Get first command user line argument
+    filename = sys.argv[1]
+    
     # Holds review dictionaries
     reviews=[]
     
@@ -96,7 +106,7 @@ if __name__ =="__main__":
     # Iterate through the file and append the lines as dictionaries
     
     # Open the JSON file
-    with open("yelp_academic_dataset_review_100000.json") as input_file: 
+    with open(filename) as input_file: 
         for line in input_file:
             # Load the line as JSON 
             json_obj = json.loads(line)
