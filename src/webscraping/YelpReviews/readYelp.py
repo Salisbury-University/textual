@@ -6,9 +6,18 @@
 
 # ================================================================================
 # Included libraries
+# Pandas: storing data
+# functools, threading, multiprocessing, and counter: Multiprocessing
 # ================================================================================
+import functools as ft
+import multiprocessing as mp
+import threading
+import pandas as pd
+from collections import Counter
 
 # Method to pull from file (Will be implemented later)
+def pullReviews(input_str):
+    print("Hello")
 
 # Main method
 if __name__ =="__main__":
@@ -24,7 +33,7 @@ if __name__ =="__main__":
     print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
-    # pool.map(readWebpage, [pageNum for pageNum in entryCount])
+    pool.map(pullReviews, [pageNum for pageNum in entryCount])
     
     #Stop threads and write output to console
     pool.close()
