@@ -15,6 +15,7 @@ import multiprocessing as mp
 import threading
 import pandas as pd
 import json
+import numpy as np
 from collections import Counter
 
 # Open the file and return it
@@ -49,7 +50,12 @@ if __name__ =="__main__":
     reviewList=[]
     for i in range(mp.cpu_count()):
         reviewList.append(reviews[i])
+
+    arrays = np.array_split(reviews, mp.cpu_count())
     
+    for array in arrays:
+        print(len(array))
+
     #Print information to the console to inform the user on the number of threads available
     print("Number of available processors: ", mp.cpu_count())
 
