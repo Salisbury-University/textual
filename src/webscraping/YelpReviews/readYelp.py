@@ -65,11 +65,20 @@ def openFile(filename):
 
 # Method to pull from file (Will be implemented later)
 def pullReviews(input_arr):
-    for line in input_arr:
+    # Get a connection to the server
+    #client = get_client()
+    
+    # Get a database from the connection
+    #database = get_database(client)
 
-    # Print current thread
-    print("Thread: " + str(mp.current_process()))
+    # Get a collection from the database (WikiSourceText, holds the wikisource pages, WikiSourceHTML holds html source)
+    #page_collection = database.YelpReviews
 
+    for i in range(0, len(input_arr)):
+        # Print current thread
+        print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
+        dict(input_arr[i])
+    
 # Main method
 if __name__ =="__main__":
     # Holds review dictionaries
