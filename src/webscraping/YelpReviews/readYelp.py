@@ -38,10 +38,10 @@ if __name__ =="__main__":
 
     # Iterate through the file and append the lines to dictionaries
     for line in input_file:
-        dict = [line]
-        reviews.append(dict)
+        json_obj = json.loads(line)
+        reviews.append(json_obj)
     
-    print(reviews[0])
+    print(reviews[0]["categories"])
 
     # Create the multithreading pool
     pool=mp.Pool(mp.cpu_count())
