@@ -74,13 +74,16 @@ def pullReviews(input_arr):
     # Get a collection from the database (WikiSourceText, holds the wikisource pages, WikiSourceHTML holds html source)
     yelp_collection = database.YelpReviews
 
+    # Iterate through each array within the numpy array
     for i in range(0, len(input_arr)):
         # Print current thread
         print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
         # Convert to dictionary and write to database
         yelp_collection.insert_one(dict(input_arr[i]))
     
+    # Close the connection to the database, IMPORTANT
     client.close()
+
 # Main method
 if __name__ =="__main__":
     # Holds review dictionaries
