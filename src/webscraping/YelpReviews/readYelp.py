@@ -37,21 +37,22 @@ if __name__ =="__main__":
     
     # Holds review dictionaries
     reviews=[]
-
+    
+    # Parallelizing this part will increase the script's speed further
     # Iterate through the file and append the lines as dictionaries
     for line in input_file:
+        # Load the line as JSON 
         json_obj = json.loads(line)
+        # Append the JSON object to the end of the list
         reviews.append(json_obj)
 
-    # Create the multithreading pool
-    pool=mp.Pool(mp.cpu_count())
-    
-    #Write the pages to the list
-    reviewList=[]
-    for i in range(mp.cpu_count()):
-        reviewList.append(reviews[i])
-
+    # Split larger array into n sub arrays where n is the number of available processors
+    # This is done to allow each processor to process some of the data
+    # Parallelizing this part greatly speeds up the process of writing the data to the database
     arrays = np.array_split(reviews, mp.cpu_count())
+
+    # Create the multithreading pool
+    pool=mp.Pool(mp.cpu_count()) 
     
     for array in arrays:
         print(len(array))
