@@ -9,3 +9,6 @@ This script will take a JSON file from the Yelp Review Dataset and write it to t
 # Usage
 Simply pass the desired JSON file in as a command line argument.
 NOTE: Since when files are opened in Python, they are fully loaded into memory, the script can only be run with a file and machine with matching capabilities.
+
+# Current Status
+Currently all of the ~7m Yelp Reviews have been placed into the monogoDB database. Totaling approximately 5.5 GB uncompressed.
