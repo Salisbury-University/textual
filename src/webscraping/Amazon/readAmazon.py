@@ -3,6 +3,7 @@ import sys
 import pandas as pd
 import multiprocessing as mp
 import csv
+import requests 
 
 from pymongo import MongoClient
 
@@ -67,5 +68,10 @@ def read_data(input_file):
 
 if __name__ == "__main__":
 
-    read_data("amazon_reviews_multilingual_US_v1_00.tsv")
+    url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_multilingual_US_v1_00.tsv.gz' 
+    r = requests.get(url, allow_redirects=True)
+
+    open('amazon_reviews.tsv', 'wb').write(r.content)
+
+    #read_data("amazon_reviews_multilingual_US_v1_00.tsv")
             
