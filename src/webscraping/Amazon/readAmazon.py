@@ -1,5 +1,4 @@
 import json
-import sys
 import pandas as pd
 import multiprocessing as mp
 import csv
