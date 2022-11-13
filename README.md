@@ -14,7 +14,7 @@
 
 ### **Sprint Three**: 7 November 2022 - XX November 2022
 
-    We were successful in our second sprint goals. We built continued to build our 
+    We were successful in our second sprint goals. We continued to build our 
     scrapers and refine our analysis scripts. We also got the preliminary database set up
     (thanks to Chris!) and are beginning to push data to the database. 
     
