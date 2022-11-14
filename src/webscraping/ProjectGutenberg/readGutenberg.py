@@ -7,9 +7,9 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 from string import punctuation
-
+from pymongo import MongoClient
 #Holds the number of iterations that each processor will run
-numIter=20
+numIter=100
 
 #Beginning of the URL that will be used to make the url of different sources
 URLBEGIN="https://www.gutenberg.org/cache/epub"
