@@ -5,7 +5,7 @@
 
 //Import required packages
 var MongoClient = require('mongodb').MongoClient;
-var http = require('http')
+var http = require('http');
 
 //Database url, does not contain the password for security purposes
 const url = "mongodb://10.251.12.108:30000?authSource=admin";
@@ -22,7 +22,12 @@ function connect_to_db(res) {
 		cursor.each(function(err, item) {
 			//Write until empty
 			if (item != null)
+			{
+				//Write post title, date, and text to the HTML page
 				res.write("Post Title: " + item.title + "<br/>");
+				res.write("Post Date: " + item.created_utc + "<br/>");
+				res.write("Post content: " + item.selftext + "<br/><br/>");
+			}
 			else
 				res.end();
 		});
