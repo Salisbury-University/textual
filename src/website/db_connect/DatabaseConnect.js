@@ -20,7 +20,7 @@ function connect_to_db(res) {
 
 		//Write table
 		res.write("<table><tr>");
-		res.write("<th>Post Title</th><th>Post Date</th><th>Post Content</th></tr>");
+		res.write("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
 
 		//For each item, append it to the HTML content
 		cursor.each(function(err, item) {
@@ -29,6 +29,7 @@ function connect_to_db(res) {
 			{
 				//Write post title, date, and text to the HTML page
 				res.write("<tr><td>" + item.title + "</td>");
+				res.write("<td>" + item.subreddit + "</td>");
 				res.write("<td>" + item.created_utc + "</td>");
 				res.write("<td>" + item.selftext + "</td></tr>");
 			}
@@ -47,7 +48,7 @@ http.createServer(function (req, res) {
 	var body = "";
 	var header = "<title>Textual Baseline Database</title><style> body { background-color: #aaaaaa; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; } #tableHeader { text-align: center; } </style>";
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-	res.write('<h1 id="pageHeader">COSC425-COSC426 Textual Baseline Database</h1><br/><br/>');
+	res.write('<h1 id="pageHeader">COSC 425-COSC 426 Textual Baseline Database</h1><br/><br/>');
 	res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
 	
 	//Connect to database and print data
