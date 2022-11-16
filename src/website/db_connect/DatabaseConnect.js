@@ -45,9 +45,9 @@ function connect_to_db(res) {
 http.createServer(function (req, res) {	
 	//Print header
 	var body = "";
-	var header = "<title>MongoDB Frontpage</title><style> table { border: 1px solid black; } table td, table th { border: 2px solid black; } </style>";
+	var header = "<title>MongoDB Frontpage</title><style> table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; } </style>";
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-	res.write("REDDIT POSTS<br/>");
+	res.write('<h1 id="pageHeader">REDDIT POSTS</h1><br/>');
 	//Connect to database and print data
 	connect_to_db(res);
 
