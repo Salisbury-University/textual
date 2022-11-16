@@ -18,18 +18,25 @@ function connect_to_db(res) {
 		var db = client.db("textual");
 		var cursor = db.collection('RedditPosts').find();
 
+		//Write table
+		res.write("<table><tr>");
+		res.write("<th>Post Title</th><th>Post Date</th><th>Post Content</th></tr>");
+
 		//For each item, append it to the HTML content
 		cursor.each(function(err, item) {
 			//Write until empty
 			if (item != null)
 			{
 				//Write post title, date, and text to the HTML page
-				res.write("Post Title: " + item.title + "<br/>");
-				res.write("Post Date: " + item.created_utc + "<br/>");
-				res.write("Post content: " + item.selftext + "<br/><br/>");
+				res.write("<tr><td>" + item.title + "</td>");
+				res.write("<td>" + item.created_utc + "</td>");
+				res.write("<td>" + item.selftext + "</td></tr>");
 			}
 			else
+			{
+				res.write("</table>");
 				res.end();
+			}
 		});
 	});
 }
