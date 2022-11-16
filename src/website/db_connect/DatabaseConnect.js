@@ -31,7 +31,8 @@ function connect_to_db(res) {
 				res.write("<tr><td>" + item.title + "</td>");
 				res.write("<td>" + item.subreddit + "</td>");
 				res.write("<td>" + item.created_utc + "</td>");
-				res.write("<td>" + item.selftext + "</td></tr>");
+				var post_text = item.selftext
+				res.write("<td>" + post_text + "</td></tr>");
 			}
 			else
 			{
@@ -46,7 +47,7 @@ function connect_to_db(res) {
 http.createServer(function (req, res) {	
 	//Print header
 	var body = "";
-	var header = "<title>Textual Baseline Database</title><style> body { background-color: #aaaaaa; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; } #tableHeader { text-align: center; } </style>";
+	var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; } #tableHeader { text-align: center; } </style>";
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
 	res.write('<h1 id="pageHeader">COSC 425-COSC 426 Textual Baseline Database</h1><br/><br/>');
 	res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
