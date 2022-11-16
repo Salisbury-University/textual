@@ -25,12 +25,12 @@ STOPWORDS = set(stopwords.words("english"))
 
 file_list = (glob.glob("train_dataset/*/*.txt"))
 
-reviews=[]
-labels=[]
+reviews = []
+labels = []
 
 vocab=5000
 embedding_dim=64
-max_length=200
+max_length=500
 trunc_type = "post"
 padding_type = "post"
 oov_tok = "<oov>" # OUT OF VOCAB
@@ -47,9 +47,46 @@ for input_file in file_list:
     rating = re.sub("train_dataset/star_", "", rating)
     rating = re.sub("/.*", "", rating)
 
+    new_file.close()
     labels.append(rating)
     print(str(i) + " " + rating)
     i = i + 1
 
-print(reviews[5])
-print(labels[5])
+train_size = int(len(reviews) * training_portion)
+
+train_reviews = reviews[0: train_size]
+train_labels = labels[0: train_size]
+
+validation_reviews = reviews[train_size:]
+validation_labels = labels[train_size:]
+
+print("Tokenizing")
+tokenizer = Tokenizer(num_words = vocab, oov_token=oov_tok)
+tokenizer.fit_on_texts(train_reviews)
+word_index = tokenizer.word_index
+
+print("Extracting sequences")
+train_sequences = tokenizer.texts_to_sequences(train_reviews)
+train_padded = pad_sequences(train_sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)
+
+validation_sequences = tokenizer.texts_to_sequences(validation_reviews)
+validation_padded = pad_sequences(validation_sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)
+
+label_tokenizer = Tokenizer()
+label_tokenizer.fit_on_texts(labels)
+
+training_label_seq = np.array(label_tokenizer.texts_to_sequences(train_labels))
+validation_label_seq = np.array(label_tokenizer.texts_to_sequences(validation_labels))
+
+print("Creating Model")
+model = Sequential()
+
+model.add(Embedding(vocab, embedding_dim))
+model.add(Dropout(0.5))
+model.add(Bidirectional(LSTM(embedding_dim)))
+model.add(Dense(5, activation="softmax"))
+
+model.compile(loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+num_epochs = 12
+history = model.fit(train_padded, training_label_seq, epochs=num_epochs, validation_data=(validation_padded, validation_label_seq), verbose=2)
