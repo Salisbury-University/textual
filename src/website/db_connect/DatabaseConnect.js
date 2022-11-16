@@ -45,9 +45,11 @@ function connect_to_db(res) {
 http.createServer(function (req, res) {	
 	//Print header
 	var body = "";
-	var header = "<title>MongoDB Frontpage</title><style> table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; } </style>";
+	var header = "<title>Textual Baseline Database</title><style> body { background-color: #aaaaaa; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; } #tableHeader { text-align: center; } </style>";
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-	res.write('<h1 id="pageHeader">REDDIT POSTS</h1><br/>');
+	res.write('<h1 id="pageHeader">COSC425-COSC426 Textual Baseline Database</h1><br/><br/>');
+	res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
+	
 	//Connect to database and print data
 	connect_to_db(res);
 
