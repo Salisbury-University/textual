@@ -8,7 +8,7 @@ var MongoClient = require('mongodb').MongoClient;
 var http = require('http');
 
 //Database url, does not contain the password for security purposes
-const url = "mongodb://10.251.12.108:30000?authSource=admin";
+const url = "mongodb://root:password@10.251.12.108:30000?authSource=admin";
 
 function connect_to_db(res) {
 	//Connect to the MongoDB
@@ -35,9 +35,11 @@ function connect_to_db(res) {
 }
 
 //Create local host server
-http.createServer(function (req, res) {
+http.createServer(function (req, res) {	
 	//Print header
-	res.writeHead(200, {'Content-Type': 'text/html'});
+	var body = "";
+	var header = "<title>MongoDB Frontpage</title>";
+	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
 	res.write("REDDIT POSTS<br/>");
 	//Connect to database and print data
 	connect_to_db(res);
