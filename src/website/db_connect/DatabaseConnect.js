@@ -45,7 +45,7 @@ function connect_to_db(res) {
 http.createServer(function (req, res) {	
 	//Print header
 	var body = "";
-	var header = "<title>MongoDB Frontpage</title>";
+	var header = "<title>MongoDB Frontpage</title><style> table { border: 1px solid black; } </style>";
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
 	res.write("REDDIT POSTS<br/>");
 	//Connect to database and print data
