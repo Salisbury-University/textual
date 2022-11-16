@@ -31,8 +31,11 @@ function connect_to_db(res) {
 				res.write("<tr><td>" + item.title + "</td>");
 				res.write("<td>" + item.subreddit + "</td>");
 				res.write("<td>" + item.created_utc + "</td>");
-				var post_text = item.selftext
-				res.write("<td>" + post_text + "</td></tr>");
+				var post_text = item.selftext;
+				if (post_text == "")
+					res.write("<td>" + "No Text Found" + "</td></tr>");
+				else
+					res.write("<td>" + post_text + "</td></tr>");
 			}
 			else
 			{
