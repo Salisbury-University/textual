@@ -1,9 +1,11 @@
 import json
-import sys
 import pandas as pd
 import multiprocessing as mp
 import csv
 import requests 
+import zipfile
+import urllib.request
+import gzip
 
 from pymongo import MongoClient
 
@@ -66,12 +68,26 @@ def read_data(input_file):
 
         collection.insert_one(json_review)
 
+    print(json_review)
+
+    close_database(client)
+
+
+
 if __name__ == "__main__":
 
-    url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_multilingual_US_v1_00.tsv.gz' 
-    r = requests.get(url, allow_redirects=True)
+    #url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_multilingual_US_v1_00.tsv.gz' 
 
-    open('amazon_reviews.tsv', 'wb').write(r.content)
+    # temp location
+    file_load = "/Users/cksmith21/Downloads/amazon_one.tsv"
+    read_data(file_load)
 
-    #read_data("amazon_reviews_multilingual_US_v1_00.tsv")
+    '''
+    with open(file_load, 'r') as f:
+        df = pd.read_csv(file_load, sep="\t", header=0)
+
+    print(df)
+    print(df.shape)
+    '''
+  
             
