@@ -7,44 +7,12 @@ import multiprocessing as mp
 import threading
 from collections import Counter
 from string import punctuation
-from pymongo import MongoClient
+
 #Holds the number of iterations that each processor will run
-numIter=100
+numIter=20
 
 #Beginning of the URL that will be used to make the url of different sources
 URLBEGIN="https://www.gutenberg.org/cache/epub"
-
-def get_credentials():
-    with open("mongopassword.txt","r") as pass_file:
-        lines=pass_file.read().splitlines()
-    pass_file.close()
-    return line
-
-def get_client():
-    # Needs to be done this way, can't push credentials to github
-    # Call the get pass function to open the file and extract the credentials
-    lines = get_credentials()
-
-    # Get the username from the file
-    username = lines[0]
-
-    # Get the password from the file
-    password = lines[1]
-    
-    # Set up a new client to the database
-    # Using database address and port number
-    client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
-
-    # Return the client
-    return client
-
-def get_database(client):
-	return client.textual
-
-def close_database(client):
-	client.close()
-
-
 
 def find_html(purl):
     '''Gets the html from the provided site'''    
@@ -105,8 +73,6 @@ def get_author(html_page):
 
 
 def readWebpage(pageCount):
-    client=get_client()
-    database=get_database(client)
     '''Creates the URL to search and collects the metadata'''
     print(pageCount)
     totalLen=0
@@ -126,7 +92,8 @@ def readWebpage(pageCount):
                 print("Warning: Source may not be in English")
             print(tempURL)
             title=get_title(pageHtml) #Gets the title of the webpage
-            if len(title)>=1000:
+            if len(title)<1000:
+                print(title)
             else:
                 print("Title too long")
             date=get_date(pageHtml) #Gets the source's publishing date
