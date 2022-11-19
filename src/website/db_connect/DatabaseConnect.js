@@ -54,7 +54,7 @@ http.createServer(function (req, res) {
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
 	res.write('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
 	res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
-	
+
 	//Connect to database and print data
 	connect_to_db(res);
 
