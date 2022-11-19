@@ -18,7 +18,7 @@ def get_credentials():
     with open("mongopassword.txt","r") as pass_file:
         lines=pass_file.read().splitlines()
     pass_file.close()
-    return line
+    return lines
 
 def get_client():
     # Needs to be done this way, can't push credentials to github
@@ -44,7 +44,11 @@ def get_database(client):
 def close_database(client):
 	client.close()
 
-
+def save_html(html, pageID):
+    htmlFile="HTML_ProjectGutenberg_"+str(pageID)+".html"
+    file=open_file(htmlFile)
+    file.writelines(html)
+    file.close()
 
 def find_html(purl):
     '''Gets the html from the provided site'''    

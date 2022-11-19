@@ -1,9 +1,11 @@
 import json
-import sys
 import pandas as pd
 import multiprocessing as mp
 import csv
 import requests 
+import zipfile
+import urllib.request
+import gzip
 
 from pymongo import MongoClient
 
@@ -55,23 +57,41 @@ def read_data(input_file):
 
     collection = db.AmazonReviews
 
-    with open(input_file) as tsv:
-        reader = csv.DictReader(tsv, dialect="excel-tab")
+    for file_ in file_load:
+        with open(file_) as tsv:
+            reader = csv.DictReader(tsv, dialect="excel-tab")
 
-        for row in reader:
-            reviews.append(row)
+            for row in reader:
+                reviews.append(row)
 
 
-        json_review = json.dumps(reviews, indent=4)
+            json_review = json.dumps(reviews, indent=4)
 
-        collection.insert_one(json_review)
+            collection.insert_one(json_review)
+
+        print(json_review)
+
+    close_database(client)
 
 if __name__ == "__main__":
 
-    url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_multilingual_US_v1_00.tsv.gz' 
-    r = requests.get(url, allow_redirects=True)
+    #url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_multilingual_US_v1_00.tsv.gz' 
 
-    open('amazon_reviews.tsv', 'wb').write(r.content)
+    # temp location
 
-    #read_data("amazon_reviews_multilingual_US_v1_00.tsv")
+    file_load = []
+    
+    file_load.append("/Users/cksmith21/Downloads/amazon_one.tsv")
+    file_load.append("/Users/cksmith21/Downloads/amazon_two.tsv")
+    read_data(file_load)
+
+
+    '''
+    with open(file_load, 'r') as f:
+        df = pd.read_csv(file_load, sep="\t", header=0)
+
+    print(df)
+    print(df.shape)
+    '''
+  
             
