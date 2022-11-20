@@ -12,7 +12,7 @@
 
 ## Current Status 
 
-### **Sprint Three**: 7 November 2022 - XX November 2022
+### **Sprint Three**: 7 November 2022 - 5 December 2022
 
     We were successful in our second sprint goals. We continued to build our 
     scrapers and refine our analysis scripts. We also got the preliminary database set up
