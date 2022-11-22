@@ -8,6 +8,7 @@ import threading
 from collections import Counter
 from string import punctuation
 from pymongo import MongoClient
+
 #Holds the number of iterations that each processor will run
 numIter=100
 
