@@ -24,3 +24,17 @@
         font-size: 0.7em;
         bottom:0;
 }
+
+#page_tiles
+{
+	padding-top: 6rem;
+	padding-bottom: 4rem;
+}
+
+.page_tile
+{
+	max-width: 25%;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	background-color: #D3D3D3;
+}
