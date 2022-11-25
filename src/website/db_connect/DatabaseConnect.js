@@ -6,6 +6,8 @@
 //Import required packages
 var MongoClient = require('mongodb').MongoClient;
 var http = require('http');
+var fs = require('fs');
+var express = require('express');
 
 //Database url, does not contain the password for security purposes
 const url = "mongodb://root:password@10.251.12.108:30000?authSource=admin";
@@ -46,17 +48,25 @@ function connect_to_db(res) {
 	});
 }
 
+var app = express();
+app.use(express.static(__dirname + "/page_content"));
+app.listen(8080);
+
+/*
 //Create local host server
 http.createServer(function (req, res) {	
 	//Print header
+	
 	var body = "";
 	var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
 	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
 	res.write('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
 	res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
 
-	res.end();
+
+
 	//Connect to database and print data
 	//connect_to_db(res);
 
 }).listen(8080); //Start the server
+*/
