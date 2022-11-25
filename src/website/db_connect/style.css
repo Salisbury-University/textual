@@ -9,7 +9,18 @@
 	padding-bottom: 4rem;
 }
 
+/* ADD PADDING TO LEFT SIDE OF NAVBAR */
 #nav_title
 {
 	padding-left: 1rem;
+}
+
+/* PLACE FOOTER AT BOTTOM OF PAGE */
+#su_footer
+{
+	position: fixed;
+        color: #BABABA;
+        line-height: 40px;
+        font-size: 0.7em;
+        bottom:0;
 }
