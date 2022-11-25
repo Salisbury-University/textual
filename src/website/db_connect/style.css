@@ -1,0 +1,8 @@
+/* STYLESHEET FOR THE COSC425/426 TEXTUAL BASELINE DATABASE WEBSITE */
+
+/* ADD PADDING TO TOP OF THE HEADER, SEPARATING IT FROM THE NAVBAR */
+/* USING REM UNITS (Relative to the font size of the root element) to unsure better consistency accross devices */
+#jumbo_header
+{
+	padding-top: 4rem;
+}
