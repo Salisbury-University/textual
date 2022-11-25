@@ -27,14 +27,28 @@
 
 #page_tiles
 {
-	padding-top: 6rem;
-	padding-bottom: 4rem;
+	padding-top: 3rem;
 }
 
 .page_tile
 {
-	max-width: 25%;
+	color: #FFFFFF;
+	padding-bottom: 5rem;
+	border-radius: 0.5rem;
+	padding: 2rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
-	background-color: #D3D3D3;
+	background-color: #0275D8;
+}
+
+#sub_header
+{
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 25%;
+	padding-bottom: 1rem;
+	text-align: center;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	border-bottom: 0.25rem solid black;
 }
