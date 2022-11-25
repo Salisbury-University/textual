@@ -22,7 +22,7 @@
         color: #BABABA;
         line-height: 40px;
         font-size: 0.7em;
-        bottom:0;
+        bottom: 0;
 }
 
 #page_tiles
@@ -32,13 +32,13 @@
 
 .page_tile
 {
-	color: #FFFFFF;
+	color: #000000;
 	padding-bottom: 5rem;
 	border-radius: 0.5rem;
 	padding: 2rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
-	background-color: #0275D8;
+	background-color: #C0C0C0;
 }
 
 #sub_header
@@ -51,4 +51,9 @@
 	margin-top: 2rem;
 	margin-bottom: 2rem;
 	border-bottom: 0.25rem solid black;
+}
+
+#page_tile_1_text
+{
+	font-size: 0.9rem;
 }
