@@ -4,5 +4,12 @@
 /* USING REM UNITS (Relative to the font size of the root element) to unsure better consistency accross devices */
 #jumbo_header
 {
+	background-color: #ADADAD;
 	padding-top: 4rem;
+	padding-bottom: 4rem;
+}
+
+#nav_title
+{
+	padding-left: 1rem;
 }
