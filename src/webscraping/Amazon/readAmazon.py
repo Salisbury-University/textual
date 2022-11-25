@@ -1,12 +1,9 @@
 import json
 import pandas as pd
 import multiprocessing as mp
-import csv
-import requests 
-import zipfile
-import urllib.request
-import gzip
-
+import numpy as np
+import sys
+import os
 from pymongo import MongoClient
 
 # Get authoriazation from file
@@ -47,9 +44,9 @@ def close_database(client):
     # Close database connection
     client.close()
 
-def read_data(input_file): 
+def read_data(reviews): 
 
-    reviews = []
+    os.chdir("/root/textual/src/webscraping/Amazon")
 
     client = get_client()
 
@@ -57,41 +54,38 @@ def read_data(input_file):
 
     collection = db.AmazonReviews
 
-    for file_ in file_load:
-        with open(file_) as tsv:
-            reader = csv.DictReader(tsv, dialect="excel-tab")
+    for i in range(0, len(reviews)):
+	print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
 
-            for row in reader:
-                reviews.append(row)
-
-
-            json_review = json.dumps(reviews, indent=4)
-
-            collection.insert_one(json_review)
-
-        print(json_review)
+	collection.insert_one(reviews[i])
 
     close_database(client)
 
 if __name__ == "__main__":
 
-    #url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_multilingual_US_v1_00.tsv.gz' 
+	csv.field_size_limit(sys.maxsize)
+	
+	if(len(sys.argv) < 2):
+		
+		print("Please provide a path to the data.\n")
+		sys.exit()
 
-    # temp location
+	reviews = []
+	
+	with open(sys.argv[1], 'r') as tsv:
+		reader = csv.DictReader(tsv, dialect="excel-tab")
+		for row in reader: 
+			reviews.append(row)
 
-    file_load = []
-    
-    file_load.append("/Users/cksmith21/Downloads/amazon_one.tsv")
-    file_load.append("/Users/cksmith21/Downloads/amazon_two.tsv")
-    read_data(file_load)
+	review_arr = np.array_split(reviews, mp.cpu_count())
+	
+	pool = mp.Pool(mp.cpu_count())
 
+	print("Number of available processors: ", mp.cpu_count())
 
-    '''
-    with open(file_load, 'r') as f:
-        df = pd.read_csv(file_load, sep="\t", header=0)
+	pool.map(read_data, [review_sub for review_sub in review_arr])
 
-    print(df)
-    print(df.shape)
-    '''
+	pool.close()) 
+ 
   
             
