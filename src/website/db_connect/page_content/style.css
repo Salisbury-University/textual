@@ -35,7 +35,8 @@
 {
 	color: #000000;
 	padding-bottom: 5rem;
-	border-radius: 0.5rem;
+	border: 0.2rem solid black;
+	border-radius: 0.5rem;	
 	padding-left: 2rem;
 	padding-right: 2rem;
 	padding-top: 1rem;
@@ -72,7 +73,7 @@
 	text-align: center;
 }
 
-#about_intro
+.about_intro
 {
 	line-height: 2.5rem;
 	margin-left: auto;
@@ -82,15 +83,30 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
+#second_paragraph
+{
+	margin-bottom: 2rem;
+}
+
 #sources_container
 {
-	margin-top: 8rem;
+	margin-top: 4rem;
+}
+
+#sources_header
+{
+	font-size: 3.5rem;
+	font-family: 'Fjalla One', sans-serif;
+	text-align: center;
+	margin-bottom: 2rem;
+
 }
 
 .source_box
 {
+	background-color: #C0C0C0;
 	border: 0.2rem solid black;
-	border-radius: 2rem;
+	border-radius: 0.5rem;
 	padding: 2rem;
 	margin: 2rem;
 }
