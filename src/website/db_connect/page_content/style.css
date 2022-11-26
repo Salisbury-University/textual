@@ -86,3 +86,11 @@
 {
 	margin-top: 8rem;
 }
+
+.source_box
+{
+	border: 0.2rem solid black;
+	border-radius: 2rem;
+	padding: 2rem;
+	margin: 2rem;
+}
