@@ -107,6 +107,13 @@
 	background-color: #C0C0C0;
 	border: 0.2rem solid black;
 	border-radius: 0.5rem;
-	padding: 2rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	padding-bottom: 2rem;
 	margin: 2rem;
+}
+
+.source_icons
+{
+	font-size: 4rem;
 }
