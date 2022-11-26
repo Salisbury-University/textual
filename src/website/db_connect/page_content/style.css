@@ -35,7 +35,10 @@
 	color: #000000;
 	padding-bottom: 5rem;
 	border-radius: 0.5rem;
-	padding: 2rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
 	background-color: #C0C0C0;
@@ -56,4 +59,10 @@
 #page_tile_1_text
 {
 	font-size: 0.9rem;
+}
+
+#about_header
+{
+	margin-top: 3.5rem;
+	text-align: center;
 }
