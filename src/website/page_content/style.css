@@ -72,10 +72,10 @@
 {
 	color: #D9D9D9;
 	font-family: 'Fjalla One', sans-serif;
-	font-size: 2rem;
+	font-size: 3.5rem;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 25%;
+	max-width: 30%;
 	padding-bottom: 1rem;
 	text-align: center;
 	margin-top: 2rem;
@@ -97,6 +97,7 @@
 
 #about_header
 {
+	color: #D9D9D9;
 	font-size: 5rem;
 	font-family: 'Fjalla One', sans-serif;
 	margin-top: 4rem;
@@ -105,6 +106,7 @@
 
 .about_intro
 {
+	color: #D9D9D9;
 	line-height: 2.5rem;
 	margin-left: auto;
 	margin-right: auto;
@@ -125,6 +127,7 @@
 
 #sources_header
 {
+	color: #D9D9D9;
 	font-size: 3.5rem;
 	font-family: 'Fjalla One', sans-serif;
 	text-align: center;
@@ -134,8 +137,8 @@
 
 .source_box
 {
-	background-color: #C0C0C0;
-	border: 0.2rem solid black;
+	color: #D9D9D9;
+	background-color: #252525;
 	border-radius: 0.5rem;
 	padding-left: 2rem;
 	padding-right: 2rem;
