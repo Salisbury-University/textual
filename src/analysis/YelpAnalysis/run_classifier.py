@@ -1,13 +1,14 @@
 # Project Name(s): English Contextual Baseline Database
-# Program Name: 
+# Program Name: run_classifier.py 
 # Date: 11/26/2022
-# Description: Reads in the review.csv file, extacts the reviews and their labels, formats them and trains a keras neural network to classify new reviews into different categories of stars
-# Saving format: Output is a pickle file that stores the tokenizer and a h5 file storing the network weights
+# Description: Takes in a review as a command line argument and classifies it into a category based on the number of predicted stars the review gave
+# Saving format: Output is sent to the command line as a prediction
 
 # ================================================================================
 # Included libraries
 # Pandas: storing data
 # JSON: reading json file
+# Tokenizer: converts text into values that can be classified by the neural network
 # re, spacy, nltk, string: formatting review text
 # glob, pickle: loading and saving 
 # sklearn: data formatting
@@ -29,10 +30,10 @@ from nltk.corpus import stopwords
 import string
 import pandas as pd
 
+# Load the model weights
 model = keras.models.load_model("final_output.h5")
 
-model.summary()
-
+# Dictionaries used to clean the input text
 apposV2 = {
 "are not" : "are not",
 "ca" : "can",
@@ -154,54 +155,50 @@ appos = {
 "didn't": "did not"
 }
 
-
-nlp = spacy.load('en_core_web_sm',disable=['parser','ner'])
-stop = stopwords.words('english')
+# Function to clean the input text
 def cleanData(review):
-    lower_case = review.lower() #lower case the text
-    lower_case = lower_case.replace(" n't"," not") #correct n't as not
-    lower_case = lower_case.replace("."," . ")
-    lower_case = ' '.join(word.strip(string.punctuation) for word in lower_case.split()) #remove punctuation
-    words = lower_case.split() #split into words
-    words = [word for word in words if word.isalpha()] #remove numbers
-    split = [apposV2[word] if word in apposV2 else word for word in words] #correct using apposV2 as mentioned above
-    split = [appos[word] if word in appos else word for word in split] #correct using appos as mentioned above
-    split = [word for word in split if word not in stop] #remove stop words
-    reformed = " ".join(split) #join words back to the text
+    # Stopwords, these will be removed from the input text
+    nlp = spacy.load('en_core_web_sm',disable=['parser','ner'])
+    stop = stopwords.words('english')
+    
+    lower_case = review.lower() # Lower case the text
+    lower_case = lower_case.replace(" n't"," not") # Correct n't as not (Can be better interpreted by the model)
+    lower_case = lower_case.replace("."," . ") # Add spaces to the end of setences
+    lower_case = ' '.join(word.strip(string.punctuation) for word in lower_case.split()) # Remove punctuation
+    words = lower_case.split() # Split text into words
+    words = [word for word in words if word.isalpha()] # Remove numbers
+    split = [apposV2[word] if word in apposV2 else word for word in words] # Correct using apposV2 as mentioned above
+    split = [appos[word] if word in appos else word for word in split] # Correct using appos as mentioned above
+    split = [word for word in split if word not in stop] # Remove stop words
+    reformed = " ".join(split) # Join words back to the text
     doc = nlp(reformed)
-    reformed = " ".join([token.lemma_ for token in doc]) #lemmatiztion
+    reformed = " ".join([token.lemma_ for token in doc]) # Lemmatiztion
+    
+    # Return cleaned text
     return reformed
 
+# Constants for the dataset, these need to be changed for each dataset
 vocab=72287
 max_length=491
 
-#  Clean up review text
+# Load the tokenizer values
 with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
+# Print the review before and after cleaning
 print(sys.argv[1])
 text = cleanData(sys.argv[1])
 print(text)
 
-# print(text.head())
-
-# data=[sys.argv[1]]
-# text = cleanData(data)
-
-# print(text.head())
-
+# Convert text into padded sequences
 text = tokenizer.texts_to_sequences(text)
 text = pad_sequences(text, max_length ,padding='post')
 
+# Get a prediction from the model
 pred = model.predict(text)
 
+# Label values
 labels = ["1 star", "2 star", "3 star", "4 star", "5 star"]
 
+# Print the prediction to the command line
 print(labels[tf.argmax(tf.argmax(pred, axis=0))])
-
-#pred = to_categorical(pred, 5)
-#print(pred)
-
-
-
-
