@@ -1,5 +1,5 @@
 # Project Name(s): English Contextual Baseline Database
-# Program Name: extract_reviews.py
+# Program Name: review_classifier_training.py
 # Date: 11/26/2022
 # Description: Reads in the review.csv file, extacts the reviews and their labels, formats them and trains a keras neural network to classify new reviews into different categories of stars
 # Saving format: Output is a pickle file that stores the tokenizer and a h5 file storing the network weights
