@@ -3,10 +3,10 @@
 /* ADD PADDING TO TOP OF THE HEADER, SEPARATING IT FROM THE NAVBAR */
 /* USING REM UNITS (Relative to the font size of the root element) to unsure better consistency accross devices */
 
-/* BODY BACKGROUND COLOR */
-main
+/* MAIN CONTENT BACKGROUND COLOR */
+#page_content
 {
-	background-color: #0D0D0D;
+	background: #0D0D0D; !important
 }
 
 #jumbo_header
@@ -42,8 +42,8 @@ main
 /* PLACE FOOTER AT BOTTOM OF PAGE */
 #su_footer
 {
-	position: absolute;
-        color: #BABABA;
+	position: fixed;
+        color: #828282;
         line-height: 40px;
         font-size: 0.7em;
         bottom: 0;
