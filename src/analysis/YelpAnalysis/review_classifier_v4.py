@@ -37,9 +37,11 @@ config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
 
+# Load in review.csv file and print dataframe header
 data = pd.read_csv('reviews.csv')
 print(data.head())
 
+# Dictionary containing typos and contractions, these will be used to clean the text
 apposV2 = {
 "are not" : "are not",
 "ca" : "can",
@@ -100,6 +102,8 @@ apposV2 = {
 "we'll":"we will",
 "did n't": "did not"
 }
+
+# Similar to the first dictionary, these will be used to clean the review text
 appos = {
 "aren't" : "are not",
 "can't" : "cannot",
@@ -161,67 +165,93 @@ appos = {
 "didn't": "did not"
 }
 
+# Extract the data X (review text) and labels Y (stars)
 X = data["text"].copy()
 y = data["stars"].copy()
 
+# Load ntlk stopwords, these will be filtered out of the review text
 nlp = spacy.load('en_core_web_sm',disable=['parser','ner'])
 stop = stopwords.words('english')
+
+# Clean data function, this will take in a DataFrame of reviews and clean each one
 def cleanData(reviews):
+    # List to hold review text after being cleaned
     all_=[]
+    # Iteration variable
     i = 0
+    
+    # Iterate through each review in the DataFrame
     for review in reviews:
+        # Print to the console every 10,000 iterations
         if i % 10000 == 0:
             print(i)
-
-        lower_case = review.lower() #lower case the text
-        lower_case = lower_case.replace(" n't"," not") #correct n't as not
-        lower_case = lower_case.replace("."," . ")
+        
+        lower_case = review.lower() # Lower case all text
+        lower_case = lower_case.replace(" n't"," not") # Correct n't as not (Not can be used better by the network)
+        lower_case = lower_case.replace("."," . ") # Add spaces to the end of sentences
         lower_case = ' '.join(word.strip(string.punctuation) for word in lower_case.split()) #remove punctuation
-        words = lower_case.split() #split into words
-        words = [word for word in words if word.isalpha()] #remove numbers
-        split = [apposV2[word] if word in apposV2 else word for word in words] #correct using apposV2 as mentioned above
-        split = [appos[word] if word in appos else word for word in split] #correct using appos as mentioned above
-        split = [word for word in split if word not in stop] #remove stop words
-        reformed = " ".join(split) #join words back to the text
+        words = lower_case.split() # Split text into words
+        words = [word for word in words if word.isalpha()] # Remove numbers
+        split = [apposV2[word] if word in apposV2 else word for word in words] # Correct using apposV2 as mentioned above
+        split = [appos[word] if word in appos else word for word in split] # Correct using appos as mentioned above
+        split = [word for word in split if word not in stop] # Remove stop words
+        reformed = " ".join(split) # Join words back to the text
         doc = nlp(reformed)
-        reformed = " ".join([token.lemma_ for token in doc]) #lemmatiztion
-        all_.append(reformed)
-        i = i + 1
-    df_cleaned = pd.DataFrame()
-    df_cleaned['clean_reviews'] = all_
-    return df_cleaned['clean_reviews']
+        reformed = " ".join([token.lemma_ for token in doc]) # Lemmatiztion
+        all_.append(reformed) # Append document to the list
+        i = i + 1 # Increase iteration variable
+    df_cleaned = pd.DataFrame() # Create new DataFrame
+    df_cleaned['clean_reviews'] = all_ # Add list to DataFrame
+    return df_cleaned['clean_reviews'] # Return the clean reviews as a DataFrame
 
+# Clean all the data X (review text)
 X_cleaned = cleanData(X)
+# Print the head to verify the data was cleaned
 print(X_cleaned.head())
 
+# Encode the review stars to values between 0-4 (1 star - 5 stars)
 encoding = {1: 0,
             2: 1,
             3: 2,
             4: 3,
             5: 4
            }
+
+# Create labels to be used in output
 labels = ['1', '2', '3', '4', '5']
            
+# Convert labels to classification categories
 y = data['stars'].copy()
 y.replace(encoding, inplace=True)
 y = to_categorical(y,5)
 
+# Split the data into test and training data
 X_train, X_test, y_train, y_test = train_test_split(X_cleaned, y, stratify=y, random_state=42,test_size=0.1)
 
+# Create new Tokenizer
 tokenizer = Tokenizer()
+# Fit tokenizer on the cleaned review data
 tokenizer.fit_on_texts(X_train)
-X_train = tokenizer.texts_to_sequences(X_train)
+X_train = tokenizer.texts_to_sequences(X_train) # Get sequences from the tokenizer
+
+# Get the max length of a sentence and size of the vocabulary
 max_length = max([len(x) for x in X_train])
-vocab_size = len(tokenizer.word_index)+1 #add 1 to account for unknown word
+vocab_size = len(tokenizer.word_index)+1 # Add 1 to account for unknown word
 print("Vocabulary size: {}".format(vocab_size))
 print("Max length of sentence: {}".format(max_length))
+
+# Pad empty space
 X_train = pad_sequences(X_train, max_length ,padding='post')
 
+# Save the tokenizer so it can be used for testing later (The same tokenizer must be used to obtain accurate results)
 with open("tokenizer.pickle", "wb") as handle:
     pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+# Define training variables
 embedding_vector_length=32
 num_classes = 5
+
+# Create the model
 model = Sequential()
 model.add(Embedding(vocab_size,embedding_vector_length,input_length=X_train.shape[1]))
 model.add(Bidirectional(LSTM(250,return_sequences=True)))
@@ -234,14 +264,20 @@ model.add(Dense(32,activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(16,activation='relu'))
 model.add(Dense(num_classes,activation='softmax'))
+
+# Compile the model with early stopping to prevent overfitting
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 callbacks = [EarlyStopping(monitor='val_loss', patience=5),
              ModelCheckpoint('../model/model.h5', save_best_only=True,
                              save_weights_only=False)]
+
+# Print a model summary
 model.summary()
 
+# Train the model on the training data, spliiting to use some data for validation
 history = model.fit(X_train, y_train, validation_split=0.11, 
                     epochs=15, batch_size=256, verbose=1,
                     callbacks=callbacks)
 
+# Save the model weights so they can be used for testing later
 model.save("final_output.h5")
