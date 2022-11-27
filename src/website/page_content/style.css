@@ -4,7 +4,7 @@
 /* USING REM UNITS (Relative to the font size of the root element) to unsure better consistency accross devices */
 
 /* BODY BACKGROUND COLOR */
-body
+main
 {
 	background-color: #0D0D0D;
 }
@@ -42,7 +42,7 @@ body
 /* PLACE FOOTER AT BOTTOM OF PAGE */
 #su_footer
 {
-	position: fixed;
+	position: absolute;
         color: #BABABA;
         line-height: 40px;
         font-size: 0.7em;
@@ -56,9 +56,8 @@ body
 
 .page_tile
 {
-	color: #000000;
+	color: #D9D9D9;
 	padding-bottom: 5rem;
-	border: 0.2rem solid black;
 	border-radius: 0.5rem;	
 	padding-left: 2rem;
 	padding-right: 2rem;
@@ -66,12 +65,14 @@ body
 	padding-bottom: 1rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
-	background-color: #C0C0C0;
+	background-color: #252525;
 }
 
 #sub_header
 {
+	color: #D9D9D9;
 	font-family: 'Fjalla One', sans-serif;
+	font-size: 2rem;
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 25%;
@@ -79,13 +80,19 @@ body
 	text-align: center;
 	margin-top: 2rem;
 	margin-bottom: 2rem;
-	border-bottom: 0.25rem solid black;
+	border-bottom: 0.25rem solid #D9D9D9;
 }
 
 #page_tile_1_text
 {
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 	font-size: 0.9rem;
+}
+
+#page_tile_1_btn
+{
+	background-color: #A62139;
+	border-color: #A62139;
 }
 
 #about_header
