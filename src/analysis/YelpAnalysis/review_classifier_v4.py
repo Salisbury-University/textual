@@ -281,3 +281,7 @@ history = model.fit(X_train, y_train, validation_split=0.11,
 
 # Save the model weights so they can be used for testing later
 model.save("final_output.h5")
+
+# Main function
+if __name__ =="__main__":
+    print("Loading file...")
