@@ -2,11 +2,34 @@
 
 /* ADD PADDING TO TOP OF THE HEADER, SEPARATING IT FROM THE NAVBAR */
 /* USING REM UNITS (Relative to the font size of the root element) to unsure better consistency accross devices */
+
+/* BODY BACKGROUND COLOR */
+body
+{
+	background-color: #0D0D0D;
+}
+
 #jumbo_header
 {
-	background-color: #ADADAD;
+	background-color: #252525;
 	padding-top: 4rem;
 	padding-bottom: 4rem;
+}
+
+#jumbo_title
+{
+	color: #D9D9D9;
+}
+
+#jumbo_text
+{
+	color: #D9D9D9;
+}
+
+#jumbo_btn
+{
+	background-color: #A62139;
+	border-color: #A62139;
 }
 
 /* ADD PADDING TO LEFT SIDE OF NAVBAR */
