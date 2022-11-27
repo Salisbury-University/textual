@@ -1,3 +1,19 @@
+# Project Name(s): English Contextual Baseline Database
+# Program Name: extract_reviews.py
+# Date: 11/26/2022
+# Description: Reads in the review.csv file, extacts the reviews and their labels, formats them and trains a keras neural network to classify new reviews into different categories of stars
+# Saving format: Output is a pickle file that stores the tokenizer and a h5 file storing the network weights
+
+# ================================================================================
+# Included libraries
+# Pandas: storing data
+# JSON: reading json file
+# re, spacy, nltk, string: formatting review text
+# glob, pickle: loading and saving 
+# tensorflow and keras libraries: Neural network layers
+# sklearn: data formatting
+# ================================================================================
+
 import numpy as np 
 import tensorflow as tf
 import pandas as pd
@@ -16,6 +32,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 
+# Setup review configuration
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.compat.v1.Session(config=config)
