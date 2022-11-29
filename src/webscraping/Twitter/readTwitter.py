@@ -16,60 +16,85 @@ CLIENT_SECRET = 'rC6BrlAUbhZE6aDl9JSzDEzOe0IlZiL6LbU9OftOQ8xhg8rgan'
 Function grabs the most recent tweets from a certain user with a specificed user ID
 (Twitter assigns a unique ID to every user and we can access their recent tweets)
 """
-def get_user_tweets(client,username,userId,result_limit=1000):
-    fileName = username + ".csv"
-    tweets = []
+def get_user_tweets(client,user,result_limit=100):
+    userId=client.get_user(username=user) # retrieves the userId for access to the tweets
+    tweets = [] # list that will contain lists of tweet information from user
+
+    # Twitter's API only allows for grabbing 100 unique tweets
+    # Paginator helps to grab more in the function default is 100
     for response in tweepy.Paginator(client.get_users_tweets,id=userId,exclude=['retweets','replies'],
                                      tweet_fields=['created_at','public_metrics'],max_results=100)\
                                      .flatten(limit=result_limit):
-        tupleList = []
-        tupleList.append(response.text)
-        tupleList.append(response.public_metrics['like_count'])
-        tupleList.append(response.public_metrics['retweet_count'])
-        tupleList.append(response.created_at)
-        tweets.append(tupleList)
-    pd.DataFrame(tweets,columns=['Tweet','# of Likes','# of Retweets','Published']).to_csv(fileName,index=False)
-    return len(tweets)
 
+        tupleList = [] # the list of the information of one tweet
+        tupleList.append(response.text) # stores the content of the actual tweet
+        tupleList.append(response.public_metrics['like_count']) # stores number of likes
+        tupleList.append(response.public_metrics['retweet_count']) # stores number of retweets
+        tupleList.append(response.created_at) # stores the time it was created
+        tweets.append(tupleList) # adds single tweet information to the total accumulation of tweets
+
+    # stores tweets into a DataFrame via pandas
+    data = pd.DataFrame(tweets,columns=['Tweet','# of Likes','# of Retweets','Published'])
+    return data
+    
 """
 Function gets the most recent tweets with a specific search query
        (See query formatting on twitter developer website)
 """
-def get_tweets(client,search,wanted_results=100):
-    tweetList = []
+def get_recent_tweets(client,search,wanted_results=100):
+    tweetList = [] # list that will contain lists of tweet information
+
+    # Twitter's API only allows for grabbing 100 unique tweets
+    # Paginator helps to grab more in the function default is 100
     for response in tweepy.Paginator(client.search_recent_tweets,query=search,
                                  expansions='author_id',tweet_fields=['created_at','public_metrics'],
                                  sort_order='relevancy',max_results=100).flatten(limit=wanted_results):
-        tweetInfo = []
-        tweetInfo.append(response.text) # add content of tweet to result
-        tweetInfo.append(response.public_metrics['like_count']) # adds the like count
-        tweetInfo.append(response.public_metrics['retweet_count']) # adds the retweet count
-        tweetInfo.append(response.created_at) # add when tweeted to resul    
-        
-        # adds complete "tuple" of information
-        tweetList.append(tweetInfo)
+        tweetInfo = [] # the list of the information of one tweet
+        tweetInfo.append(response.text) # stores the content of the actual tweet
+        tweetInfo.append(response.public_metrics['like_count']) # stores number of likes
+        tweetInfo.append(response.public_metrics['retweet_count']) # stores number of retweets
+        tweetInfo.append(response.created_at) # stores the time it was created    
+        tweetList.append(tweetInfo) # adds single tweet information to the total accumulation of tweets
 
-    print("Tweets Recieved: {}".format(len(tweetList)))
+    # stores tweets into a DataFrame via pandas
     data = pd.DataFrame(tweetList,columns=['Tweet','# of likes','# of retweets','Date Tweeted'])
     return data
 
 """
 This function will grab archieved tweet instead of the most recent with a specified start and end time. 
-                             (Requires academic research access)
-                                       (Coming Soon...)
+                              (Requires academic research access)
+                Unable to test however the function is here for when access is granted
 """
 def get_archive_tweets(client,search,date_start,date_end,wanted_results=100):
-    pass
+    for response in tweepy.Paginator(client.search_all_tweets,query=search,end_time=date_end,
+                                 start_time=date_start,expansions='author_id',tweet_fields=['created_at','public_metrics'],
+                                 sort_order='relevancy',max_results=100).flatten(limit=wanted_results):
+        tweetInfo = []
+        tweetInfo.append(response.text) # add content of tweet to result
+        tweetInfo.append(response.public_metrics['like_count']) # adds the like count
+        tweetInfo.append(response.public_metrics['retweet_count']) # adds the retweet count
+        tweetInfo.append(response.created_at) # add when tweeted to result   
+        
+        # adds complete "tuple" of information
+        tweetList.append(tweetInfo)
 
-"""
-A function that will get comments of a specific tweet
-                  (Coming Soon...)
-"""
-def __get_replies(client,tweet_id,wanted_results=100):
-    pass
+    data = pd.DataFrame(tweetList,columns=['Tweet','# of likes','# of retweets','Date Tweeted'])
+    return data
 
+def start(info):
+    client=info[0]
+    queryList=info[1]
+    userList=info[2]
+    for query in queryList:
+        print('Searching Query {}...\n'.format(query))
+        get_recent_tweets(client, query,1000).to_csv(query+".csv",index=False)
+    for user in userList:
+        print('Searching Tweet by @{}...\n'.format(user))
+        fileName = user + ".csv"
+        get_user_tweets(client,user,1000).to_csv(fileName,index=False)
 
 if __name__ == "__main__":
+    
     client = tweepy.Client(bearer_token=BEARER_TOKEN) # gives us access to the api in the program
     queries = ['(death OR dead) lang:en -is:retweet -has:media -has:links',
         '"Functional Programming" (#python OR #scala OR #haskell) lang:en -is:retweet -has:media -has:links',
@@ -86,26 +111,50 @@ if __name__ == "__main__":
         'October (#halloween OR #breastcancerawareness) lang:en -is:retweet -has:media -has:links',
         '#midterms2022 lang:en -is:retweet -has:media -has:links',
         '#football OR #NFL lang:en -is:retweet -has:media -has:links']
+    users = ['CNN','FoxNews','ABC','CBSNews','NBCNews','nytimes','TIME','Independent','WSJ','CNBC']
+
+    print('Available Processors: {}\n'.format(mp.cpu_count()))
+    pool = mp.Pool(mp.cpu_count()) # creates a pool of threads and makes it efficient by using # of processors avaialable
     
-    print("Scraping Tweets...\n")
-    i = 1
-    for query in queries:
-        print("Searching for tweets that fit the query: {}\n".format(queries[i-1]),end='')
-        # create a file name for the csv file
-        fileName = "tweets" + str(i) + ".csv"
-        i+=1 
-        data = get_tweets(client,query,1000) # grabs the most recent tweets
-        data.to_csv(fileName,index=False) # creates the csv file
-        print("Done searching for those tweets.\n")
+    mod = len(queries)%mp.cpu_count()
+    task_range = len(queries)//mp.cpu_count()
+    queriesList=[]
+    queryList=[]
 
-    print('Done.\nResults saved in *.csv files.\n')
+    """Splits up the queries into cpu_count() divisions"""
+    for i in range(0,task_range*mp.cpu_count()):
+        queryList.append(queries[i])
+        if (i+1) % task_range == 0:
+            queriesList.append(queryList)
+            queryList=[]
+    if mod != 0:
+        iterate = 0
+        for i in range(task_range*mp.cpu_count(),len(queries)):
+            queriesList[iterate].append(queries[i])
+            iterate+=1
 
-    users = ['elonmusk','WHO','NASA']
+    mod = len(users)%mp.cpu_count()
+    task_range = len(users)//mp.cpu_count()
+    usersList=[]
+    userList=[]
+
+    """  Splits up the users into cpu_count() divisions  """
+    for i in range(0,task_range*mp.cpu_count()):
+        userList.append(users[i])
+        if (i+1) % task_range == 0:
+            usersList.append(userList)
+            userList=[]
+    if mod != 0:
+        iterate = 0
+        for i in range(task_range*mp.cpu_count(),len(users)):
+            usersList[iterate].append(users[i])
+            iterate+=1
     
-    for user in users:
-        userId = client.get_user(username=user)
-        print('Grabbing Tweets from @{}...'.format(user))
-        print('Tweets Received: {}'.format(get_user_tweets(client,user,userId.data.id)))
-        print('Finished grabbing tweets.\n')
+    """  Combines all data into one single list containing the parameters for each 'thread'  """
+    param_list =[]
+    for i in range(0,mp.cpu_count()):
+        param_list.append([client,queriesList[i],usersList[i]])
 
-    print('Done.\nTweets saved to *.csv files.')
+    pool.map(start, param_list)
+    print('Finished.')
+    pool.close()
