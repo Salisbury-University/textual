@@ -112,6 +112,9 @@ if __name__ == '__main__':
 
     for col in collections:
         print(col)
+        x = col.find_one()
+        for data in x:
+            print(data)
 
 
 
