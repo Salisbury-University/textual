@@ -4,6 +4,7 @@ import multiprocessing as mp
 import numpy as np
 import sys
 import os
+import csv
 from pymongo import MongoClient
 
 # Get authoriazation from file
@@ -55,9 +56,10 @@ def read_data(reviews):
     collection = db.AmazonReviews
 
     for i in range(0, len(reviews)):
-	print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
+        
+        print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
 
-	collection.insert_one(reviews[i])
+        collection.insert_one(reviews[i])
 
     close_database(client)
 
@@ -85,7 +87,7 @@ if __name__ == "__main__":
 
 	pool.map(read_data, [review_sub for review_sub in review_arr])
 
-	pool.close()) 
+	pool.close()
  
   
             
