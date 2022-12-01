@@ -73,6 +73,41 @@ def get_dictionary(processed_docs):
 
     return bag_of_words, dictionary
 
+def iterate_in_collection(collection_name, database, entries): 
+
+    if collection_name == "RedditPosts":
+
+        processed_entries = []
+
+        for entry in entries:
+
+            processed_entries.append(pre_process(entry))
+
+        results = get_dictionary(processed_entries)
+
+        lda_model = gensim.models.LdaMulticore(results[0], num_topics = 8, id2word = results[1], passed=10, workers=2)
+
+        # save model to update it after??? 
+
+    elif collection_name == "WikiSourceText":
+
+        pass
+
+    elif collection_name == "AmazonReviews":
+
+        pass
+
+    elif collection_name == "RedditComments":
+
+        pass
+
+    elif collection_name == "YelpReviews":
+
+        pass
+    
+    else: 
+
+        pass
 if __name__ == '__main__': 
 
     # get documents 
@@ -110,12 +145,68 @@ if __name__ == '__main__':
 
     collections = database.list_collection_names()
 
+    # parallelize --> go through each collection
+    # run the LDA on each entry
+    # assign the topic words to each item 
+
+    # RedditPosts -> 'selftext'
+    # WikiSourceText -> 'title' or 'text'
+    # AmazonReviews -> 'review_body'
+    # RedditComments -> 'body' 
+    # YelpReviews -> 'text' 
+
+    entries = [] 
+
     for col in collections:
-        print(col)
-        x = col.find_one()
-        for data in x:
-            print(data)
+        
+        if col == "RedditPosts":
 
+            old_entries = []
 
+            old_entries = database[col].find({}, {'selftext':1, '_id':0})
 
+            for old_entry in old_entries:
+                entries.append(old_entry['selftext'])
+
+            #iterate_in_collection(col, database, entries)
+
+        elif col == "WikiSourceText":
+
+            old_entries = []
+
+            old_entries = database[col].find({}, {'Text':1, '_id':0})
+
+            for old_entry in old_entries:
+                entries.append(old_entry['Text'])
+
+        elif col == "AmazonReviews":
+
+            old_entries = []
+
+            old_entries = database[col].find({}, {'review_body':1, '_id':0})
+
+            for old_entry in old_entries:
+                entries.append(old_entry['review_body'])
+
+        elif col == "RedditComments":
+
+            old_entries = []
+
+            old_entries = database[col].find({}, {'body':1, '_id':0})
+
+            for old_entry in old_entries:
+                entries.append(old_entry['body'])
+
+        elif col == "YelpReviews":
+
+            old_entries = []
+
+            old_entries = database[col].find({}, {'text':1, '_id':0})
+
+            for old_entry in old_entries:
+                entries.append(old_entry['text'])
+        
+        else:
+
+            pass
 
