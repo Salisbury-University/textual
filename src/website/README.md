@@ -21,4 +21,14 @@ This website will be used to display content about our Textual Baseline Database
 
 4. Now install the two required node modules <br/>
 	- npm install express
-	- npm install mongodb@3.7 
+	- npm install mongodb@3.7
+
+<br/>
+
+5. To start the website run the following command <br/>
+	- nodejs DatabaseConnect.js
+
+<br/>
+
+6. To access the page locally open a browser and using the following url <br/>
+	- localhost:8080 
