@@ -10,3 +10,6 @@
 *.json
 #Ignore CSV files
 *.csv
+
+#Ignore node_modules directory
+node_modules/
