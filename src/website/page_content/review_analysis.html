@@ -66,7 +66,8 @@
 				<div id="review_header_text">Yelp Review Classification</div>
 			</div>
 
-			<p id="review_analysis_title">What can we do with Yelp reviews?</p>		
+			<!-- PAGE SUBTITLE -->
+			<p id="review_analysis_title">What Can We Do With Yelp Reviews?</p>		
 			
 			<div class="container" id="review_analysis_container">
 
@@ -76,6 +77,8 @@
 					<p id="review_analysis_paragraph_2" class="review_analysis_paragraph">The current collection of Yelp reviews in the database contains roughly ~7.5 million reviews, each entry containing the review text, the date posted, the review rating, and additional information. Many kinds of analysis can be done with this data but for the purposes of this application only the reivew's text and rating were used.</p>
 
 					<p id="review_analysis_paragraph_3" class="review_analysis_paragraph">This project looked into predicting a review's rating based on the way its text was worded. With negative sounding reviews primarily being on the lower half of the 5-star scale and the more positive reviews residing on the other. For the purposes of the training the neural network approximately 1.5 million reviews were extracted from the database and formated as comma separated values (.csv).</p>
+
+					<p id="review_analysis_paragraph_4" class="review_analysis_paragraph">The neural network was trained using Google's Cloud Computing Service, Google Colab. After being trained on the reviews the network achieved a training classifaction accuracy of ~85% and a validation accuracy of ~70%. There is still room for improvement with the network's performance, however, for the time being these values are acceptable. An explanation of the network and the source code are available below.</p>
 				</div>
 
 				<div id="review_analysis_logo">
@@ -83,6 +86,8 @@
 				</div>
 			</div>
 
+			<div id="review_subheader"><p id="review_subheader_text">How the Network Works</p></div>
+			
 			<footer class="container" id="su_footer">
 				<p>Salisbury University 2022-2023</p>
 			</footer>

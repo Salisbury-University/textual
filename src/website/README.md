@@ -14,7 +14,7 @@ This website will be used to display content about our Textual Baseline Database
 
 <br/>
 
-3. If you do not have npm install npm by running the following command <br/>
+3. If you do not have npm, install npm by running the following command <br/>
 	- sudo apt install npm
 
 <br/>
