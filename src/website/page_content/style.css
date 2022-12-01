@@ -195,5 +195,18 @@
 {
        	text-align: center;	
 	color: #D9D9D9;
-	font-size: 5rem;
+	font-size: 4rem;
+}
+
+.review_analysis_paragraph
+{
+	color: #D9D9D9;
+	width: 40rem;
+	text-align: left;
+	margin-left: 1.5rem;
+}
+
+#yelp_logo
+{
+	width: 20rem;
 }
