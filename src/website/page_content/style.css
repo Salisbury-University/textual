@@ -183,19 +183,27 @@
 	font-family: 'Fjalla One', sans-serif;
 }
 
-#review_analysis_container
+#review_analysis_title
 {
 	margin-top: 45rem;
-	width: 100%;
+       	text-align: center;	
+	color: #D9D9D9;
+	font-size: 4rem;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
 }
 
-#review_analysis_title
+#review_analysis_logo
 {
-       	text-align: center;	
-	color: #D9D9D9;
-	font-size: 4rem;
+	display: table;
+}
+
+#review_analysis_container
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
 }
 
 .review_analysis_paragraph
@@ -206,7 +214,16 @@
 	margin-left: 1.5rem;
 }
 
+#yelp_logo_div
+{
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
 #yelp_logo
 {
-	width: 20rem;
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
 }
