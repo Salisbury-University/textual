@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-
+import os
 import googleapiclient._auth
 import googleapiclient.discovery
 import googleapiclient.errors
+import sys
 from pymongo import MongoClient
 
 
@@ -103,7 +104,7 @@ if __name__ == "__main__":
         maxResults=10,
         videoCategoryId = category['id']
         )
-    
+        print("currently on category:", category['title'])
         try:
             print("requesting videos")
             response = request.execute()
@@ -116,17 +117,16 @@ if __name__ == "__main__":
                 thisDict = {'vId': item['id'], 
                             "vidTitle": item['snippet']['title'],
                             "channelTitle": item['snippet']['channelTitle'],
-                            "vidTags": item['snippet']['tags'], #store one string containing the tags
-                            "commentCount": item['statistics']['commentCount']
+                            "commentCount": item['statistics']['commentCount'],
+                            "category": category['title']
                             }
                 videos.append(thisDict)
             
             print("VIDEOS in LIST:", len(videos))
-
             # request 5 most recent commentThreads per video
             for video in videos:
                 if video["commentCount"] != '0':
-                    print("requesting comment threads")
+
                     request = youtube.commentThreads().list(
                     part="snippet",
                     order="time",
@@ -137,7 +137,7 @@ if __name__ == "__main__":
                     response = request.execute()
                     items = response['items']
 
-                    #store metadata about the 5 comment threads
+                    #store metadata about the 20 comment threads
                     commentThreads = []
                     for item in items:
                         thisDict = {
@@ -152,57 +152,15 @@ if __name__ == "__main__":
                         commentThreads.append(thisDict)
                     
                     print("COMMENTS in LIST:", len(commentThreads))
-                    #store video info
-                    print("Checking if video exists in db")
-                    print("video collection find count:", video_collection.find({'vId': { "$in": video['vId']}}).count())
-
-                    if video_collection.find({'vId': { "$in": video['vId']}}).count() > 0:
-                        video_collection.insert_one(video)
-                        print("inserting video", video)
-                    else:
-                        print("NOT inserting video", video)
-
-
-                    #store comment info
-                    for comment in commentThreads:
-                        print("comment collection find count:", comment_collection.find({'cId': { "$in": comment['cId']}}).count())
-
-                        print(comment_collection.find({'cId': { "$in": comment['cId']}}).count())
-                        if comment_collection.find({'cId': { "$in": comment['cId']}}).count() > 0:
-                            comment_collection.insert_one(comment)
-                            print("inserting comment", comment)
-                        else:
-                            print("NOT inserting comment", comment)
-            
                     
-                
-
-                        
+                    #store video info
+                    video_collection.insert_one(video)
+            
+                    #store comment info
+                    comment_collection.insert_many(commentThreads)
                         
         except:
-            print("most popular chart for category", category["title"]," is not supported or not available")
+            print("Oops!", sys.exc_info()[0], "occurred.")
+            #print("most popular chart for category", category["title"]," is not supported or not available")
     
     close_database(client)
-        
-            
-            
-        
-
-            
-
-
-
-            
-                        
-
-
-            
-
-
-
-    
-    
-
-
-    
-
