@@ -15,7 +15,15 @@ const url = "mongodb://root:password@10.251.12.108:30000?authSource=admin";
 function connect_to_db(res) {
 	//Connect to the MongoDB
 	MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
-		
+	
+
+		//Print header and CSS
+		var body = "";
+		var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
+		res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
+		res.write('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
+		res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
+
 		//Get the db from MongoDB and search the RedditPost collection
 		var db = client.db("textual");
 		var cursor = db.collection('RedditPosts').find();
