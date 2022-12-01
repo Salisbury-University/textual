@@ -22,7 +22,7 @@ def get_user_tweets(client,user,result_limit=100):
 
     # Twitter's API only allows for grabbing 100 unique tweets
     # Paginator helps to grab more in the function default is 100
-    for response in tweepy.Paginator(client.get_users_tweets,id=userId,exclude=['retweets','replies'],
+    for response in tweepy.Paginator(client.get_users_tweets,id=userId.data.id,exclude=['retweets','replies'],
                                      tweet_fields=['created_at','public_metrics'],max_results=100)\
                                      .flatten(limit=result_limit):
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     print('Available Processors: {}\n'.format(mp.cpu_count()))
     pool = mp.Pool(mp.cpu_count()) # creates a pool of threads and makes it efficient by using # of processors avaialable
-    
+
     mod = len(queries)%mp.cpu_count()
     task_range = len(queries)//mp.cpu_count()
     queriesList=[]
