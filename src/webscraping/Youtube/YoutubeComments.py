@@ -123,7 +123,7 @@ if __name__ == "__main__":
                 videos.append(thisDict)
             
             print("VIDEOS in LIST:", len(videos))
-            # request 5 most recent commentThreads per video
+            # request 20 most recent commentThreads per video
             for video in videos:
                 if video["commentCount"] != '0':
 
@@ -131,7 +131,8 @@ if __name__ == "__main__":
                     part="snippet",
                     order="time",
                     textFormat="plainText",
-                    videoId=video['vId']
+                    videoId=video['vId'],
+                    maxResults=20
                     )
 
                     response = request.execute()

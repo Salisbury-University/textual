@@ -132,6 +132,7 @@ def readWebpage(pageCount):
             print(tempURL)
             title=get_title(pageHtml) #Gets the title of the webpage
             if len(title)>=1000:
+                print(title)
             else:
                 print("Title too long")
             date=get_date(pageHtml) #Gets the source's publishing date
