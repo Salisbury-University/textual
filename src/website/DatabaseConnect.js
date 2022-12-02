@@ -26,7 +26,7 @@ async function connect_to_db() {
 	content_string.concat('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
 
 	//Get the db from MongoDB and search the RedditPost collection
-	const db = await client.db("textual");
+	const db = client.db("textual");
 	const cursor = await db.collection('RedditPosts').find();
 
 	//Write table
@@ -55,7 +55,6 @@ async function connect_to_db() {
 		}
 	});
 
-	console.log(content_string);
 	return content_string;
 }
 
@@ -63,8 +62,14 @@ var app = express();
 app.use(express.static(__dirname + "/page_content"));
 app.listen(8080);
 
-app.post("/downloads", async (req, res) => {
-	await connect_to_db();
+async function get_string()
+{
+	const result = await connect_to_db();
+	console.log(result);
+}
+
+app.post("/downloads", (req, res) => {
+	get_string();
 });
 /*
 //Create local host server
