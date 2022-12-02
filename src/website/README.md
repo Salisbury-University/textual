@@ -5,6 +5,7 @@ This website will be used to display content about our Textual Baseline Database
 # Setup
 
 1. Pull from the GitHub to get the most up to date version of the website. <br/>
+	- Place the mongo_credentials.txt file in the same directory as the DatabaseConnect.js script.
 
 <br/>
 
@@ -19,9 +20,10 @@ This website will be used to display content about our Textual Baseline Database
 
 <br/>
 
-4. Now install the two required node modules <br/>
+4. Now install the three required node modules <br/>
 	- npm install express
 	- npm install mongodb@3.7
+	- npm install line-reader
 
 <br/>
 
