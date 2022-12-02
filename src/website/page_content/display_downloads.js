@@ -3,6 +3,7 @@ function load_downloads()
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
 		var table = document.getElementById("database_table");
+		table.style.tableLayout = "fixed";
 
 		//Count how many documents are in the query
 		const count = (documents.match(/\{(.*?)\}/g) || []).length;
@@ -24,6 +25,10 @@ function load_downloads()
 			var text = json_obj.selftext;
 			var subreddit = json_obj.subreddit;
 			var date = json_obj.created_utc;
+
+			//If the text from the query is empty, write a message
+			if (text == "")
+				text = "No Text Found.";
 			
 			//Create a new row
 			var row = table.insertRow();
