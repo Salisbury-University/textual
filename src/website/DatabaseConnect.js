@@ -8,6 +8,7 @@ var MongoClient = require('mongodb').MongoClient;
 var http = require('http');
 var fs = require('fs');
 var express = require('express');
+var assert = require('assert');
 
 //Database url, does not contain the password for security purposes
 const url = "mongodb://root:password@10.251.12.108:30000?authSource=admin";
@@ -25,6 +26,7 @@ async function connect_to_db() {
 	content_string.concat('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
 	content_string.concat('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
 
+	/*
 	//Get the db from MongoDB and search the RedditPost collection
 	const db = client.db("textual");
 	const cursor = await db.collection('RedditPosts').find();
@@ -34,7 +36,9 @@ async function connect_to_db() {
 	content_string.concat("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
 
 	//For each item, append it to the HTML content
-	cursor.each(function(err, item) {
+	//cursor.each(function(err, item) {
+	while (await cursor.hasNext()) {
+		item = await cursor.next();
 		//Write until empty
 		if (item != null)
 		{
@@ -53,8 +57,12 @@ async function connect_to_db() {
 		{
 			content_string.concat("</table>");
 		}
-	});
 
+		console.log(content_string);
+	}
+
+	*/
+	
 	return content_string;
 }
 
@@ -62,15 +70,41 @@ var app = express();
 app.use(express.static(__dirname + "/page_content"));
 app.listen(8080);
 
-async function get_string()
-{
-	const result = await connect_to_db();
-	console.log(result);
-}
+app.post("/downloads", (req, res, next) => {
+	try
+	{
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
 
-app.post("/downloads", (req, res) => {
-	get_string();
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					db.collection('RedditPosts').find().toArray(function(err, data) {
+						err
+						? reject(err) : resolve(data[0]);
+					});
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				client.close();
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
 });
+
 /*
 //Create local host server
 http.createServer(function (req, res) {	
