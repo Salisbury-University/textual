@@ -82,8 +82,7 @@ app.post("/downloads", (req, res, next) => {
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
 					db.collection('RedditPosts').find().toArray(function(err, data) {
-						err
-						? reject(err) : resolve(data[0]);
+						err ? reject(err) : resolve(data);
 					});
 				});
 			};
@@ -96,6 +95,21 @@ app.post("/downloads", (req, res, next) => {
 
 			callMyPromise().then(function(result) {
 				client.close();
+
+				//String to hold all db content
+				var content_string = "";
+
+				var body = "";
+				var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
+				content_string.concat("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
+				content_string.concat('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
+				content_string.concat('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
+				
+				content_string.concat("<table><tr>");
+				content_string.concat("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
+
+				//content_string.concat(result);
+
 				res.send(result);
 			});
 		}); //End of MongoClient call
@@ -104,6 +118,31 @@ app.post("/downloads", (req, res, next) => {
 		next(e)
 	}
 });
+
+function extract_document(result)
+{
+	var content_string = "";
+	
+	if (result != null)
+	{
+		//Write post title, date, and text to the HTML page
+		content_string.concat("<tr><td>" + result['title'] + "</td>");
+		content_string.concat("<td>" + result['subreddit'] + "</td>");
+		content_string.concat("<td>" + result['created_utc'] + "</td>");
+		var post_text = result['selftext'];
+		if (post_text == "")
+			content_string.concat("<td>" + "No Text Found" + "</td></tr>");
+		else
+			content_string.concat("<td>" + post_text + "</td></tr>");
+
+	}
+	else
+	{
+		content_string.concat("</table>");
+	}
+
+	return content_string;
+}
 
 /*
 //Create local host server
