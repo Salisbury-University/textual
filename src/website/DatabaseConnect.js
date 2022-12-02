@@ -9,70 +9,28 @@ var http = require('http');
 var fs = require('fs');
 var express = require('express');
 var assert = require('assert');
+var lineReader = require('line-reader');
 
-//Database url, does not contain the password for security purposes
-const url = "mongodb://root:password@10.251.12.108:30000?authSource=admin";
+//Database url, file is read in to avoid pushing login info to the GitHub
+var url;
 
-async function connect_to_db() {
-	//Connect to the MongoDB
-	//String to hold all db content
-	var content_string = "";
-	
-	const client = await MongoClient.connect(url, { useUnifiedTopology: true });
-	//Print header and CSS
-	var body = "";
-	var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
-	content_string.concat("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-	content_string.concat('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
-	content_string.concat('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
+//Read the credentials from the mongodb file
+lineReader.eachLine("mongo_credentials.txt", function(line, last) {
+	url = line;
+});
 
-	/*
-	//Get the db from MongoDB and search the RedditPost collection
-	const db = client.db("textual");
-	const cursor = await db.collection('RedditPosts').find();
-
-	//Write table
-	content_string.concat("<table><tr>");
-	content_string.concat("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
-
-	//For each item, append it to the HTML content
-	//cursor.each(function(err, item) {
-	while (await cursor.hasNext()) {
-		item = await cursor.next();
-		//Write until empty
-		if (item != null)
-		{
-			//Write post title, date, and text to the HTML page
-			content_string.concat("<tr><td>" + item.title + "</td>");
-			content_string.concat("<td>" + item.subreddit + "</td>");
-			content_string.concat("<td>" + item.created_utc + "</td>");
-			var post_text = item.selftext;
-			if (post_text == "")
-				content_string.concat("<td>" + "No Text Found" + "</td></tr>");
-			else
-				content_string.concat("<td>" + post_text + "</td></tr>");
-
-		}
-		else
-		{
-			content_string.concat("</table>");
-		}
-
-		console.log(content_string);
-	}
-
-	*/
-	
-	return content_string;
-}
-
+//Start the NodeJS express app, the contents of the page_content directory will be loaded
 var app = express();
 app.use(express.static(__dirname + "/page_content"));
+//Start the app on port 8080
 app.listen(8080);
 
+//The function will be called when the user clicks on the downloads page
+//Data will be posted, and can be fetched by the client to be displayed on the downloads page
 app.post("/downloads", (req, res, next) => {
 	try
 	{
+		//Connect to the database
 		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
 			assert.equal(null, err);
 			//Get the textual database
@@ -81,6 +39,7 @@ app.post("/downloads", (req, res, next) => {
 			//Create new promise
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
+					//Query the database and convert the result to an array
 					db.collection('RedditPosts').find().toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
@@ -94,22 +53,10 @@ app.post("/downloads", (req, res, next) => {
 			};
 
 			callMyPromise().then(function(result) {
+				//Close the connection to the database client
 				client.close();
-
-				//String to hold all db content
-				var content_string = "";
-
-				var body = "";
-				var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
-				content_string.concat("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-				content_string.concat('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
-				content_string.concat('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
 				
-				content_string.concat("<table><tr>");
-				content_string.concat("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
-
-				//content_string.concat(result);
-
+				//Send the query result to the client
 				res.send(result);
 			});
 		}); //End of MongoClient call
@@ -118,47 +65,3 @@ app.post("/downloads", (req, res, next) => {
 		next(e)
 	}
 });
-
-function extract_document(result)
-{
-	var content_string = "";
-	
-	if (result != null)
-	{
-		//Write post title, date, and text to the HTML page
-		content_string.concat("<tr><td>" + result['title'] + "</td>");
-		content_string.concat("<td>" + result['subreddit'] + "</td>");
-		content_string.concat("<td>" + result['created_utc'] + "</td>");
-		var post_text = result['selftext'];
-		if (post_text == "")
-			content_string.concat("<td>" + "No Text Found" + "</td></tr>");
-		else
-			content_string.concat("<td>" + post_text + "</td></tr>");
-
-	}
-	else
-	{
-		content_string.concat("</table>");
-	}
-
-	return content_string;
-}
-
-/*
-//Create local host server
-http.createServer(function (req, res) {	
-	//Print header
-	
-	var body = "";
-	var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
-	res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-	res.write('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
-	res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
-
-
-
-	//Connect to database and print data
-	//connect_to_db(res);
-
-}).listen(8080); //Start the server
-*/
