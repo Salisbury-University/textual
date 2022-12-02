@@ -22,27 +22,20 @@ function load_downloads()
 		//alert(documents);	
 		//Write the the paragraph on the downloads page		
 		
-		var index_start = documents.indexOf("{") + 1;
-		var index_end = documents.indexOf("}");
+		var index_start = documents.indexOf("{");
+		var index_end = documents.indexOf("}") + 1;
 
 		var sub_string = documents.substring(index_start, index_end);
 		alert(sub_string);
 
-		/*
-		for (const character of documents)
-		{
-			if (character == "{")
-				index_start = documents.indexOf(character);
-			
-			if (character == "}")
-				end_index = documents.indexOf(character);			
-		}
+		const json_obj = JSON.parse(sub_string);
 
-		alert("Output");
-		*/
+		var title = json_obj.title;
+		var text = json_obj.selftext;
+		var subreddit = json_obj.subreddit;
+		var date = json_obj.created_utc;
 
-		//for (var i = 0; i < document_array.length; i++)
-		//	document.getElementById("downloads_content").innerHTML = document_array[i] + "\n";
+		document.getElementById("downloads_content").innerHTML = sub_string;
 	
 	}).catch(function (error) {
 		alert(error);
