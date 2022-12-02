@@ -35,7 +35,17 @@ function load_downloads()
 		var subreddit = json_obj.subreddit;
 		var date = json_obj.created_utc;
 
-		document.getElementById("downloads_content").innerHTML = sub_string;
+		var table = document.getElementById("database_table");
+		var row = table.insertRow();
+		var cell_1 = row.insertCell(0);
+		var cell_2 = row.insertCell(1);
+		var cell_3 = row.insertCell(2);
+		var cell_4 = row.insertCell(3);
+
+		cell_1.innerHTML = title;
+		cell_2.innerHTML = subreddit;
+		cell_3.innerHTML = date;
+		cell_4.innerHTML = text;
 	
 	}).catch(function (error) {
 		alert(error);
