@@ -21,31 +21,40 @@ function load_downloads()
 		//var str = JSON.stringify(text, null, 2); // spacing level = 2
 		//alert(documents);	
 		//Write the the paragraph on the downloads page		
+
 		
-		var index_start = documents.indexOf("{");
-		var index_end = documents.indexOf("}") + 1;
+		var index = 0;
 
-		var sub_string = documents.substring(index_start, index_end);
-		alert(sub_string);
+		while(index < 10)
+		{
+			var index_start = documents.indexOf("{");
+			var index_end = documents.indexOf("}") + 1;
 
-		const json_obj = JSON.parse(sub_string);
+			var sub_string = documents.substring(index_start, index_end);
+			//alert(sub_string);
 
-		var title = json_obj.title;
-		var text = json_obj.selftext;
-		var subreddit = json_obj.subreddit;
-		var date = json_obj.created_utc;
+			const json_obj = JSON.parse(sub_string);
 
-		var table = document.getElementById("database_table");
-		var row = table.insertRow();
-		var cell_1 = row.insertCell(0);
-		var cell_2 = row.insertCell(1);
-		var cell_3 = row.insertCell(2);
-		var cell_4 = row.insertCell(3);
+			var title = json_obj.title;
+			var text = json_obj.selftext;
+			var subreddit = json_obj.subreddit;
+			var date = json_obj.created_utc;
 
-		cell_1.innerHTML = title;
-		cell_2.innerHTML = subreddit;
-		cell_3.innerHTML = date;
-		cell_4.innerHTML = text;
+			var table = document.getElementById("database_table");
+			var row = table.insertRow();
+			var cell_1 = row.insertCell(0);
+			var cell_2 = row.insertCell(1);
+			var cell_3 = row.insertCell(2);
+			var cell_4 = row.insertCell(3);
+
+			cell_1.innerHTML = title;
+			cell_2.innerHTML = subreddit;
+			cell_3.innerHTML = date;
+			cell_4.innerHTML = text;
+
+			documents = documents.replace(sub_string, "");
+			index++;
+		}
 	
 	}).catch(function (error) {
 		alert(error);
