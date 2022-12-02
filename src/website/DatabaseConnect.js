@@ -12,56 +12,59 @@ var express = require('express');
 //Database url, does not contain the password for security purposes
 const url = "mongodb://root:password@10.251.12.108:30000?authSource=admin";
 
-function connect_to_db(res) {
+async function connect_to_db() {
 	//Connect to the MongoDB
-	MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+	//String to hold all db content
+	var content_string = "";
 	
+	const client = await MongoClient.connect(url, { useUnifiedTopology: true });
+	//Print header and CSS
+	var body = "";
+	var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
+	content_string.concat("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
+	content_string.concat('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
+	content_string.concat('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
 
-		//Print header and CSS
-		var body = "";
-		var header = "<title>Textual Baseline Database</title><style> body { background-color: #FFFFFF; } table { border: 1px solid black; } table td, table th { border: 2px solid black; } #pageHeader { margin: auto; text-align: center; border-bottom: 5px solid black; } #tableHeader { text-align: center; } </style>";
-		res.write("<!DOCTYPE html>" + "<html><head>" + header + "</head><body>" + body + "</body></html>");
-		res.write('<h1 id="pageHeader">COSC425/COSC426 Textual Baseline Database</h1><br/><br/>');
-		res.write('<h3 id="tableHeader">REDDIT POSTS</h3><br/>');
+	//Get the db from MongoDB and search the RedditPost collection
+	const db = await client.db("textual");
+	const cursor = await db.collection('RedditPosts').find();
 
-		//Get the db from MongoDB and search the RedditPost collection
-		var db = client.db("textual");
-		var cursor = db.collection('RedditPosts').find();
+	//Write table
+	content_string.concat("<table><tr>");
+	content_string.concat("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
 
-		//Write table
-		res.write("<table><tr>");
-		res.write("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
-
-		//For each item, append it to the HTML content
-		cursor.each(function(err, item) {
-			//Write until empty
-			if (item != null)
-			{
-				//Write post title, date, and text to the HTML page
-				res.write("<tr><td>" + item.title + "</td>");
-				res.write("<td>" + item.subreddit + "</td>");
-				res.write("<td>" + item.created_utc + "</td>");
-				var post_text = item.selftext;
-				if (post_text == "")
-					res.write("<td>" + "No Text Found" + "</td></tr>");
-				else
-					res.write("<td>" + post_text + "</td></tr>");
-			}
+	//For each item, append it to the HTML content
+	cursor.each(function(err, item) {
+		//Write until empty
+		if (item != null)
+		{
+			//Write post title, date, and text to the HTML page
+			content_string.concat("<tr><td>" + item.title + "</td>");
+			content_string.concat("<td>" + item.subreddit + "</td>");
+			content_string.concat("<td>" + item.created_utc + "</td>");
+			var post_text = item.selftext;
+			if (post_text == "")
+				content_string.concat("<td>" + "No Text Found" + "</td></tr>");
 			else
-			{
-				res.write("</table>");
-				//res.end();
-			}
-		});
+				content_string.concat("<td>" + post_text + "</td></tr>");
+
+		}
+		else
+		{
+			content_string.concat("</table>");
+		}
 	});
+
+	console.log(content_string);
+	return content_string;
 }
 
 var app = express();
 app.use(express.static(__dirname + "/page_content"));
 app.listen(8080);
 
-app.get("/downloads", (req, res) => {
-	connect_to_db(res);
+app.post("/downloads", async (req, res) => {
+	await connect_to_db();
 });
 /*
 //Create local host server
