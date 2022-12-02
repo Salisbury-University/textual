@@ -22,10 +22,11 @@ function load_downloads()
 		//alert(documents);	
 		//Write the the paragraph on the downloads page		
 
-		
+		const count = (documents.match(/\{(.*?)\}/g) || []).length;
+		alert(count);
 		var index = 0;
 
-		while(index < 10)
+		while(index < count)
 		{
 			var index_start = documents.indexOf("{");
 			var index_end = documents.indexOf("}") + 1;
