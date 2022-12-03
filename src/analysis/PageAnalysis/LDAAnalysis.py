@@ -16,8 +16,6 @@ import os
 from pymongo import MongoClient
 from gensim.test.utils import datapath
 
-temp_file = None
-
 # Get authoriazation from file
 def get_credentials():
     with open("mongopassword.txt", "r") as pass_file:
@@ -78,8 +76,24 @@ def get_dictionary(processed_docs):
 
 def iterate_in_collection(collection_name, database, entries): 
 
-    global temp_file
+    processed_entries = []
 
+    for entry in entries:
+
+        processed_entries.append(pre_process(entry))
+
+    results = get_dictionary(processed_entries) 
+
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 20, id2word = results[1], passes = 10, workers = 2)
+
+    temp_file = datapath(collection_name+"_model")
+
+    lda_model.save(temp_file)
+
+    for i in range(0, lda_model.num_topics-1):
+        print(lda_model.print_topic(i)
+
+    '''
     if collection_name == "RedditPosts":
 
         processed_entries = []
@@ -92,7 +106,7 @@ def iterate_in_collection(collection_name, database, entries):
 
         if temp_file is not None:
 
-            lda_model = LdaModel.load(temp_file)
+            lda_model = gensim.models.LdaMulticore.load(temp_file)
             lda_model.update(results[0]))
 
             lda_model.save(temp_file) 
@@ -123,6 +137,8 @@ def iterate_in_collection(collection_name, database, entries):
     else: 
 
         pass
+
+    ''' 
 if __name__ == '__main__': 
 
     # get documents 
@@ -183,7 +199,7 @@ if __name__ == '__main__':
             for old_entry in old_entries:
                 entries.append(old_entry['selftext'])
 
-            #iterate_in_collection(col, database, entries)
+            iterate_in_collection(col, database, entries)
 
         elif col == "WikiSourceText":
 
