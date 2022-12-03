@@ -14,6 +14,9 @@ from nltk.stem import WordNetLemmatizer
 import sys
 import os
 from pymongo import MongoClient
+from gensim.test.utils import datapath
+
+temp_file = None
 
 # Get authoriazation from file
 def get_credentials():
@@ -75,6 +78,8 @@ def get_dictionary(processed_docs):
 
 def iterate_in_collection(collection_name, database, entries): 
 
+    global temp_file
+
     if collection_name == "RedditPosts":
 
         processed_entries = []
@@ -85,9 +90,19 @@ def iterate_in_collection(collection_name, database, entries):
 
         results = get_dictionary(processed_entries)
 
-        lda_model = gensim.models.LdaMulticore(results[0], num_topics = 8, id2word = results[1], passed=10, workers=2)
+        if temp_file is not None:
 
-        # save model to update it after??? 
+            lda_model = LdaModel.load(temp_file)
+            lda_model.update(results[0]))
+
+            lda_model.save(temp_file) 
+
+        else: 
+
+            lda_model = gensim.models.LdaMulticore(results[0], num_topics = 8, id2word = results[1], passes=10, workers=2)
+
+            temp_file = datapath("model") 
+            lda_model.save(temp_file) 
 
     elif collection_name == "WikiSourceText":
 
