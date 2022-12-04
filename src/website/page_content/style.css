@@ -85,7 +85,15 @@
 #page_tile_1_text
 {
 	font-family: 'Yanone Kaffeesatz', sans-serif;
-	font-size: 0.9rem;
+	font-size: 1rem;
+	padding-bottom: 0.5rem;
+}
+
+#page_tile_2_text
+{
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	font-size: 1rem;
+	padding-bottom: 0.5rem;
 }
 
 #page_tile_1_btn
