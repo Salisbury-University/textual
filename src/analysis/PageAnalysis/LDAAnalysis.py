@@ -91,106 +91,41 @@ def iterate_in_collection(collection_name, database, entries):
     lda_model.save(temp_file)
 
     for i in range(0, lda_model.num_topics-1):
-        print(lda_model.print_topic(i)
+        print(lda_model.print_topic(i))
 
-    '''
-    if collection_name == "RedditPosts":
-
-        processed_entries = []
-
-        for entry in entries:
-
-            processed_entries.append(pre_process(entry))
-
-        results = get_dictionary(processed_entries)
-
-        if temp_file is not None:
-
-            lda_model = gensim.models.LdaMulticore.load(temp_file)
-            lda_model.update(results[0]))
-
-            lda_model.save(temp_file) 
-
-        else: 
-
-            lda_model = gensim.models.LdaMulticore(results[0], num_topics = 8, id2word = results[1], passes=10, workers=2)
-
-            temp_file = datapath("model") 
-            lda_model.save(temp_file) 
-
-    elif collection_name == "WikiSourceText":
-
-        pass
-
-    elif collection_name == "AmazonReviews":
-
-        pass
-
-    elif collection_name == "RedditComments":
-
-        pass
-
-    elif collection_name == "YelpReviews":
-
-        pass
-    
-    else: 
-
-        pass
-
-    ''' 
 if __name__ == '__main__': 
 
-    # get documents 
 
-    # option one: get data from command line
-    '''
     if(len(sys.argv) < 2):
-        print("Need path to documents.\n")
-        sys.exit()
-
-    original_docs = []
-    processed_docs = []
-
-    for filename in os.listdir(sys.argv[1]):
-        file_ = os.path.join(sys.argv[1], filename)
-
-        if os.path.isfile(file_):
-            with open(file_, 'r') as read_file:
-                original_docs.append(read_file.read())
-
-
-    for doc in original_docs: 
-        processed_docs.append(pre_process(doc))
-
-    
-    results = get_dictionary(processed_docs)
-
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 8, id2word = results[1], passes = 10, workers = 2)
-    '''
-
-    # option two: pull data from database???? 
+        print("Please provide a collection name.")
+        sys.exit
 
     client = get_client()
     database = get_database(client)
 
     collections = database.list_collection_names()
 
-    # parallelize --> go through each collection
-    # run the LDA on each entry
-    # assign the topic words to each item 
-
     # RedditPosts -> 'selftext'
     # WikiSourceText -> 'title' or 'text'
     # AmazonReviews -> 'review_body'
     # RedditComments -> 'body' 
     # YelpReviews -> 'text' 
+    # YoutubeComment -> 'text'
+    # YoutubeVideo -> 'vidTitle' 
 
-    entries = [] 
+    found = 0 
 
     for col in collections:
         
-        if col == "RedditPosts":
+        if col == sys.argv[1]:
+
+            found = 1 
+
+    entries = []
+
+    if found: 
+
+        if sys.argv[1] == "RedditPosts":
 
             old_entries = []
 
@@ -201,7 +136,7 @@ if __name__ == '__main__':
 
             iterate_in_collection(col, database, entries)
 
-        elif col == "WikiSourceText":
+        elif sys.argv[1] == "WikiSourceText":
 
             old_entries = []
 
@@ -210,16 +145,29 @@ if __name__ == '__main__':
             for old_entry in old_entries:
                 entries.append(old_entry['Text'])
 
-        elif col == "AmazonReviews":
+            iterate_in_collection(col, database, entries)
+
+        elif sys.argv[1] == "AmazonReviews":
 
             old_entries = []
 
             old_entries = database[col].find({}, {'review_body':1, '_id':0})
 
             for old_entry in old_entries:
-                entries.append(old_entry['review_body'])
 
-        elif col == "RedditComments":
+                # one of the entries throws a key error
+
+                if 'review_body' in old_entry: 
+
+                    entries.append(old_entry['review_body'])
+
+                else: 
+
+                    pass
+
+            iterate_in_collection(col, database, entries)
+
+        elif sys.argv[1] == "RedditComments":
 
             old_entries = []
 
@@ -227,8 +175,10 @@ if __name__ == '__main__':
 
             for old_entry in old_entries:
                 entries.append(old_entry['body'])
+            
+            iterate_in_collection(col, database, entries)
 
-        elif col == "YelpReviews":
+        elif sys.argv[1] == "YelpReviews":
 
             old_entries = []
 
@@ -236,8 +186,34 @@ if __name__ == '__main__':
 
             for old_entry in old_entries:
                 entries.append(old_entry['text'])
+
+            iterate_in_collection(col, database, entries)
         
+        elif sys.argv[1] == "YoutubeComment":
+
+            old_entries = []
+
+            old_entries = database[col].find({}, {'text':1, '_id':0})
+
+            for old_entry in old_entries:
+                entries.append(old_entry['text'])
+
+            iterate_in_collection(col, database, entries)
+
+        elif sys.argv[1] == "YoutubeVideo":
+
+            old_entries = []
+
+            old_entries = database[col].find({}, {'vidTitle':1, '_id':0})
+
+            for old_entry in old_entries:
+                entries.append(old_entry['vidTitle'])
+
+            iterate_in_collection(col, database, entries)
+
         else:
 
             pass
+
+        
 
