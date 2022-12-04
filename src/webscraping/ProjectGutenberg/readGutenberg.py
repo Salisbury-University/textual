@@ -41,6 +41,15 @@ def get_client():
     # Return the client
     return client
 
+def remove_empty(text):
+    lines=text.split('\n')
+    nonEmpt=[line for line in lines if line.strip()!='']
+    listS=[]
+    for l in nonEmpt:
+        listS.append(l)
+        listS.append('\n')
+    return ''.join(listS)
+
 def get_database(client):
 	return client.textual
 
@@ -139,6 +148,8 @@ def readWebpage(pageCount):
         if flag==0: #Only runs if the page exists
             pageHtml=find_html(tempURL)
             totalLen+=(len(pageHtml))
+            pageText=get_text(pageHtml)
+            pageText=remove_empty(text)
             if "Language: English" not in pageHtml: #ProjectGutenberg sometimes has a language tag
                 print("Warning: Source may not be in English")
             print(tempURL)
