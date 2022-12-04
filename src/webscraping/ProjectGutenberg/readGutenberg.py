@@ -1,4 +1,5 @@
 import requests
+import zlib
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import urllib.request
@@ -49,6 +50,9 @@ def remove_empty(text):
         listS.append(l)
         listS.append('\n')
     return ''.join(listS)
+
+def makeID(url):
+    return str(hash(url))
 
 def get_database(client):
 	return client.textual
@@ -126,7 +130,13 @@ def get_author(html_page):
         end3=html_page.find("\n", start)
         return html_page[start:end3]
 
+def pageDict(metadata,text):
+    pDict={'URL':metadata[0], 'title': metadata[1],'date':metadata[2],'author':metadata[3], 'text':text,'id': makeID(metadata[0])}
+    return pDict
 
+def htmlDict(html, URL):
+    hDict={'HTML': zlib.compress(html.encode()), 'ID': makeID(URL)}
+    return hDict
 def readWebpage(pageCount):
     client=get_client()
     database=get_database(client)
@@ -150,6 +160,7 @@ def readWebpage(pageCount):
             totalLen+=(len(pageHtml))
             pageText=get_text(pageHtml)
             pageText=remove_empty(text)
+            metadata.append(tempURL)
             if "Language: English" not in pageHtml: #ProjectGutenberg sometimes has a language tag
                 print("Warning: Source may not be in English")
             print(tempURL)
@@ -162,7 +173,10 @@ def readWebpage(pageCount):
             metadata.append(date)
             author=get_author(pageHtml) #Gets the source's author
             metadata.append(author)
+            page_collection.insert_one(pageDict(metadata,text))
+            html_collection.insert_one(htmlDict(pageHtml,metadata[0]))
         flag=0
+    close_database(client)
     return totalLen
 
 if __name__=="__main__":
