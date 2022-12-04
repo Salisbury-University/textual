@@ -48,6 +48,7 @@ def get_database(client):
 def close_database(client):
     # Close the connection to the database
     client.close()
+    print('closed database')
 
 if __name__ == "__main__":
 
@@ -86,6 +87,8 @@ if __name__ == "__main__":
         thisDict = {"id": item['id'], "title":item['snippet']['title'],}
         categories.append(thisDict)
 
+    numVideosInserted = 0 
+    numCommentsInserted = 0
     # request 10 most popular videos per category
     for category in categories:
         request = youtube.videos().list(
@@ -123,6 +126,8 @@ if __name__ == "__main__":
                     print("'KeyERROR': This video has no comments available. Next video...")
                     print()
 
+            
+
             #print("num VIDEOS in LIST:", len(videos))
             # request 20 most recent commentThreads per video
             for video in videos:
@@ -151,26 +156,31 @@ if __name__ == "__main__":
                     }
                     commentThreads.append(thisDict)
                 
-
+                
                 #store video info
                 if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0:
                     print("inserting a video:", video["vidTitle"])
-                    #video_collection.insert_one(video)
+                    numVideosInserted += 1
+                    video_collection.insert_one(video)
                 else:
                     print("video already in database")
 
+                
                 #store comment info
+                print("about to insert",len(commentThreads),"comments from this video")
                 for comment in commentThreads:
                     if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0:
-                        print("inserting a comment from video:", video["vidTitle"])
-                        #comment_collection.insert_many(commentThreads)
+                        comment_collection.insert_one(comment)
+                        numCommentsInserted += 1
                     else:
                         print("comment already in database")
                 print()
-                
+
         except HttpError:
             print("HTTPError: most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
             print()
         print()
-
+                    
     close_database(client)
+    print("inserted:", numVideosInserted, "videos")
+    print("inserted:", numCommentsInserted, "comments")
