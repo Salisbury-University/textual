@@ -9,6 +9,8 @@ from collections import Counter
 from string import punctuation
 from pymongo import MongoClient
 
+tagList=['[document]','noscript','header','html','meta','head'. 'input'. 'script', 'style', 'script', 'footer']
+
 #Holds the number of iterations that each processor will run
 numIter=100
 
@@ -90,6 +92,13 @@ def get_date(html_page):
         end=html_page.find(closedT, start)
         return html_page[start:end] #Returns the date of the source is one is found
 
+def get_text(html_page):
+    '''Gets the text from the html of the page'''
+    soup=BeautifulSoup(html_page,'lxml')
+    text=soup.find_all(text=True)
+    for tag in tagList:
+        text=text.replace(tag,"");
+    return text
 
 def get_author(html_page):
     '''Gets the author of the source'''
@@ -114,8 +123,11 @@ def readWebpage(pageCount):
     database=get_database(client)
     '''Creates the URL to search and collects the metadata'''
     print(pageCount)
+    page_collection=database.PGText
+    html_collection=databse.PGHTML
     totalLen=0
     for i in range(numIter): #Runs the specified number of times
+        metadata=[]
         num=pageCount+i
         flag=0
         tempURL=URLBEGIN+"/"+str(num)+"/pg"+str(num)+".txt" #Creates the link for the page that will be searched
@@ -131,14 +143,14 @@ def readWebpage(pageCount):
                 print("Warning: Source may not be in English")
             print(tempURL)
             title=get_title(pageHtml) #Gets the title of the webpage
-            if len(title)>=1000:
-                print(title)
+            if len(title)<1000:
+                metadata.append(title)
             else:
-                print("Title too long")
+                metadata.append("Title too long")
             date=get_date(pageHtml) #Gets the source's publishing date
-            print(date)
+            metadata.append(date)
             author=get_author(pageHtml) #Gets the source's author
-            print(author)
+            metadata.append(author)
         flag=0
     return totalLen
 
