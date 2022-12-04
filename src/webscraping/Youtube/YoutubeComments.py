@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
                 #store comment info
                 for comment in commentThreads:
-                    if comment_collection.count_documents({ 'cId': comment["vId"] }, limit = 1) == 0:
+                    if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0:
                         print("inserting a comment from video:", video["vidTitle"])
                         #comment_collection.insert_many(commentThreads)
                     else:
