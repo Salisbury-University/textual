@@ -84,7 +84,7 @@ def iterate_in_collection(collection_name, database, entries):
 
     results = get_dictionary(processed_entries) 
 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 20, id2word = results[1], passes = 10, workers = 2)
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 3)
 
     temp_file = datapath(collection_name+"_model")
 
@@ -92,6 +92,8 @@ def iterate_in_collection(collection_name, database, entries):
 
     for i in range(0, lda_model.num_topics-1):
         print(lda_model.print_topic(i))
+
+    
 
 if __name__ == '__main__': 
 
