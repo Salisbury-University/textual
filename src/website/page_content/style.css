@@ -111,6 +111,16 @@
 	text-align: center;
 }
 
+#about_subheader
+{ 
+	color: #D9D9D9;
+	font-size: 3rem;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 4rem;
+	text-align: center;
+	
+} 
+
 .about_intro
 {
 	color: #D9D9D9;
