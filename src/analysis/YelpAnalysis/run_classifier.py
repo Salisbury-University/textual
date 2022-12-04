@@ -178,8 +178,8 @@ def cleanData(review):
     return reformed
 
 # Constants for the dataset, these need to be changed for each dataset
-vocab=72287
-max_length=491
+vocab=208344 # Needs to be updated to match the dataset the network was trained on
+max_length=507
 
 # Load the tokenizer values
 with open('tokenizer.pickle', 'rb') as handle:
