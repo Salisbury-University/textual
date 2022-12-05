@@ -20,7 +20,7 @@
     achievement. 
     
     As we move into te future, we will be working on making our website more responsive. We 
-    want to add visualizations, which will be a large part of phase thhree. We additionally 
+    want to add visualizations, which will be a large part of phase three. We additionally 
     want to be able to have the website hosted non-locally. Hopefully this will occur over
     winter break.
     
