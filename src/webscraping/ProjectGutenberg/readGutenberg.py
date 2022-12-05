@@ -10,7 +10,7 @@ from collections import Counter
 from string import punctuation
 from pymongo import MongoClient
 
-tagList=['[document]','noscript','header','html','meta','head'. 'input'. 'script', 'style', 'script', 'footer']
+tagList=['[document]','noscript','header','html','meta','head', 'input', 'script', 'style', 'script', 'footer']
 
 #Holds the number of iterations that each processor will run
 numIter=100
