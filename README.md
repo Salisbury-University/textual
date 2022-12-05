@@ -12,6 +12,20 @@
 
 ## Current Status 
 
+### **COSC425 Final Presentation/Post Sprint Three**
+
+    We were sucessful in completing our third sprint goals. We have a working website which 
+    contains information pertaining to the data that is present in the database. We have 
+    over 16 million data samples present in our database at this time, which is a huge
+    achievement. 
+    
+    As we move into te future, we will be working on making our website more responsive. We 
+    want to add visualizations, which will be a large part of phase thhree. We additionally 
+    want to be able to have the website hosted non-locally. Hopefully this will occur over
+    winter break.
+    
+    The tools we are continuing to use are the same, with bootstrap, JavaScript, and Python.
+
 ### **Sprint Three**: 7 November 2022 - 5 December 2022
 
     We were successful in our second sprint goals. We continued to build our 
