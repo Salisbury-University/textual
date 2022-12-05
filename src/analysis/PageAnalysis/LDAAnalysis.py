@@ -20,6 +20,7 @@ import sys
 import os
 from pymongo import MongoClient
 from gensim.test.utils import datapath
+from nltk.corpus import stopwords
 
 # Get authoriazation from file
 def get_credentials():
@@ -78,6 +79,16 @@ def get_dictionary(processed_docs):
     bag_of_words = [dictionary.doc2bow(doc) for doc in processed_docs]
 
     return bag_of_words, dictionary
+
+def bag_of_words(text):
+
+    # extract words
+
+    ignore = ['a', 'the', 'is']
+
+    words = text.split()
+
+
 
 def iterate_in_collection(collection_name, database, entries): 
 
