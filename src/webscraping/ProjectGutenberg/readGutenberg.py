@@ -143,7 +143,7 @@ def readWebpage(pageCount):
     '''Creates the URL to search and collects the metadata'''
     print(pageCount)
     page_collection=database.PGText
-    html_collection=databse.PGHTML
+    html_collection=database.PGHTML
     totalLen=0
     for i in range(numIter): #Runs the specified number of times
         metadata=[]
