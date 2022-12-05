@@ -13,7 +13,7 @@ from pymongo import MongoClient
 tagList=['[document]','noscript','header','html','meta','head', 'input', 'script', 'style', 'script', 'footer']
 
 #Holds the number of iterations that each processor will run
-numIter=100
+numIter=60000
 
 #Beginning of the URL that will be used to make the url of different sources
 URLBEGIN="https://www.gutenberg.org/cache/epub"
