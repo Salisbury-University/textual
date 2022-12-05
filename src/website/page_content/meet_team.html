@@ -41,23 +41,18 @@
 		      <li class="nav-item active">
 			<a class="nav-link" href="index.html">Home</a>
 		      </li>
-		      <li class="nav-item">
+		      <li class="nav-item dropdown">
 			<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> About</a>
 				<div class="dropdown-menu" aria-labelledby="navDropdownMenuLink">
-					<a class="dropdown-item" href="about.html"> About Project </a> 
-					<a class="dropdown-item" href="meet_team.html"> Meet the team!</a>
+					<a class="dropdown-item" href="about.html">About the Project</a> 
+					<a class="dropdown-item" href="meet_team.html">Meet the Team</a>
 				</div>
 		      </li>
 		      <li class="nav-item">
 			<a class="nav-link" href="downloads.html">Download</a>
 		      </li>
-		      <li class="nav-item">	
-			<a class="nav-link" href="meet_team.html">Meet the Team</a>
-		      </li>
 		      <li class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  Tutorials
-			</a>
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tutorials</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 			  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
 			  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
@@ -69,37 +64,45 @@
 		</nav>
 
         <main role="main">
+            	<h2 id="team_header">Team Members</h2>
+		<!-- TEAM MEMBER CONTAINERS -->
+		<div class="container aos-init aos-animate" data-aos="fade-up" id="team_container">
+			<div class="row gy-5 aos-init aos-animate justify-content-center" data-aos="fade-up" data-aos-delay="100" id="team_boxes">
+				<div class="col-lg-3 col-md-6 team_box">
+					<img class="team_icons" src="team_icon.png">
+					<h3>Caroline Smith</h3>
+					<p>About Paragraph.</p>
+				</div>
 
-            <div class="container aos-init aos-animate" data-aos="fade-up" id="sources_container"> 
-            <h2 id="sources_header">Team Members</h2>
+				<div class="col-lg-3 col-md-6 team_box">
+					<img class="team_icons" src="team_icon.png">
+					<h3>Ikomi Moki</h3>
+					<p>About Paragraph.</p>
+				</div>
 
-                <div class="row"> 
-                    <div class="col-sm-4"> Caroline Smith </div>
-                    <div class="col-md-8"></div> 
-                </div>
-                <div class="row"> 
-                    <div class="col-sm-4"> Ikomi Moki </div>
-                    <div class="col-md-8"></div> 
-                </div>
-                <div class="row"> 
-                    <div class="col-sm-4"> Joshua Comfort </div>
-                    <div class="col-md-8"></div> 
-                </div>
-                <div class="row"> 
-                    <div class="col-sm-4"> Joseph Fernandez </div>
-                    <div class="col-md-8"></div> 
-                </div>
-                <div class="row"> 
-                    <div class="col-sm-4"> William Townsend </div>
-                    <div class="col-md-8"></div> 
-                </div>
+				<div class="col-lg-3 col-md-6 team_box">
+					<img class="team_icons" src="team_icon.png">
+					<h3>Joshua Comfort</h3>
+					<p>About Paragraph.</p>
+				</div>
+				
+				<div class="col-lg-3 col-md-6 team_box">
+					<img class="team_icons" src="team_icon.png">
+					<h3>Joseph Fernandez</h3>
+					<p>About Paragraph.</p>
+				</div>
 
-             </div>
+				<div class="col-lg-3 col-md-6 team_box">
+					<img class="team_icons" src="team_icon.png">
+					<h3>William Townsend</h3>
+					<p>About Paragraph.</p>
+				</div> 
+		     	</div>
+		</div>
 
             <footer class="container" id="su_footer">
-				<p>Salisbury University 2022-2023</p>
-			</footer>
-
+			<p>Salisbury University 2022-2023</p>
+	    </footer>
         </main>
     </body>
 </html>
