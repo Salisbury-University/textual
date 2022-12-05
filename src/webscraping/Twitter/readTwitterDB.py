@@ -91,7 +91,8 @@ if __name__ == "__main__":
     except:
         print("Couldn't Connect to Database")
 
-    collection = connection.TwitterTweets
+    database = connection.textual
+    collection = database.TwitterTweets
 
     client = tweepy.Client(bearer_token=BEARER_TOKEN) # gives us access to the api in the program
     queries = ['(death OR dead) lang:en -is:retweet -has:media -has:links',
