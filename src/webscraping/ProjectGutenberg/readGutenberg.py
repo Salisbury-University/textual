@@ -13,7 +13,7 @@ from pymongo import MongoClient
 tagList=['[document]','noscript','header','html','meta','head', 'input', 'script', 'style', 'script', 'footer']
 
 #Holds the number of iterations that each processor will run
-numIter=60000
+numIter=4000
 
 #Beginning of the URL that will be used to make the url of different sources
 URLBEGIN="https://www.gutenberg.org/cache/epub"
@@ -107,11 +107,13 @@ def get_date(html_page):
 
 def get_text(html_page):
     '''Gets the text from the html of the page'''
+    pageText=''
     soup=BeautifulSoup(html_page,'lxml')
     text=soup.find_all(text=True)
-    for tag in tagList:
-        text=text.replace(tag,"");
-    return text
+    for t in text:
+        if t.parent.name not in tagList:
+            pageText+=t
+    return pageText
 
 def get_author(html_page):
     '''Gets the author of the source'''
@@ -146,6 +148,8 @@ def readWebpage(pageCount):
     html_collection=database.PGHTML
     totalLen=0
     for i in range(numIter): #Runs the specified number of times
+        if i%100==0:
+            print("ITERATION "+str(i))
         metadata=[]
         num=pageCount+i
         flag=0
@@ -159,11 +163,10 @@ def readWebpage(pageCount):
             pageHtml=find_html(tempURL)
             totalLen+=(len(pageHtml))
             pageText=get_text(pageHtml)
-            pageText=remove_empty(text)
+            pageText=remove_empty(pageText)
             metadata.append(tempURL)
-            if "Language: English" not in pageHtml: #ProjectGutenberg sometimes has a language tag
-                print("Warning: Source may not be in English")
-            print(tempURL)
+            #if "Language: English" not in pageHtml: #ProjectGutenberg sometimes has a language tag
+                #print("Warning: Source may not be in English")
             title=get_title(pageHtml) #Gets the title of the webpage
             if len(title)<1000:
                 metadata.append(title)
@@ -173,7 +176,7 @@ def readWebpage(pageCount):
             metadata.append(date)
             author=get_author(pageHtml) #Gets the source's author
             metadata.append(author)
-            page_collection.insert_one(pageDict(metadata,text))
+            page_collection.insert_one(pageDict(metadata,pageText))
             html_collection.insert_one(htmlDict(pageHtml,metadata[0]))
         flag=0
     close_database(client)
