@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 
-
-import os
 import googleapiclient._auth
 import googleapiclient.discovery
 import googleapiclient.errors
+from googleapiclient.errors import HttpError
 import sys
 from pymongo import MongoClient
-
-
-def tag2str(taglist):
-    str = ""
-    for tag in taglist:
-        str = str + ',' + tag
-    return str
 
 def getKey():
     with open("YTkey.txt", 'r') as keyFile:
@@ -56,6 +48,7 @@ def get_database(client):
 def close_database(client):
     # Close the connection to the database
     client.close()
+    print('closed database')
 
 if __name__ == "__main__":
 
@@ -77,7 +70,6 @@ if __name__ == "__main__":
 
     # Get API key and create an API client
     key = getKey()
-
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, developerKey=key)
 
@@ -95,6 +87,8 @@ if __name__ == "__main__":
         thisDict = {"id": item['id'], "title":item['snippet']['title'],}
         categories.append(thisDict)
 
+    numVideosInserted = 0 
+    numCommentsInserted = 0
     # request 10 most popular videos per category
     for category in categories:
         request = youtube.videos().list(
@@ -108,60 +102,85 @@ if __name__ == "__main__":
         try:
             print("requesting videos")
             response = request.execute()
-            print("Successfully received videos for category:", category)
-            items = response["items"]
-            
+            print("Successfully received videos for category:", category["title"])
+            items = response["items"]            
+
+            #except HttpError:
+            #    print("HTTPError: most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
+            #    print()
+
             #store metadata about the 10 videos in this category
             videos = []
             for item in items:
-                thisDict = {'vId': item['id'], 
-                            "vidTitle": item['snippet']['title'],
-                            "channelTitle": item['snippet']['channelTitle'],
-                            "commentCount": item['statistics']['commentCount'],
-                            "category": category['title']
-                            }
-                videos.append(thisDict)
+                try:
+                    #check if each video has comments
+                    if item["statistics"]["commentCount"] is not None and item["statistics"]["commentCount"] != '0':
+                        thisDict = {'vId': item['id'], 
+                                    "vidTitle": item['snippet']['title'],
+                                    "channelTitle": item['snippet']['channelTitle'],
+                                    "commentCount": item['statistics']['commentCount'],
+                                    "category": category['title']
+                                    }
+                        videos.append(thisDict)
+                except KeyError:
+                    print("'KeyERROR': This video has no comments available. Next video...")
+                    print()
+
             
-            print("VIDEOS in LIST:", len(videos))
+
+            #print("num VIDEOS in LIST:", len(videos))
             # request 20 most recent commentThreads per video
             for video in videos:
-                if video["commentCount"] != '0':
+                request = youtube.commentThreads().list(
+                part="snippet",
+                order="time",
+                textFormat="plainText",
+                videoId=video['vId'],
+                maxResults=20,
+                )
 
-                    request = youtube.commentThreads().list(
-                    part="snippet",
-                    order="time",
-                    textFormat="plainText",
-                    videoId=video['vId'],
-                    maxResults=20
-                    )
+                response = request.execute()
+                items = response['items']
 
-                    response = request.execute()
-                    items = response['items']
-
-                    #store metadata about the 20 comment threads
-                    commentThreads = []
-                    for item in items:
-                        thisDict = {
-                            "cId": item['snippet']['topLevelComment']['id'],
-                            "text": item['snippet']['topLevelComment']['snippet']['textDisplay'],
-                            "likeCount": item['snippet']['topLevelComment']['snippet']['likeCount'],
-                            "replyCount": item['snippet']['totalReplyCount'],
-                            "publishDate": item['snippet']['topLevelComment']['snippet']['publishedAt'],
-                            "lastUpdated": item['snippet']['topLevelComment']['snippet']['updatedAt'],
-                            "vId": video['vId']
-                        }
-                        commentThreads.append(thisDict)
-                    
-                    print("COMMENTS in LIST:", len(commentThreads))
-                    
-                    #store video info
+                #store metadata about the 20 comment threads
+                commentThreads = []
+                for item in items:
+                    thisDict = {
+                        "cId": item['snippet']['topLevelComment']['id'],
+                        "text": item['snippet']['topLevelComment']['snippet']['textDisplay'],
+                        "likeCount": item['snippet']['topLevelComment']['snippet']['likeCount'],
+                        "replyCount": item['snippet']['totalReplyCount'],
+                        "publishDate": item['snippet']['topLevelComment']['snippet']['publishedAt'],
+                        "lastUpdated": item['snippet']['topLevelComment']['snippet']['updatedAt'],
+                        "vId": video['vId']
+                    }
+                    commentThreads.append(thisDict)
+                
+                
+                #store video info
+                if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0:
+                    print("inserting a video:", video["vidTitle"])
+                    numVideosInserted += 1
                     video_collection.insert_one(video)
-            
-                    #store comment info
-                    comment_collection.insert_many(commentThreads)
-                        
-        except:
-            print("Oops!", sys.exc_info()[0], "occurred.")
-            #print("most popular chart for category", category["title"]," is not supported or not available")
-    
+                else:
+                    print("video already in database")
+
+                
+                #store comment info
+                print("about to insert",len(commentThreads),"comments from this video")
+                for comment in commentThreads:
+                    if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0:
+                        comment_collection.insert_one(comment)
+                        numCommentsInserted += 1
+                    else:
+                        print("comment already in database")
+                print()
+
+        except HttpError:
+            print("HTTPError: most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
+            print()
+        print()
+                    
     close_database(client)
+    print("inserted:", numVideosInserted, "videos")
+    print("inserted:", numCommentsInserted, "comments")

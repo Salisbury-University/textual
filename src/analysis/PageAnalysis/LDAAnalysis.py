@@ -8,6 +8,11 @@
 #   overall good for finding hidden thhemes, classifying documents into said themes
 #   and organizing the documents based on those themes
 
+# IDEAS
+#   train the model, then reiterate through all of the documents to find the most probable
+#   topic
+
+from gc import collect
 import gensim
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
@@ -84,7 +89,7 @@ def iterate_in_collection(collection_name, database, entries):
 
     results = get_dictionary(processed_entries) 
 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 20, id2word = results[1], passes = 10, workers = 2)
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 3)
 
     temp_file = datapath(collection_name+"_model")
 
@@ -92,6 +97,57 @@ def iterate_in_collection(collection_name, database, entries):
 
     for i in range(0, lda_model.num_topics-1):
         print(lda_model.print_topic(i))
+
+    # get documents
+
+    documents = [] 
+
+    if collection_name == "RedditPosts":
+
+        documents = database[collection_name].find({}, {'selftext':1, '_id':0})
+
+    elif collection_name == "WikiSourceText": 
+
+        documents = database[collection_name].find({}, {'Text':1, '_id':0})
+
+    elif collection_name == "AmazonReviews":
+
+        documents = database[collection_name].find({}, {'review_body':1, '_id':0})
+
+    elif collection_name == "RedditComments":
+
+        documents = database[collection_name].find({}, {'body':1, '_id':0})
+
+    elif collection_name == "YelpReviews":
+
+        documents = database[collection_name].find({}, {'text':1, '_id':0})
+
+    elif collection_name == "YoutubeComment":
+
+        documents = database[collection_name].find({}, {'text':1, '_id':0})
+
+    elif collection_name == "YoutubeVideo":
+
+        documents = database[collection_name].find({}, {'vidTitle':1, '_id':0})
+
+    else: 
+
+        pass
+
+    for doc in documents: 
+
+        processed = pre_process(doc)
+
+        results = get_dictionary(processed)
+
+        bow = results[0]
+
+        topics = lda_model.get_document_topics(bow, None, None, True)
+
+        for item in topics:
+
+            print(item)
+    
 
 if __name__ == '__main__': 
 
@@ -129,29 +185,29 @@ if __name__ == '__main__':
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'selftext':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
 
             for old_entry in old_entries:
                 entries.append(old_entry['selftext'])
 
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "WikiSourceText":
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'Text':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
 
             for old_entry in old_entries:
                 entries.append(old_entry['Text'])
 
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "AmazonReviews":
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'review_body':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
 
             for old_entry in old_entries:
 
@@ -165,54 +221,52 @@ if __name__ == '__main__':
 
                     pass
 
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "RedditComments":
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'body':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
 
             for old_entry in old_entries:
                 entries.append(old_entry['body'])
             
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "YelpReviews":
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'text':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
 
             for old_entry in old_entries:
                 entries.append(old_entry['text'])
 
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
         
         elif sys.argv[1] == "YoutubeComment":
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'text':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
 
             for old_entry in old_entries:
                 entries.append(old_entry['text'])
 
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "YoutubeVideo":
 
             old_entries = []
 
-            old_entries = database[col].find({}, {'vidTitle':1, '_id':0})
+            old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
 
             for old_entry in old_entries:
                 entries.append(old_entry['vidTitle'])
 
-            iterate_in_collection(col, database, entries)
+            iterate_in_collection(sys.argv[1], database, entries)
 
         else:
 
             pass
-
-        

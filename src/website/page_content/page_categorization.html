@@ -25,7 +25,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>	
 	
 	</head>
-  	<body>
+  	<body id="page_content">
 		<!-- MAIN PAGE CONTENT -->
 		<main role="main">
 
@@ -40,12 +40,19 @@
 		      <li class="nav-item active">
 			<a class="nav-link" href="index.html">Home</a>
 		      </li>
-		      <li class="nav-item">
-			<a class="nav-link" href="about.html">About</a>
+		      <li class="nav-item dropdown">
+			<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+			<div class="dropdown-menu" aria-labelledby="navDropdownMenuLink">
+				<a class="dropdown-item" href="about.html">About the Project</a> 
+				<a class="dropdown-item" href="meet_team.html">Meet the Team</a>
+			</div>
 		      </li>
 		      <li class="nav-item">
 			<a class="nav-link" href="downloads.html">Download</a>
 		      </li>
+		      <li class="nav-item">
+                        <a class="nav-link" href="meet_team.html">Meet the Team</a>
+                      </li>
 		      <li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			  Tutorials
