@@ -72,7 +72,7 @@ def getVideos(youtube, category):
         part="id,snippet,statistics",
         chart="mostPopular",
         regionCode="US",
-        maxResults=10,
+        maxResults=25,
         videoCategoryId = category['id']
         )
     #print("currently on category:", category['title'])
