@@ -73,22 +73,19 @@ def pre_process(text):
             results.append(lemmatize_stemming(token))
     return results
 
+def get_single_bow(doc):
+
+    dictionary_new = gensim.corpora.Dictionary([doc])
+    bag_of_words = dictionary_new.doc2bow(doc)
+
+    return bag_of_words
+
 def get_dictionary(processed_docs):
 
     dictionary = gensim.corpora.Dictionary(processed_docs)
     bag_of_words = [dictionary.doc2bow(doc) for doc in processed_docs]
 
     return bag_of_words, dictionary
-
-def bag_of_words(text):
-
-    # extract words
-
-    ignore = ['a', 'the', 'is']
-
-    words = text.split()
-
-
 
 def iterate_in_collection(collection_name, database, entries): 
 
@@ -147,11 +144,9 @@ def iterate_in_collection(collection_name, database, entries):
 
     for doc in documents: 
 
-        processed = pre_process(doc)
+        processed = pre_process([doc])
 
-        results = get_dictionary(processed)
-
-        bow = results[0]
+        bow = get_single_bow(processed)
 
         topics = lda_model.get_document_topics(bow, None, None, True)
 
