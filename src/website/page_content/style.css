@@ -252,7 +252,20 @@
 	display: table;
 }
 
+#review_analysis_img
+{
+	display: table;
+}
+
 #review_analysis_container
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_container_2
 {
 	display: flex;
 	width: 100%;
@@ -275,6 +288,21 @@
 {
 	display:table-cell;
   	vertical-align: middle;	
+}
+
+#lstm_div
+{
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#lstm_img
+{
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 90%;
+	border-radius: 2rem;
 }
 
 #yelp_logo

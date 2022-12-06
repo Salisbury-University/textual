@@ -91,7 +91,21 @@
 			</div>
 
 			<div id="review_subheader"><p id="review_subheader_text">How the Network Works</p></div>
-			
+	
+			<div class="container" id="review_analysis_container_2">
+				<div id="review_analysis_img">
+					<div id="lstm_div"><img src="LSTM.png" alt="LSTM Network" id="lstm_img"></div>
+				</div>
+
+				<div id="review_analysis_text_2">
+				<p id="review_analysis_paragraph_5" class="review_analysis_paragraph">The primary backbone of the classifier is a Bidirection Long Short Term Memory Network or an LSTM. A Bidirectional LSTM is a Recurrent Neural Network (RNN) meaing that the network learns using feedback loops. These loops allow the network to share information it learns with other layers, allowing it to have a "memory."</p>
+
+				<p id="review_analysis_paragraph_5" class="review_analysis_paragraph">One problem with tradtional RNNs that the LSTM helps solve is the issue of long-term dependency. The LSTM solves this by using a special network to pass the information learned forward through the network, additionally the network is able to add or remove information it has learned as needed.</p>
+		
+				<p id="review_analysis_paragraph_6" class="review_analysis_paragraph">The Bidirectional Long Short Term Memory Network futher improves upon the LSTM by allowing inforation within the network to flow both forward and backward. For example if we have a sentence we cannot currently predict such as "I am _____" but later the network sees the sentence "I'm always happy" the LSTM is able to now predict the previously unpredictable blank space by passing information back through the network.</p>
+				</div>
+
+			</div>
 			<footer class="container" id="su_footer">
 				<p>Salisbury University 2022-2023</p>
 			</footer>
