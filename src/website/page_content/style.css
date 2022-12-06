@@ -102,6 +102,16 @@
 	border-color: #A62139;
 }
 
+#page_tile_2_btn
+{
+	position: absolute;
+	bottom: 10px;
+	padding: 0.5rem, 0.5rem, 0.5rem, 0.5rem;
+	background-color: #A62139;
+	border-color: #A62139;
+	margin-top: 2rem;
+}
+
 #about_header
 {
 	color: #D9D9D9;
@@ -377,5 +387,5 @@
 #database_table th 
 {
 	padding: 1rem;
-	border: 2px solid #D9D9D9; 
+	border: 2px solid #D9D9D9;
 }
