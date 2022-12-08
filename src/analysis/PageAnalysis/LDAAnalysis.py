@@ -109,34 +109,42 @@ def iterate_in_collection(collection_name, database, entries):
     # get documents
 
     documents = [] 
+    key = ''
 
     if collection_name == "RedditPosts":
 
         documents = database[collection_name].find({}, {'selftext':1, '_id':0})
+        key = 'selftext'
 
     elif collection_name == "WikiSourceText": 
 
         documents = database[collection_name].find({}, {'Text':1, '_id':0})
+        key = 'Text'
 
     elif collection_name == "AmazonReviews":
 
         documents = database[collection_name].find({}, {'review_body':1, '_id':0})
+        key = 'review_body'
 
     elif collection_name == "RedditComments":
 
         documents = database[collection_name].find({}, {'body':1, '_id':0})
+        key = 'body'
 
     elif collection_name == "YelpReviews":
 
         documents = database[collection_name].find({}, {'text':1, '_id':0})
+        key = 'text'
 
     elif collection_name == "YoutubeComment":
 
         documents = database[collection_name].find({}, {'text':1, '_id':0})
+        key = 'text'
 
     elif collection_name == "YoutubeVideo":
 
         documents = database[collection_name].find({}, {'vidTitle':1, '_id':0})
+        key = 'vidTitle'
 
     else: 
 
@@ -144,11 +152,18 @@ def iterate_in_collection(collection_name, database, entries):
 
     for doc in documents: 
 
-        processed = pre_process([doc])
+        processed = pre_process(doc[key])
 
         bow = get_single_bow(processed)
 
-        topics = lda_model.get_document_topics(bow, None, None, True)
+        for min_prob in (None, 0):
+
+            topics = lda_model.get_document_topics(bow, minimum_probability=min_prob)
+            probabilities = [[entry for entry in doc] for doc in topics]
+
+            for i, P in enumerate(probabilities):
+                sum_p = sum(P)
+                print(f"\tdoc {i} = {sum_p}")
 
         for item in topics:
 
