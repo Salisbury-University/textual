@@ -149,6 +149,10 @@ def iterate_in_collection(collection_name, database, entries):
     else: 
 
         pass
+    
+
+    f = open("results.txt", 'w')
+    counter = 0
 
     for doc in documents: 
 
@@ -156,6 +160,19 @@ def iterate_in_collection(collection_name, database, entries):
 
         bow = get_single_bow(processed)
 
+        topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
+
+        f.write(f"Document number {counter}: ")
+        
+        for item in topics:
+            for i in range(0, len(item)):
+                f.write(str(item[i]) + " ")
+        f.write("\n")
+        counter+=1
+
+    f.close()
+
+        '''
         for min_prob in (None, 0):
 
             topics = lda_model.get_document_topics(bow, minimum_probability=min_prob)
@@ -168,8 +185,8 @@ def iterate_in_collection(collection_name, database, entries):
         for item in topics:
 
             print(item)
+        '''
     
-
 if __name__ == '__main__': 
 
 
