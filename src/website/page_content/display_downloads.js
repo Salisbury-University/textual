@@ -9,22 +9,17 @@ function load_downloads()
 		const count = (documents.match(/\{(.*?)\}/g) || []).length;
 		var index = 0;
 
+		//Array to hold all the documents fetched from the database (This way is 100x easier and super fast, I'm just stupid and didn't think of this before).
+		var document_array = eval("(" + documents + ")");
+
 		//Loop through all the documents
 		while(index < count)
 		{
-			//Get the starting and stopping indexes 
-			var index_start = documents.indexOf("{");
-			var index_end = documents.indexOf("}") + 1;
-
-			//Get the substring and convert it to JSON
-			var sub_string = documents.substring(index_start, index_end);
-			const json_obj = JSON.parse(sub_string);
-
-			//Get the values from the document
-			var title = json_obj.title;
-			var text = json_obj.selftext;
-			var subreddit = json_obj.subreddit;
-			var date = json_obj.created_utc;
+			//Get the values for each document. This includes the document title, text, category (subreddit), and the date.
+			var title = document_array[index]["title"];
+			var text = document_array[index]["selftext"];
+			var subreddit = document_array[index]["subreddit"];
+			var date = document_array[index]["date"];
 
 			//If the text from the query is empty, write a message
 			if (text == "")
@@ -43,8 +38,6 @@ function load_downloads()
 			cell_3.innerHTML = date;
 			cell_4.innerHTML = text;
 
-			//Remove the value from the string
-			documents = documents.replace(sub_string, "");
 			index++;
 		}
 	}).catch(function (error) {
