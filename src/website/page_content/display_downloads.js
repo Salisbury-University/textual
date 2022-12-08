@@ -7,21 +7,10 @@ function load_downloads()
 
 		//Count how many documents are in the query
 		const count = (documents.match(/\{(.*?)\}/g) || []).length;
-		var index = 0;
-		
-		dateTimeReviver = function (key, value) {
-			var a;
-			if (typeof value === 'string') {
-				a = /\/Date\((\d*)\)\//.exec(value);
-				if (a) {
-					return new Date(+a[1]);
-				}
-			}
-			return value;
-		}
+		var index = 0;	
 
 		//Array to hold all the documents fetched from the database (This way is 100x easier and super fast, I'm just stupid and didn't think of this before).
-		var document_array = JSON.parse(documents, dateTimeReviver);
+		var document_array = JSON.parse(documents);
 		
 		//Loop through all the documents
 		while(index < count)
@@ -30,7 +19,7 @@ function load_downloads()
 			var title = document_array[index]["title"];
 			var text = document_array[index]["selftext"];
 			var subreddit = document_array[index]["subreddit"];
-			var date = document_array[index]["date"];
+			var date = document_array[index]["created_utc"];
 
 			//If the text from the query is empty, write a message
 			if (text == "")
