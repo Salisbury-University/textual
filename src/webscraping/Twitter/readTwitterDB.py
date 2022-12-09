@@ -76,7 +76,7 @@ def get_archive_tweets(client,search,date_start,date_end,wanted_results=100):
 
 def start(info):
     client=info[0]
-    collection=[1]
+    collection=info[1]
     queryList=info[2]
     userList=info[3]
     for query in queryList:
