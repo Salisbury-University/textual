@@ -13,6 +13,43 @@ ACCESS_TOKEN_SECRET = 'KRMxRSOFRkpHirI4PYEYOvZ8LfqovDxaX1ZpyinsQhuob'
 CLIENT_ID = 'SFk2UlN4RlgxU3BlRVVFdVNNelM6MTpjaQ'
 CLIENT_SECRET = 'rC6BrlAUbhZE6aDl9JSzDEzOe0IlZiL6LbU9OftOQ8xhg8rgan'
 
+# Get authoriazation from file
+def get_credentials():
+    with open("mongopassword.txt", "r") as pass_file:
+        # Read each line from the file, splitting on newline
+        lines = pass_file.read().splitlines()
+    # Close the file and return the list of lines
+    pass_file.close()
+    return lines
+
+# Connect to the database
+def get_client():
+    # Needs to be done this way, can't push credentials to github
+    # Call the get pass function to open the file and extract the credentials
+    lines = get_credentials()
+
+    # Get the username from the file
+    username = lines[0]
+
+    # Get the password from the file
+    password = lines[1]
+    
+    # Set up a new client to the database
+    # Using database address and port number
+    client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
+
+    # Return the client
+    return client
+
+# Get the database, we are using the textual database | hardcoded currently (bad)
+def get_database(client):
+    return client.textual
+
+# Important, close the database
+def close_database(client):
+    # Close the connection to the database
+    client.close()
+
 """
 Function grabs the most recent tweets from a certain user with a specificed user ID
 (Twitter assigns a unique ID to every user and we can access their recent tweets)
@@ -76,39 +113,33 @@ def get_archive_tweets(client,search,date_start,date_end,wanted_results=100):
 
 def start(info):
     client=info[0]
-    collection=info[1]
-    queryList=info[2]
-    userList=info[3]
+    dbClient=get_client()
+    collection=get_database(dbClient).TwitterTweets
+    queryList=info[1]
+    userList=info[2]
     for query in queryList:
         get_recent_tweets(client,query,collection,1000)
     for user in userList:
         get_user_tweets(client,user,collection,1000)
+    close_database(dbClient)
 
 if __name__ == "__main__":
-    try:
-        connection = MongoClient("mongodb://10.251.12.108:30000", username='root', password='password')
-    except:
-        print("Couldn't Connect to Database")
-
-    database = connection.textual
-    collection = database.TwitterTweets
-
     client = tweepy.Client(bearer_token=BEARER_TOKEN) # gives us access to the api in the program
     queries = ['(death OR dead) lang:en -is:retweet -has:media -has:links',
-        '"Functional Programming" (#python OR #scala OR #haskell) lang:en -is:retweet -has:media -has:links',
-        '#c++ OR #c OR #csharp OR #java lang:en -is:retweet -has:media -has:links',
-        '#overwatch2 lang:en -is:retweet -has:media -has:links',
+        'Programming lang:en -is:retweet -has:media -has:links',
+        'rizz lang:en -is:retweet -has:media -has:links',
+        '"God of War" lang:en -is:retweet -has:media -has:links',
         '"Salisbury University" lang:en -is:retweet -has:media -has:links',
         '"computer science" lang:en -is:retweet -has:media -has:links',
         '#rickandmorty lang:en -is:retweet -has:media -has:links',
         '#youtube lang:en -is:retweet -has:media -has:links',
         'college OR #collegelife lang:en -is:retweet -has:media -has:links',
         '"Virtual Reality" OR VR lang:en -is:retweet -has:media -has:links',
-        '#southpark lang:en -is:retweet -has:media -has:links',
-        'Netflix #DAHMER lang:en -is:retweet -has:media -has:links',
-        'October (#halloween OR #breastcancerawareness) lang:en -is:retweet -has:media -has:links',
-        '#midterms2022 lang:en -is:retweet -has:media -has:links',
-        '#football OR #NFL lang:en -is:retweet -has:media -has:links']
+        'Apple lang:en -is:retweet -has:media -has:links',
+        'Wednesday AND "Jenna Ortega" lang:en -is:retweet -has:media -has:links',
+        'Christmas lang:en -is:retweet -has:media -has:links',
+        '"Holiday Season" lang:en -is:retweet -has:media -has:links',
+        '"World Cup" lang:en -is:retweet -has:media -has:links']
     users = ['CNN','FoxNews','ABC','CBSNews','NBCNews','nytimes','TIME','Independent','WSJ','CNBC']
 
     print('Available Processors: {}\n'.format(mp.cpu_count()))
@@ -151,7 +182,7 @@ if __name__ == "__main__":
     """  Combines all data into one single list containing the parameters for each 'thread'  """
     param_list =[]
     for i in range(0,mp.cpu_count()):
-        param_list.append([client,collection,queriesList[i],usersList[i]])
+        param_list.append([client,queriesList[i],usersList[i]])
 
     pool.map(start, param_list)
     print('Finished.')
