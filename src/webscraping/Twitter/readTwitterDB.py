@@ -27,7 +27,8 @@ def get_user_tweets(client,user,collection,result_limit=100):
                                      tweet_fields=['created_at','public_metrics'],max_results=100)\
                                      .flatten(limit=result_limit):
 
-        dic = { "tweet":response.text,
+        dic = { "user":user,
+                "tweet":response.text,
                 "Likes":response.public_metrics['like_count'],
                 "Retweets":response.public_metrics['retweet_count'],
                 "Posted":response.created_at}
@@ -45,7 +46,8 @@ def get_recent_tweets(client,search,collection,wanted_results=100,):
     for response in tweepy.Paginator(client.search_recent_tweets,query=search,
                                  expansions='author_id',tweet_fields=['created_at','public_metrics'],
                                  sort_order='relevancy',max_results=100).flatten(limit=wanted_results):
-        dic = { "tweet":response.text,
+        dic = { "user":"Unknown",
+                "tweet":response.text,
                 "Likes":response.public_metrics['like_count'],
                 "Retweets":response.public_metrics['retweet_count'],
                 "Posted":response.created_at}
