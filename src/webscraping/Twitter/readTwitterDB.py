@@ -136,7 +136,7 @@ if __name__ == "__main__":
         'college OR #collegelife lang:en -is:retweet -has:media -has:links',
         '"Virtual Reality" OR VR lang:en -is:retweet -has:media -has:links',
         'Apple lang:en -is:retweet -has:media -has:links',
-        'Wednesday AND "Jenna Ortega" lang:en -is:retweet -has:media -has:links',
+        'Wednesday "Jenna Ortega" lang:en -is:retweet -has:media -has:links',
         'Christmas lang:en -is:retweet -has:media -has:links',
         '"Holiday Season" lang:en -is:retweet -has:media -has:links',
         '"World Cup" lang:en -is:retweet -has:media -has:links']
