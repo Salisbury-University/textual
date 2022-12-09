@@ -60,19 +60,32 @@ def close_database(client):
     # Close database connection
     client.close()
 
+
+# LDA related functions
+
+# lemmatize_stemming() -> input is a word, returns the stemmed word
 def lemmatize_stemming(text):
 
+    # uses a LancasterStemmer
     stemmer = LancasterStemmer()
+
+    # returns the stemmed words
     return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
 
+# pre_process() -> input is a string, output is a list of the words stemmed anad processed if they are larger than 3 characters
 def pre_process(text): 
 
     results=[]
+
+    # utilizes the lemmatize_stemming() function and appends to results list
     for token in gensim.utils.simple_preprocess(text):
         if token not in gensim.parsing.preprocessing.STOPWORDS and len(token) > 3:
             results.append(lemmatize_stemming(token))
+
     return results
 
+# get_single_bow() -> input is a document, output is the bag of words
+# used exclusively 
 def get_single_bow(doc):
 
     dictionary_new = gensim.corpora.Dictionary([doc])
@@ -172,20 +185,6 @@ def iterate_in_collection(collection_name, database, entries):
 
     f.close()
 
-        '''
-        for min_prob in (None, 0):
-
-            topics = lda_model.get_document_topics(bow, minimum_probability=min_prob)
-            probabilities = [[entry for entry in doc] for doc in topics]
-
-            for i, P in enumerate(probabilities):
-                sum_p = sum(P)
-                print(f"\tdoc {i} = {sum_p}")
-
-        for item in topics:
-
-            print(item)
-        '''
     
 if __name__ == '__main__': 
 
