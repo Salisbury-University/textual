@@ -156,9 +156,32 @@
 	margin-bottom: 2rem;
 }
 
+#project_diagram
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+#project_diagram_img
+{
+	border-radius: 2rem;
+}
+
+#about_divider
+{
+	width: 75%;
+	height: 0.3rem;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	background-color: #D9D9D9;
+}
+
 #sources_container
 {
-	margin-top: 4rem;
+	margin-top: 2rem;
 }
 
 #team_container
