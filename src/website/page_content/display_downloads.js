@@ -3,15 +3,16 @@ function load_downloads()
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
 		var table = $("#database_table tbody");
-		//table.style.tableLayout = "fixed";
-
-		//Count how many documents are in the query
-		const count = (documents.match(/\{(.*?)\}/g) || []).length;
+		
+		//Keep track of the current document
 		var index = 0;	
 
 		//Array to hold all the documents fetched from the database (This way is 100x easier and super fast, I'm just stupid and didn't think of this before).
 		var document_array = JSON.parse(documents);
 		
+		//Count how many documents are in the query
+		const count = document_array.length;
+
 		//Loop through all the documents
 		while(index < count)
 		{
@@ -23,30 +24,19 @@ function load_downloads()
 
 			//If the text from the query is empty, write a message
 			if (text == "")
-				text = "No Text Found.";
-			
-			/*
-			//Create a new row
-			var row = table.insertRow();
-			var cell_1 = row.insertCell(0);
-			var cell_2 = row.insertCell(1);
-			var cell_3 = row.insertCell(2);
-			var cell_4 = row.insertCell(3);
+				text = "No Text Found.";	
 
-			//Add data to the cells
-			cell_1.innerHTML = title;
-			cell_2.innerHTML = subreddit;
-			cell_3.innerHTML = date;
-			cell_4.innerHTML = text;
-			*/
-
+			//Create a new row with the current content
 			var row = $("<tr><td>" + title + "</td><td>" + subreddit + "</td><td>" + date + "</td><td>" + text + "</td></tr>");
 
+			//Append the new row to the table
 			table.append(row);
 
+			//Increment the number of pages
 			index++;
 		}
 
+		//Create the bootstrap table dynamically
 		$("#database_table").DataTable();
 		$('.dataTables_length').addClass('bs-select');
 	}).catch(function (error) {

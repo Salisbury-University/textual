@@ -42,11 +42,11 @@
 /* PLACE FOOTER AT BOTTOM OF PAGE */
 #su_footer
 {
-	position: absolute;
+	position: fixed;
         color: #828282;
         line-height: 40px;
         font-size: 0.7em;
-	bottom: 0;
+	bottom: -10;
 	left: 0;
 }
 
@@ -378,6 +378,7 @@
 
 #database_table
 {
+	table-layout: fixed;
 	margin-top: 3rem;
 	color: #D9D9D9;
 	font-size: 1.5rem;
@@ -389,7 +390,7 @@
 	text-align: center;
 }
 
-#database_table td
+#database_table tbody td
 {
 	width: 100%;
 	padding: 1rem;
