@@ -7,6 +7,7 @@
 #page_content
 {
 	background: #0D0D0D; !important
+	padding-bottom: 80px;
 }
 
 #jumbo_header
@@ -42,12 +43,10 @@
 /* PLACE FOOTER AT BOTTOM OF PAGE */
 #su_footer
 {
-	position: fixed;
         color: #828282;
         line-height: 40px;
         font-size: 0.7em;
-	bottom: -10;
-	left: 0;
+	margin-left: 2rem;
 }
 
 #page_tiles
@@ -361,7 +360,6 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 	margin-top: 6rem;
 	text-align: center;
-
 }
 
 #database_table_wrapper
