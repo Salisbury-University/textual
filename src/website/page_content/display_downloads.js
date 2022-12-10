@@ -1,3 +1,7 @@
+/*$(document).ready(function () {
+    $("#database_table").DataTable();
+});*/
+
 function load_downloads()
 {
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
