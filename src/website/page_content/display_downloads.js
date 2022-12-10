@@ -1,13 +1,9 @@
-/*$(document).ready(function () {
-    $("#database_table").DataTable();
-});*/
-
 function load_downloads()
 {
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
-		var table = document.getElementById("database_table");
-		table.style.tableLayout = "fixed";
+		var table = $("#database_table tbody");
+		//table.style.tableLayout = "fixed";
 
 		//Count how many documents are in the query
 		const count = (documents.match(/\{(.*?)\}/g) || []).length;
@@ -29,6 +25,7 @@ function load_downloads()
 			if (text == "")
 				text = "No Text Found.";
 			
+			/*
 			//Create a new row
 			var row = table.insertRow();
 			var cell_1 = row.insertCell(0);
@@ -41,9 +38,17 @@ function load_downloads()
 			cell_2.innerHTML = subreddit;
 			cell_3.innerHTML = date;
 			cell_4.innerHTML = text;
+			*/
+
+			var row = $("<tr><td>" + title + "</td><td>" + subreddit + "</td><td>" + date + "</td><td>" + text + "</td></tr>");
+
+			table.append(row);
 
 			index++;
 		}
+
+		$("#database_table").DataTable();
+		$('.dataTables_length').addClass('bs-select');
 	}).catch(function (error) {
 		alert(error);
 	});
