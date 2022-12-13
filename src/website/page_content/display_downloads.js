@@ -44,25 +44,32 @@ function load_downloads()
 	});
 }
 
-function downloadString() {	
+//Download the data displayed in JSON format
+function downloadData() {	
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 	
 	//Array to hold all the documents fetched from the database
 	var document_array = JSON.parse(documents);
 	var document_strings = JSON.stringify(document_array);
 
+	//Create new blob of type JSON
 	var blob = new Blob([document_strings], { type: "application/json" });	
 
+	//Create a new link in the DOM and append the blob to it
 	var a = document.createElement('a');
 	a.download = "RedditPosts.json";
 	a.href = URL.createObjectURL(blob);
 	a.dataset.downloadurl = ["application/json", a.download, a.href].join(':');
 	a.style.display = "none";
 	document.body.appendChild(a);
-	a.click();
-	document.body.removeChild(a);
-	setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
 
+	//Click the link to download the file
+	a.click();
+	//Remove the DOM element
+	document.body.removeChild(a);
+	
+	//Set new timeout
+	setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
 	}).catch(function (error) {
 		alert(error);
 	});
