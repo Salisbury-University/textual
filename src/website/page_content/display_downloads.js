@@ -47,12 +47,16 @@ function load_downloads()
 function downloadString() {	
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 	
-	var blob = new Blob([documents], { type: 'text/plain' });	
+	//Array to hold all the documents fetched from the database
+	var document_array = JSON.parse(documents);
+	var document_strings = JSON.stringify(document_array);
+
+	var blob = new Blob([document_strings], { type: "application/json" });	
 
 	var a = document.createElement('a');
-	a.download = "fileName";
+	a.download = "RedditPosts.json";
 	a.href = URL.createObjectURL(blob);
-	a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+	a.dataset.downloadurl = ["application/json", a.download, a.href].join(':');
 	a.style.display = "none";
 	document.body.appendChild(a);
 	a.click();
