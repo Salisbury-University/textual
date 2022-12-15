@@ -14,7 +14,8 @@
 # sklearn: data formatting
 # ================================================================================
 
-import os                                                                                                               os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' # Suppression of tensorflow warnings on script start
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' # Suppression of tensorflow warnings on script start
 from tensorflow import keras
 import sys
 from tensorflow.keras.preprocessing.sequence import pad_sequences
