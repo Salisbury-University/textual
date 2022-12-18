@@ -172,7 +172,7 @@ def iterate_in_collection(collection_name, database, entries):
 
     f.close()
 
-        '''
+'''
         for min_prob in (None, 0):
 
             topics = lda_model.get_document_topics(bow, minimum_probability=min_prob)
@@ -185,7 +185,7 @@ def iterate_in_collection(collection_name, database, entries):
         for item in topics:
 
             print(item)
-        '''
+'''
     
 if __name__ == '__main__': 
 
