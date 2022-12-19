@@ -118,8 +118,10 @@ def start(info):
     queryList=info[1]
     userList=info[2]
     for query in queryList:
+        print('Searching Query {}...\n'.format(query))
         get_recent_tweets(client,query,collection,1000)
     for user in userList:
+        print('Searching Tweet by @{}...\n'.format(user))
         get_user_tweets(client,user,collection,1000)
     close_database(dbClient)
 
