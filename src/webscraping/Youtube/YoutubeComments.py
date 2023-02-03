@@ -190,8 +190,6 @@ def scrape_comments(youtube, category):
 
     print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
 
-
-
 if __name__ == "__main__":
     
     api_service_name = "youtube"
