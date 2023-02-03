@@ -7,6 +7,7 @@ from googleapiclient.errors import HttpError
 import multiprocessing as mp
 import functools
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 
 def getKey():
     with open("YTkey.txt", 'r') as keyFile:
@@ -82,7 +83,7 @@ def getVideos(youtube, category):
         #print("Successfully received videos for category:", category["title"])
         items = response["items"]
 
-        #store metadata about the 10 videos in this category
+        #store metadata about the 25 videos in this category
         videos = []
         for item in items:
             try:
@@ -104,10 +105,10 @@ def getVideos(youtube, category):
     return videos
     
     
-def getComments(youtube, video):
+def getComments(youtube, video, sortBy):
     request = youtube.commentThreads().list(
     part="snippet",
-    order="time",
+    order=sortBy,
     textFormat="plainText",
     videoId=video['vId'],
     maxResults=20,
@@ -148,32 +149,47 @@ def scrape_comments(youtube, category):
     numVideosInserted = 0 
     numCommentsInserted = 0
 
-    videos = getVideos(youtube, category) # request 10 most popular videos per category
+    videos = getVideos(youtube, category) # request 25 most popular videos per category
 
     for video in videos:
-        commentThreads = getComments(youtube, video) # request 20 most recent commentThreads per video
+        commentThreadsT = getComments(youtube, video, "time") # request 20 most recent commentThreads per video
+        commentThreadsR = getComments(youtube, video, "relevance") # request 20 most relevent commentThreads per video
 
         #store video metadata
         if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0: #check if this video is in the database
-            video_collection.insert_one(video)    
+            video_collection.insert_one(video)
             numVideosInserted += 1
         else:
             print("video", video['vId'], "is already in database")
 
-        #store comment metadata
-        for comment in commentThreads:
-            if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
+        #store metadata of most recent comments
+        for comment in commentThreadsT:
+            # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
+            try: # prevents a race condition between threads inserting the same comments
                 comment_collection.insert_one(comment)
                 numCommentsInserted += 1
-            else:
-                print("comment", comment['cId'], "is already in database")
+            except DuplicateKeyError:
+                print("comment", comment['cId'], "is already in the database")
+            # else:
+            #    print("comment", comment['cId'], "is already in database")
+
+        #store metadata of most relevant comments
+        for comment in commentThreadsR:
+            # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
+            try: # prevents a race condition between threads inserting the same comments
+                comment_collection.insert_one(comment)
+                numCommentsInserted += 1
+            except DuplicateKeyError:
+                print("comment", comment['cId'], "is already in the database")
+            # else:
+            #    print("comment", comment['cId'], "is already in database")
+
     print()
 
     close_database(client)
 
-    print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"])
-    print("inserted", numCommentsInserted, "comments and", numVideosInserted,"videos")
-    print()
+    print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
+
 
 
 if __name__ == "__main__":
@@ -192,5 +208,5 @@ if __name__ == "__main__":
     pool=mp.Pool(mp.cpu_count())
 
     # Run the multiple threads on different subreddits
-    results=pool.map(partial_scrape_comments, categories)
+    results=pool.map(partial_scrape_comments, categories,)
     pool.close()
