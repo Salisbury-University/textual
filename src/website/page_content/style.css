@@ -57,12 +57,11 @@
 .page_tile
 {
 	color: #D9D9D9;
-	padding-bottom: 5rem;
 	border-radius: 0.5rem;	
 	padding-left: 2rem;
 	padding-right: 2rem;
 	padding-top: 1rem;
-	padding-bottom: 1rem;
+	padding-bottom: 5rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
 	background-color: #252525;
@@ -95,20 +94,18 @@
 	padding-bottom: 0.5rem;
 }
 
-#page_tile_1_btn
-{
-	background-color: #A62139;
-	border-color: #A62139;
-}
-
-#page_tile_2_btn
+.btn_holder
 {
 	position: absolute;
 	bottom: 10px;
-	padding: 0.5rem, 0.5rem, 0.5rem, 0.5rem;
+	justify-content: flex-start;
+	display: flex;
+}
+
+#page_tile_btn
+{
 	background-color: #A62139;
 	border-color: #A62139;
-	margin-top: 2rem;
 }
 
 #about_header
