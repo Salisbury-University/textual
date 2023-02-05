@@ -192,10 +192,11 @@
 {
 	color: #D9D9D9;
 	background-color: #252525;
-	border-radius: 0.5rem;
-	padding-left: 2rem;
-	padding-right: 2rem;
-	padding-bottom: 3.5rem;
+	border-radius: 0.5rem;	
+	padding-left: 3rem;
+	padding-right: 3rem;
+	padding-top: 1rem;
+	padding-bottom: 3rem;
 	margin: 2rem;
 }
 
