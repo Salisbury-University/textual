@@ -54,16 +54,16 @@
 	padding-top: 3rem;
 }
 
-.page_tile
+#page_tile
 {
+	position: relative;
 	color: #D9D9D9;
 	border-radius: 0.5rem;	
 	padding-left: 2rem;
 	padding-right: 2rem;
 	padding-top: 1rem;
-	padding-bottom: 5rem;
-	margin-left: 1rem;
-	margin-right: 1rem;
+	padding-bottom: 3rem;
+	margin: 2rem;
 	background-color: #252525;
 }
 
@@ -80,26 +80,19 @@
 	margin-bottom: 1rem;
 }
 
-#page_tile_1_text
+#page_tile_text
 {
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 	font-size: 1rem;
-	padding-bottom: 0.5rem;
-}
-
-#page_tile_2_text
-{
-	font-family: 'Yanone Kaffeesatz', sans-serif;
-	font-size: 1rem;
-	padding-bottom: 0.5rem;
+	padding-bottom: 2rem;
 }
 
 .btn_holder
 {
 	position: absolute;
 	bottom: 10px;
-	justify-content: flex-start;
 	display: flex;
+	justify-content: flex-start;
 }
 
 #page_tile_btn
