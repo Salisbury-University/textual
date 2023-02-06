@@ -106,6 +106,7 @@ def getVideos(youtube, category):
     
     
 def getComments(youtube, video, sortBy):
+    # Comment Request Parameters
     request = youtube.commentThreads().list(
     part="snippet",
     order=sortBy,
@@ -113,7 +114,8 @@ def getComments(youtube, video, sortBy):
     videoId=video['vId'],
     maxResults=20,
     )
-    try:
+
+    try: # Try to get 20 comments from this video
         response = request.execute() #make the request
         items = response['items'] #results
 
@@ -130,9 +132,11 @@ def getComments(youtube, video, sortBy):
                 "vId": video['vId']
             }
             commentThreads.append(thisDict)
-    except HttpError:
+            
+        return commentThreads
+
+    except HttpError: # Occurs when comments are disabled
         print("'HTTPERROR': This video has no comments available. Next video...")
-    return commentThreads
 
 
 def scrape_comments(youtube, category):
