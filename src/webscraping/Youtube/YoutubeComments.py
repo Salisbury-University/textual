@@ -132,7 +132,7 @@ def getComments(youtube, video, sortBy):
                 "vId": video['vId']
             }
             commentThreads.append(thisDict)
-            
+
         return commentThreads
 
     except HttpError: # Occurs when comments are disabled
@@ -168,28 +168,29 @@ def scrape_comments(youtube, category):
         else:
             print("video", video['vId'], "is already in database")
 
-        #store metadata of most recent comments
-        for comment in commentThreadsT:
-            # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
-            try: # prevents a race condition between threads inserting the same comments
-                comment_collection.insert_one(comment)
-                numCommentsInserted += 1
-            except DuplicateKeyError:
-                print("comment", comment['cId'], "is already in the database")
-            # else:
-            #    print("comment", comment['cId'], "is already in database")
+        if commentThreadsT == []: # if the list is empty
+            #store metadata of most recent comments
+            for comment in commentThreadsT:
+                # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
+                try: # prevents a race condition between threads inserting the same comments
+                    comment_collection.insert_one(comment)
+                    numCommentsInserted += 1
+                except DuplicateKeyError:
+                    print("comment", comment['cId'], "is already in the database")
+                # else:
+                #    print("comment", comment['cId'], "is already in database")
 
-        #store metadata of most relevant comments
-        for comment in commentThreadsR:
-            # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
-            try: # prevents a race condition between threads inserting the same comments
-                comment_collection.insert_one(comment)
-                numCommentsInserted += 1
-            except DuplicateKeyError:
-                print("comment", comment['cId'], "is already in the database")
-            # else:
-            #    print("comment", comment['cId'], "is already in database")
-
+        if commentThreadsR == []: # if the list is empty
+            #store metadata of most relevant comments
+            for comment in commentThreadsR:
+                # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
+                try: # prevents a race condition between threads inserting the same comments
+                    comment_collection.insert_one(comment)
+                    numCommentsInserted += 1
+                except DuplicateKeyError:
+                    print("comment", comment['cId'], "is already in the database")
+                # else:
+                #    print("comment", comment['cId'], "is already in database")
     print()
 
     close_database(client)
