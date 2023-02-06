@@ -83,7 +83,7 @@ def getVideos(youtube, category):
         #print("Successfully received videos for category:", category["title"])
         items = response["items"]
 
-        #store metadata about the 25 videos in this category
+        #store metadata about the 10 videos in this category
         videos = []
         for item in items:
             try:
@@ -113,23 +113,25 @@ def getComments(youtube, video, sortBy):
     videoId=video['vId'],
     maxResults=20,
     )
+    try:
+        response = request.execute() #make the request
+        items = response['items'] #results
 
-    response = request.execute() #make the request
-    items = response['items'] #results
-
-    #store metadata about the 20 comment threads into a list of dictionaries
-    commentThreads = []
-    for item in items:
-        thisDict = {
-            "cId": item['snippet']['topLevelComment']['id'],
-            "text": item['snippet']['topLevelComment']['snippet']['textDisplay'],
-            "likeCount": item['snippet']['topLevelComment']['snippet']['likeCount'],
-            "replyCount": item['snippet']['totalReplyCount'],
-            "publishDate": item['snippet']['topLevelComment']['snippet']['publishedAt'],
-            "lastUpdated": item['snippet']['topLevelComment']['snippet']['updatedAt'],
-            "vId": video['vId']
-        }
-        commentThreads.append(thisDict)
+        #store metadata about the 20 comment threads into a list of dictionaries
+        commentThreads = []
+        for item in items:
+            thisDict = {
+                "cId": item['snippet']['topLevelComment']['id'],
+                "text": item['snippet']['topLevelComment']['snippet']['textDisplay'],
+                "likeCount": item['snippet']['topLevelComment']['snippet']['likeCount'],
+                "replyCount": item['snippet']['totalReplyCount'],
+                "publishDate": item['snippet']['topLevelComment']['snippet']['publishedAt'],
+                "lastUpdated": item['snippet']['topLevelComment']['snippet']['updatedAt'],
+                "vId": video['vId']
+            }
+            commentThreads.append(thisDict)
+    except HttpError:
+        print("'HTTPERROR': This video has no comments available. Next video...")
     return commentThreads
 
 
@@ -149,7 +151,7 @@ def scrape_comments(youtube, category):
     numVideosInserted = 0 
     numCommentsInserted = 0
 
-    videos = getVideos(youtube, category) # request 25 most popular videos per category
+    videos = getVideos(youtube, category) # request 10 most popular videos per category
 
     for video in videos:
         commentThreadsT = getComments(youtube, video, "time") # request 20 most recent commentThreads per video
@@ -189,6 +191,8 @@ def scrape_comments(youtube, category):
     close_database(client)
 
     print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
+
+
 
 if __name__ == "__main__":
     
