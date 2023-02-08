@@ -308,6 +308,15 @@
 	font-family: 'Fjalla One', sans-serif;
 }
 
+
+#review_analysis_container_4
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
 .review_analysis_paragraph
 {
 	margin-top: 2.5rem;
@@ -408,6 +417,16 @@
 }
 
 #review_analysis_text_3_header
+{
+	width: 100%;
+	color: #D9D9D9;
+	font-size: 2rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 0.5rem;
+}
+
+#review_analysis_text_4_header
 {
 	width: 100%;
 	color: #D9D9D9;
