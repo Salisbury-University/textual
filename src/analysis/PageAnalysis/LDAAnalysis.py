@@ -95,12 +95,6 @@ def iterate_in_collection(collection_name, database, entries):
 
     processed_entries = [pre_process(entry) for entry in entries]
 
-    '''
-    for entry in entries:
-
-        processed_entries.append(pre_process(entry))
-    '''
-
     results = get_dictionary(processed_entries) 
 
     lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 3)
@@ -149,9 +143,7 @@ def iterate_in_collection(collection_name, database, entries):
     for doc in documents: 
 
         processed = pre_process(doc[key])
-
         bow = get_single_bow(processed)
-
         topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
 
         f.write(f"Document number {counter}: ")
@@ -165,14 +157,13 @@ def iterate_in_collection(collection_name, database, entries):
     f.close()
     
 if __name__ == '__main__': 
-    
+
     if(len(sys.argv) < 2):
         print("Please provide a collection name.")
         sys.exit
 
     client = get_client()
     database = get_database(client)
-
     collections = database.list_collection_names()
 
     # RedditPosts -> 'selftext'
@@ -184,69 +175,54 @@ if __name__ == '__main__':
     # YoutubeVideo -> 'vidTitle' 
 
     found = 0 
+    entries = []
 
     # checking if the input is in the collection names
     if sys.argv[1] in collections:
         found = 1
-
-    entries = []
 
     if found: 
 
         if sys.argv[1] == "RedditPosts":
 
             old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
-
             entries = [old_entry['selftext'] for old_entry in old_entries]
-
             iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "WikiSourceText":
 
             old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
-
             entries = [old_entry['Text'] for old_entry in old_entries]
-
             iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "AmazonReviews":
 
             old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
-
             entries = [old_entry['review_body'] for old_entry in old_entries if 'review_body' in old_entry]
-
             iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "RedditComments":
 
             old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
-
             entries = [old_entry['body'] for old_entry in old_entries]
-            
             iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "YelpReviews":
 
             old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
-
             entries = [old_entry['text'] for old_entry in old_entries]
-
             iterate_in_collection(sys.argv[1], database, entries)
         
         elif sys.argv[1] == "YoutubeComment":
 
             old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
-
             entries = [old_entry['text'] for old_entry in old_entries]
-
             iterate_in_collection(sys.argv[1], database, entries)
 
         elif sys.argv[1] == "YoutubeVideo":
 
             old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
-
             entries = [old_entry['vidTitle'] for old_entry in old_entries]
-
             iterate_in_collection(sys.argv[1], database, entries)
 
         else:
