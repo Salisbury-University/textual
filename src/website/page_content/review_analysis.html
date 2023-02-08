@@ -119,6 +119,11 @@
 						<div id="review_analysis_text_3_header">Dataset:</div>
 							<p id="review_analysis_paragraph_7" class="review_analysis_paragraph">The Yelp review dataset is a collection of reviews supplied through an official data dump by the Yelp review site. As stated previously, these reviews span a large variety of categories and businesses. As of the time of this project, the Yelp data dump supplied around seven and a half million unique reviews. These reviews contain the text associated with the review and also provides additional metadata such as the data of publishing and the number of stars the reviewer gave to the reviewed establishment.</p>
 							<p id="review_analysis_paragraph_8" class="review_analysis_paragraph">To collect the provided data a Python script was written to load in the Yelp reviews data dump (in JSON format) and save each review into the MongoDB database. Processing the data involves opening the JSON file and reading in each rview, the review is saved into a Python list containing all the review content, metadata, and associated tags. The Python list is then pushed into the database using the Python MongoDB library. As of the writing of this documentation the Python script has been run, storing all 7.5 million reviews into the Textual Baseline Database.</p>
+							<p id="review_analysis_paragraph_9" class="review_analysis_paragraph">To train the network a small subset of this data was extracted from the database. Using the MongoDB shell 1,000,000 of the reviews were downloaded with their review text and the number of stars associated with it. The data was split in a 80:20 fashion, 200,000 reviews were used for validation and the remaining 800,000 reviews were used to train the network.</p>
+					</div>
+					<!-- <a href="https://www.flaticon.com/free-icons/server" title="server icons">Server icons created by vectorsmarket15 - Flaticon</a> -->
+					<div id="dataset_icon_img">
+						<div id="dataset_div"><img src="server_storage.png" alt="Dataset Icon" id="dataset_img"></div>
 					</div>
 				</div>
 
