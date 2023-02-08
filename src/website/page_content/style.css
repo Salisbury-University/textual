@@ -364,12 +364,26 @@
 	border-radius: 2rem;
 }
 
+#network_img
+{
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 90%;
+	border-radius: 2rem;
+}
+
 #yelp_logo
 {
 	display: block;
   	margin-left: auto;
   	margin-right: auto;
 	width: 75%;
+}
+
+#review_analysis_text_4
+{
+	margin-left: 1rem;
 }
 
 #review_subheader
