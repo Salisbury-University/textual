@@ -69,8 +69,8 @@ def getDocumentCount():
     comment_collection = database.YoutubeComment
     
     # Get number of documents in both collections
-    videoCount = video_collection.count_documents()
-    commentCount = comment_collection.count_documents()
+    videoCount = video_collection.count_documents({})
+    commentCount = comment_collection.count_documents({})
     
     #close database
     close_database(client)
