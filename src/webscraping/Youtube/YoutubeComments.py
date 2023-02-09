@@ -32,7 +32,8 @@ def get_credentials():
 # Connect to the database
 def get_client():
     # Needs to be done this way, can't push credentials to github
-    # Call the get pass function to open the file and extract the credentials
+
+    # Call the get credentials function to open the file and extract the credentials
     lines = get_credentials()
 
     # Get the username from the file
@@ -56,6 +57,26 @@ def get_database(client):
 def close_database(client):
     # Close the connection to the database
     client.close()
+
+def getDocumentCount():
+    client = get_client()
+
+    # Get a database from the connection
+    database = get_database(client)
+
+    # Get a collections
+    video_collection = database.YoutubeVideo
+    comment_collection = database.YoutubeComment
+    
+    # Get number of documents in both collections
+    videoCount = video_collection.count_documents()
+    commentCount = comment_collection.count_documents()
+    
+    #close database
+    close_database(client)
+
+    #return the number of documents in both collection
+    return [videoCount, commentCount]
 
 def getCategories(youtube):
     #request a list of all youtube categories used in the US
@@ -101,9 +122,10 @@ def getVideos(youtube, category):
                                 }
                     videos.append(thisDict)
             except KeyError:
-                print("'KeyERROR': This video has no comments available. Next video...")
-    except HttpError: 
-            print("HTTPError: most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
+                # print("'KeyERROR': This video has no comments available. Next video...")
+                pass
+    except HttpError:
+            print("Thread " + str(mp.current_process().pid) + ": ", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
             return []
 
     return videos
@@ -140,7 +162,7 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError: # Occurs when comments are disabled for this video
-        print( "Thread " + str(mp.current_process().pid) + "", "'HTTPError': This video has no comments available. Next video...")
+        print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available. Next video...")
 
 
 def scrape_comments(youtube, category):
@@ -172,7 +194,7 @@ def scrape_comments(youtube, category):
             numVideosInserted += 1
         else:
             with lock:
-                #print("video", video['vId'], "is already in database")
+                #print("Thread " + str(mp.current_process().pid) + ":", "video", video['vId'], "is already in database")
                 pass
 
         if commentThreadsT != None: # if the list is not empty
@@ -199,6 +221,7 @@ def scrape_comments(youtube, category):
                     with lock:
                         #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
                         pass
+    
     with lock:
         print()
 
@@ -208,8 +231,6 @@ def scrape_comments(youtube, category):
         print("Thread " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
     
     return [numVideosInserted, numCommentsInserted]
-
-
 
 if __name__ == "__main__":
     
@@ -225,6 +246,9 @@ if __name__ == "__main__":
     # Create a Lock for the processes to share
     lock = mp.Lock()
 
+    # get the initial number of documents before inserting more into the database 
+    DocumentCount = getDocumentCount() 
+
     # Make a partial function since using multiple parameters
     partial_scrape_comments = functools.partial(scrape_comments, youtube,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
@@ -238,6 +262,20 @@ if __name__ == "__main__":
     for total in results:
         totalV += total[0]
         totalC += total[1]
+    
+    print("                     <RESULTS>                           ")
+    print("<-------------------------------------------------------->")
 
-    print("Total Videos Inserted: ", totalV)
-    print("Total Comments Inserted: ", totalC)
+    print("Initial number of documents in YoutubeComment Collection: ", DocumentCount[0])
+    print("Initial number of documents in YoutubeVideo Collection: ", DocumentCount[1])
+    print()
+
+    print("Total Videos inserted: ", totalV)
+    print("Total Comments inserted: ", totalC)
+    print()
+
+    DocumentCount = getDocumentCount()
+
+    print("Current number of documents in YoutubeComment Collection: ", DocumentCount[0])
+    print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[1])
+ 
