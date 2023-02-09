@@ -79,17 +79,15 @@ def getVideos(youtube, category):
         part="id,snippet,statistics",
         chart="mostPopular",
         regionCode="US",
-        maxResults=25,
+        maxResults=50,
         videoCategoryId = category['id']
         )
-    #print("currently on category:", category['title'])
+    
     try:
-        #print("requesting videos")
-        response = request.execute()
-        #print("Successfully received videos for category:", category["title"])
+        response = request.execute() # Request 50 most popular videos from this category
         items = response["items"]
 
-        #store metadata about the 10 videos in this category
+        #store metadata about the 50 videos in this category
         videos = []
         for item in items:
             try:
@@ -118,10 +116,10 @@ def getComments(youtube, video, sortBy):
     order=sortBy,
     textFormat="plainText",
     videoId=video['vId'],
-    maxResults=20,
+    maxResults=50,
     )
 
-    try: # Try to get 20 comments from this video
+    try: # Try to get 50 comments from this video
         response = request.execute() #make the request
         items = response['items'] #results
 
@@ -139,17 +137,16 @@ def getComments(youtube, video, sortBy):
             }
             commentThreads.append(thisDict)
 
-
         return commentThreads
 
     except HttpError: # Occurs when comments are disabled for this video
-        print("'HTTPERROR': This video has no comments available. Next video...")
+        print( "Thread " + str(mp.current_process().pid) + "", "'HTTPError': This video has no comments available. Next video...")
 
 
 def scrape_comments(youtube, category):
 
     with lock:
-        print("Thread: " + str(mp.current_process().pid) + ": Looking at Category: " + category["title"])
+        print("Thread " + str(mp.current_process().pid) + ": Looking at Category: " + category["title"])
     # Get a connection to the server
     client = get_client()
 
@@ -163,11 +160,11 @@ def scrape_comments(youtube, category):
     numVideosInserted = 0 
     numCommentsInserted = 0
 
-    videos = getVideos(youtube, category) # request 25 most popular videos per category
+    videos = getVideos(youtube, category) # request 50 most popular videos per category
 
     for video in videos:
-        commentThreadsT = getComments(youtube, video, "time") # request 20 most recent commentThreads per video
-        commentThreadsR = getComments(youtube, video, "relevance") # request 20 most relevent commentThreads per video
+        commentThreadsT = getComments(youtube, video, "time") # request 50 most recent commentThreads per video
+        commentThreadsR = getComments(youtube, video, "relevance") # request 50 most relevent commentThreads per video
 
         #store video metadata
         if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0: #check if this video is in the database
@@ -187,7 +184,7 @@ def scrape_comments(youtube, category):
                     numCommentsInserted += 1
                 except DuplicateKeyError: # two threads tried to insert the same comment at the same time.
                     with lock:
-                        #print("Thread: " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
+                        #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
                         pass
 
         if commentThreadsR != None: # if the list is not empty
@@ -200,7 +197,7 @@ def scrape_comments(youtube, category):
 
                 except DuplicateKeyError:
                     with lock:
-                        #print("Thread: " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
+                        #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
                         pass
     with lock:
         print()
@@ -208,7 +205,7 @@ def scrape_comments(youtube, category):
     close_database(client)
 
     with lock:
-        print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
+        print("Thread " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
     
     return [numVideosInserted, numCommentsInserted]
 
@@ -242,5 +239,5 @@ if __name__ == "__main__":
         totalV += total[0]
         totalC += total[1]
 
-    print("Total Videos Inserted: ", totalV) 
+    print("Total Videos Inserted: ", totalV)
     print("Total Comments Inserted: ", totalC)
