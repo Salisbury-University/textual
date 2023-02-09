@@ -139,6 +139,7 @@ def getComments(youtube, video, sortBy):
             }
             commentThreads.append(thisDict)
 
+
         return commentThreads
 
     except HttpError: # Occurs when comments are disabled for this video
@@ -177,7 +178,7 @@ def scrape_comments(youtube, category):
                 #print("video", video['vId'], "is already in database")
                 pass
 
-        if commentThreadsT != []: # if the list is not empty
+        if commentThreadsT != None: # if the list is not empty
             #store metadata of most recent comments
             for comment in commentThreadsT:
                 # prevents a race condition between threads inserting the same comments
@@ -189,7 +190,7 @@ def scrape_comments(youtube, category):
                         #print("Thread: " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
                         pass
 
-        if commentThreadsR != []: # if the list is not empty
+        if commentThreadsR != None: # if the list is not empty
             #store metadata of most relevant comments
             for comment in commentThreadsR:
                 # prevents a race condition between threads inserting the same comments
