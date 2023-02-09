@@ -9,6 +9,12 @@ import functools
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
+def initialize_lock(this_lock):
+    # Initialize each process with a shared lock variable
+
+    global lock # each process creates this global variable
+    lock = this_lock # and assigns the shared lock to each process
+
 def getKey():
     with open("YTkey.txt", 'r') as keyFile:
         text = keyFile.read()
@@ -135,13 +141,14 @@ def getComments(youtube, video, sortBy):
 
         return commentThreads
 
-    except HttpError: # Occurs when comments are disabled
+    except HttpError: # Occurs when comments are disabled for this video
         print("'HTTPERROR': This video has no comments available. Next video...")
 
 
 def scrape_comments(youtube, category):
 
-    print("Thread: " + str(mp.current_process().pid) + ": Looking at Category: " + category["title"])
+    with lock:
+        print("Thread: " + str(mp.current_process().pid) + ": Looking at Category: " + category["title"])
     # Get a connection to the server
     client = get_client()
 
@@ -155,7 +162,7 @@ def scrape_comments(youtube, category):
     numVideosInserted = 0 
     numCommentsInserted = 0
 
-    videos = getVideos(youtube, category) # request 10 most popular videos per category
+    videos = getVideos(youtube, category) # request 25 most popular videos per category
 
     for video in videos:
         commentThreadsT = getComments(youtube, video, "time") # request 20 most recent commentThreads per video
@@ -166,36 +173,43 @@ def scrape_comments(youtube, category):
             video_collection.insert_one(video)
             numVideosInserted += 1
         else:
-            print("video", video['vId'], "is already in database")
+            with lock:
+                #print("video", video['vId'], "is already in database")
+                pass
 
-        if commentThreadsT == []: # if the list is empty
+        if commentThreadsT != []: # if the list is not empty
             #store metadata of most recent comments
             for comment in commentThreadsT:
-                # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
-                try: # prevents a race condition between threads inserting the same comments
+                # prevents a race condition between threads inserting the same comments
+                try:
                     comment_collection.insert_one(comment)
                     numCommentsInserted += 1
-                except DuplicateKeyError:
-                    print("comment", comment['cId'], "is already in the database")
-                # else:
-                #    print("comment", comment['cId'], "is already in database")
+                except DuplicateKeyError: # two threads tried to insert the same comment at the same time.
+                    with lock:
+                        #print("Thread: " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
+                        pass
 
-        if commentThreadsR == []: # if the list is empty
+        if commentThreadsR != []: # if the list is not empty
             #store metadata of most relevant comments
             for comment in commentThreadsR:
-                # if comment_collection.count_documents({ 'cId': comment["cId"] }, limit = 1) == 0: #check if this comment is in the database
-                try: # prevents a race condition between threads inserting the same comments
+                # prevents a race condition between threads inserting the same comments
+                try:
                     comment_collection.insert_one(comment)
                     numCommentsInserted += 1
+
                 except DuplicateKeyError:
-                    print("comment", comment['cId'], "is already in the database")
-                # else:
-                #    print("comment", comment['cId'], "is already in database")
-    print()
+                    with lock:
+                        #print("Thread: " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
+                        pass
+    with lock:
+        print()
 
     close_database(client)
 
-    print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
+    with lock:
+        print("Thread: " + str(mp.current_process().pid) + ": finished Category: " + category["title"] + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
+    
+    return [numVideosInserted, numCommentsInserted]
 
 
 
@@ -203,17 +217,29 @@ if __name__ == "__main__":
     
     api_service_name = "youtube"
     api_version = "v3"
-    
+
     # Get API key and create an API client
     key = getKey()
     youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=key)
 
     categories = getCategories(youtube)
 
-    # Make a partial function since using multiple parameters
-    partial_scrape_comments = functools.partial(scrape_comments, youtube)
-    pool=mp.Pool(mp.cpu_count())
+    # Create a Lock for the processes to share
+    lock = mp.Lock()
 
-    # Run the multiple threads on different subreddits
+    # Make a partial function since using multiple parameters
+    partial_scrape_comments = functools.partial(scrape_comments, youtube,)
+    pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
+
+    # Run each process on a different category
     results=pool.map(partial_scrape_comments, categories,)
     pool.close()
+
+    totalV = 0
+    totalC = 0
+    for total in results:
+        totalV += total[0]
+        totalC += total[1]
+
+    print("Total Videos Inserted: ", totalV) 
+    print("Total Comments Inserted: ", totalC)
