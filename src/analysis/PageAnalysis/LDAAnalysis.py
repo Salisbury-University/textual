@@ -110,37 +110,37 @@ def iterate_in_collection(collection_name, database, entries):
 
     if(collection_name == "RedditPosts"):
     
-        documents = database[collection_name].find({}, {'selftext':1, '_id':0})
+        documents = database[collection_name].find({}, {'selftext':1, '_id':1})
         key = 'selftext'
     
     elif(collection_name == "WikiSourceText"):
         
-        documents = database[collection_name].find({}, {'Text':1, '_id':0})
+        documents = database[collection_name].find({}, {'Text':1, '_id':1})
         key = 'Text'
 
     elif(collection_name == "AmazonReviews"):
 
-        documents = database[collection_name].find({}, {'review_body':1, '_id':0})
+        documents = database[collection_name].find({}, {'review_body':1, '_id':1})
         key = 'review_body'
 
     elif(collection_name == "RedditComments"):
     
-        documents = database[collection_name].find({}, {'body':1, '_id':0})
+        documents = database[collection_name].find({}, {'body':1, '_id':1})
         key = 'body'
 
     elif(collection_name == "YelpReviews"):
 
-        documents = database[collection_name].find({}, {'text':1, '_id':0})
+        documents = database[collection_name].find({}, {'text':1, '_id':1})
         key = 'text'
 
     elif(collection_name == "YoutubeComment"):
         
-        documents = database[collection_name].find({}, {'text':1, '_id':0})
+        documents = database[collection_name].find({}, {'text':1, '_id':1})
         key = 'text'
 
     elif(collection_name == "YoutubeVideo"):
       
-        documents = database[collection_name].find({}, {'vidTitle':1, '_id':0})
+        documents = database[collection_name].find({}, {'vidTitle':1, '_id':1})
         key = 'vidTitle'
     
     else:
