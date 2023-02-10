@@ -83,8 +83,8 @@
 
     /src/ -> stores all of our source files 
     /src/webscraping -> maintains all of our webscraping files 
-    /src/backend -> maintains the backend files
-    /src/frontend -> maintains the front end files
+    /src/website -> maintains the website files
+    /src/analysis -> maintains the analysis script files
 
 ## The Project Breakdown 
 
