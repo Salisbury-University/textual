@@ -12,6 +12,19 @@
 
 ## Current Status 
 
+### **Sprint One**: 30 January 2023 - 19 February 2023
+
+    As we move into COSC426, we are looking more at polishing the code written and parts of the
+    project that we worked on last semester. We will also be using GitHub more effectively
+    to track our progress on the projects tab and issues. To see the status of any portion of the
+    project, view the project board. 
+    
+    This sprint in particular we will be focused on cleaning up and getting refamiliarized with the 
+    code base, since it has been several weeks since we have worked on the project. Members of the
+    team will continue where they left off in December in order to polishh the website - specifically
+    the backend - for a more streamlined experience for the user. This includes a fleshed out search page 
+    in addition to more tutorials. There will be additional work on the various analysis tools. 
+
 ### **COSC425 Final Presentation/Post Sprint Three**
 
     We were sucessful in completing our third sprint goals. We have a working website which 
