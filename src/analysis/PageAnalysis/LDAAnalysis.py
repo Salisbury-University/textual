@@ -94,13 +94,10 @@ def get_dictionary(processed_docs):
 def iterate_in_collection(collection_name, database, entries): 
 
     processed_entries = [pre_process(entry) for entry in entries]
-
     results = get_dictionary(processed_entries) 
-
     lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 3)
 
     temp_file = datapath(collection_name+"_model")
-
     lda_model.save(temp_file)
 
     for i in range(0, lda_model.num_topics-1):
@@ -147,14 +144,18 @@ def iterate_in_collection(collection_name, database, entries):
         key = 'vidTitle'
     
     else:
-        
+
         pass
         
 
     f = open("results.txt", 'w')
     counter = 0
 
+    collection = database[collection_name]
+
     for doc in documents: 
+
+        id = doc['_id']
 
         processed = pre_process(doc[key])
         bow = get_single_bow(processed)
@@ -167,6 +168,11 @@ def iterate_in_collection(collection_name, database, entries):
                 f.write(str(item[i]) + " ")
         f.write("\n")
         counter+=1
+
+        new_val = {"$set" : {"topic_words": topics}}
+        query = {'_id':id}
+
+        collection.update_one(query, new_val)
 
     f.close()
     
