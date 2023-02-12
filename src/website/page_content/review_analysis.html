@@ -137,7 +137,13 @@
 					<div id="review_analysis_text_4">
 						<div id="review_analysis_text_4_header">Network Structure:</div>
 							<p id="review_analysis_paragraph_10" class="review_analysis_paragraph">After the dataset was compiled, a network was created to be trained on these reviews. After training the network should be able to make predictions on new data not yet seen. Depicted to the left is a diagram of the network structure. The network begins with an embedding layer, the purpose of this is to convert the words fed into the network into numerical values. This layer may be pretrained or configured to work with a specific set of words such as those found within this Yelp Review dataset.</p>
-							<p id="review_analysis_paragraph_11" class="review_analysis_paragraph">The next layer is the Bidirectional Long Short Term Memory (LSTM) layer. This layer takes input from both the left and right side, combining this data to create better predictions. Normally, LSTM networks usually output data directly, however, a Bidirectional LSTM will produce output from both its forward and backward layer, this data is given to an activation layer. This output is considered in the final result.</p>
+							<!-- https://medium.com/analytics-vidhya/what-does-it-mean-by-bidirectional-lstm-63d6838e34d9 -->
+							<p id="review_analysis_paragraph_11" class="review_analysis_paragraph">The next layer is the Bidirectional Long Short Term Memory (LSTM) layer. This layer takes input from both the left and right side, combining this data to create better predictions. Normally, LSTM networks usually output data directly, however, a bidirectional LSTM will produce output from both its forward and backward layer, this data is given to an activation layer. This output is considered in the final result.</p>
+
+							<!-- https://www.tutorialspoint.com/keras/keras_dropout_layers.htm -->
+							<!-- https://towardsdatascience.com/machine-learning-part-20-dropout-keras-layers-explained-8c9f6dc4c9ab -->
+							<p id="review_analysis_paragraph_11" class="review_analysis_paragraph">Following the bidirectional LSTM is a dropout layer. The purpose of the dropout layer is to prevent the network from overfitting on its training dataset. The dropout layer randomly sets the weights of neurons within the network to 0. The result of this is the cost function is more senitive to the weights of its neighboring neurons during backpropigation. By doing this the dropout layer works to help a network better generalize on a dataset.</p>
+
 
 					</div>
 
