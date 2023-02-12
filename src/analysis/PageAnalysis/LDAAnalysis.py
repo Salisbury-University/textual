@@ -105,7 +105,7 @@ def iterate_in_collection(collection_name, database, entries):
 
     # dictionary containing all of the words in each topic
 
-    topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10) for i in range(0, lda_model.num_topics())]}
+    topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10)] for i in range(0, lda_model.num_topics)}
 
     # get documents
 
@@ -169,19 +169,21 @@ def iterate_in_collection(collection_name, database, entries):
         topics contains a list of tuples where the first entry correspons to the index
         of the topic word in the model 
         '''
+        temp = (0,0)
+        for item in topics:
+            if item[1] > temp[1]:
+                temp = item
+            else:
+                continue
 
-
-
-
+        unique_document_topics = topic_words[str(temp[0])]
         f.write(f"Document number {counter}: ")
         
-        for item in topics:
-            for i in range(0, len(item)):
-                f.write(str(item[i]) + " ")
-        f.write("\n")
+        for item in unique_document_topics:
+            f.write(item + " ")
         counter+=1
 
-        new_val = {"$set" : {"topic_words": topics}}
+        new_val = {"$set" : {"topic_words": unique_document_topics}}
         query = {'_id':id}
 
         collection.update_one(query, new_val)
