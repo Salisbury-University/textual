@@ -16,6 +16,11 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Fjalla+amily=Yanone+Kaffeesatz:wght@300&display=swap" rel="stylesheet">
 
+		<!-- CODE FONT -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300&display=swap" rel="stylesheet">
+
 		<!-- CSS STYLING -->
 		<link href="style.css" rel="stylesheet">
 
@@ -154,30 +159,25 @@
 
 				<div class="container" id="review_analysis_container_5">	
 					<div id="review_analysis_text_5">
-						<div id="review_analysis_text_3_header">Implementation in Python:</div>
-						<!-- FONT -->
-						<link rel="preconnect" href="https://fonts.googleapis.com">
-						<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-						<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&display=swap" rel="stylesheet">
-
+						<div id="review_analysis_text_3_header">Implementation in Python:</div>	
 						<p id="review_analysis_paragraph_15" class="review_analysis_paragraph">
 							# Define training variables <br/>
-							embedding_vector_length=32 <br/>
+							embedding_vector_length = 32 <br/>
 							num_classes = 5 <br/><br/>
 							
 							# Create the model <br/>
 							model = Sequential() <br/>
-							model.add(Embedding(vocab_size,embedding_vector_length,input_length=X_train.shape[1])) <br/>
-							model.add(Bidirectional(LSTM(250,return_sequences=True))) <br/>
+							model.add(Embedding(vocab_size, embedding_vector_length, input_length=X_train.shape[1])) <br/>
+							model.add(Bidirectional(LSTM(250, return_sequences=True))) <br/>
 							model.add(Dropout(0.2)) <br/>
 							model.add(Flatten()) <br/>
-						    	model.add(Dense(128,activation='relu')) <br/>
+						    	model.add(Dense(128, activation='relu')) <br/>
 						    	model.add(Dropout(0.2)) <br/>
-						   	model.add(Dense(64,activation='relu')) <br/>
-						    	model.add(Dense(32,activation='relu')) <br/>
+						   	model.add(Dense(64, activation='relu')) <br/>
+						    	model.add(Dense(32, activation='relu')) <br/>
 						    	model.add(Dropout(0.2)) <br/>
-						    	model.add(Dense(16,activation='relu')) <br/>
-						    	model.add(Dense(num_classes,activation='softmax')) <br/>
+						    	model.add(Dense(16, activation='relu')) <br/>
+							model.add(Dense(num_classes, activation='softmax')) <br/><br/>
 
 						    	# Compile the model using the adam optimizer <br/>
 						    	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy']) <br/>

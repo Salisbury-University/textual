@@ -284,6 +284,12 @@
 	display: table;
 }
 
+#review_analysis_paragraph_15
+{
+	font-family: 'Sora', sans-serif;
+	width: 50rem;
+}
+
 #review_analysis_container
 {
 	display: flex;
@@ -323,11 +329,6 @@
 	width: 100%;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
-}
-
-#review_analysis_paragraph_15
-{
-	font-family: 'Sora', sans-serif;
 }
 
 .review_analysis_paragraph
