@@ -287,7 +287,10 @@
 #review_analysis_paragraph_15
 {
 	font-family: 'Sora', sans-serif;
+	background-color: #414141;
+	padding: 2rem;
 	width: 50rem;
+	border-radius: 2rem;
 }
 
 #review_analysis_container
