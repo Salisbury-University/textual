@@ -103,6 +103,10 @@ def iterate_in_collection(collection_name, database, entries):
     for i in range(0, lda_model.num_topics-1):
         print(lda_model.print_topic(i))
 
+    # dictionary containing all of the words in each topic
+
+    topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10) for i in range(0, lda_model.num_topics())]}
+
     # get documents
 
     documents = [] 
@@ -160,6 +164,14 @@ def iterate_in_collection(collection_name, database, entries):
         processed = pre_process(doc[key])
         bow = get_single_bow(processed)
         topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
+
+        '''
+        topics contains a list of tuples where the first entry correspons to the index
+        of the topic word in the model 
+        '''
+
+
+
 
         f.write(f"Document number {counter}: ")
         
