@@ -317,6 +317,19 @@
 	font-family: 'Fjalla One', sans-serif;
 }
 
+#review_analysis_container_5
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_paragraph_15
+{
+	font-family: 'Sora', sans-serif;
+}
+
 .review_analysis_paragraph
 {
 	margin-top: 2.5rem;

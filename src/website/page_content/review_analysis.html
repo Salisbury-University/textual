@@ -147,10 +147,42 @@
 							<!-- https://www.superdatascience.com/blogs/convolutional-neural-networks-cnn-step-3-flattening -->
 							<p id="review_analysis_paragraph_13" class="review_analysis_paragraph">After the data has passed through all of the previous layers the output result will be a multi dimensional matrix. Before this data can be fed into a traditional neural network it first must literally be flattened out into an vector. This lengthy vector can then be passed forward into the remainder of the network.</p>
 							<!-- https://machinelearningknowledge.ai/keras-dense-layer-explained-for-beginners/ -->
-							<p id="review_analysis_paragraph_14" class="review_analysis_paragraph">After being flattened, the data vector is passed into the first of multiple dense layers. Dense layers are the backbone of most neural networks. The dense layer is the part of the network that learns high-level features from the input data. Also known as the fully connected layer, each dense layer recieves input from the previous layer and applies a set of weights and produces a particular output. As the network is trained these weights are adjusted to produce the correct outputs.</p>
+							<p id="review_analysis_paragraph_14" class="review_analysis_paragraph">After being flattened, the data vector is passed into the first of multiple dense layers. Dense layers are the backbone of most neural networks. The dense layer is the part of the network that learns high-level features from the input data. Also known as the fully connected layer, each dense layer recieves input from the previous layer and applies a set of weights and produces a particular output. As the network is trained these weights are adjusted to produce the correct outputs. The Yelp review textual data is passed through a series of dense and dropout layers until a classification is produced.</p>
 
 					</div>
+				</div>
 
+				<div class="container" id="review_analysis_container_5">	
+					<div id="review_analysis_text_5">
+						<div id="review_analysis_text_3_header">Implementation in Python:</div>
+						<!-- FONT -->
+						<link rel="preconnect" href="https://fonts.googleapis.com">
+						<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+						<link href="https://fonts.googleapis.com/css2?family=Sora:wght@800&display=swap" rel="stylesheet">
+
+						<p id="review_analysis_paragraph_15" class="review_analysis_paragraph">
+							# Define training variables <br/>
+							embedding_vector_length=32 <br/>
+							num_classes = 5 <br/><br/>
+							
+							# Create the model <br/>
+							model = Sequential() <br/>
+							model.add(Embedding(vocab_size,embedding_vector_length,input_length=X_train.shape[1])) <br/>
+							model.add(Bidirectional(LSTM(250,return_sequences=True))) <br/>
+							model.add(Dropout(0.2)) <br/>
+							model.add(Flatten()) <br/>
+						    	model.add(Dense(128,activation='relu')) <br/>
+						    	model.add(Dropout(0.2)) <br/>
+						   	model.add(Dense(64,activation='relu')) <br/>
+						    	model.add(Dense(32,activation='relu')) <br/>
+						    	model.add(Dropout(0.2)) <br/>
+						    	model.add(Dense(16,activation='relu')) <br/>
+						    	model.add(Dense(num_classes,activation='softmax')) <br/>
+
+						    	# Compile the model using the adam optimizer <br/>
+						    	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy']) <br/>
+						</p>
+					</div>
 				</div>
 
 			<footer class="container" id="su_footer">
