@@ -262,7 +262,6 @@
 
 #review_analysis_title
 {
-	margin-top: 45rem;
        	text-align: center;	
 	color: #D9D9D9;
 	font-size: 4rem;
@@ -295,6 +294,17 @@
 
 #review_navbar_border
 {
+	margin-top: 45rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 2.5rem;
+	border-top: 0.5rem #D9D9D9 solid;
+	width: 85%;
+}
+
+#review_navbar_border_2
+{
+	margin-top: 2.5rem;
 	margin-left: auto;
 	margin-right: auto;
 	padding-top: 2.5rem;
