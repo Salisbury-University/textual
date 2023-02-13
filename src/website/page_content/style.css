@@ -127,8 +127,7 @@
 	font-size: 1rem;
 	font-family: 'Fjalla One', sans-serif;
 	margin-top: 2rem;
-	text-align: center;
-	
+	text-align: center;	
 } 
 
 .about_intro
@@ -242,6 +241,16 @@
 #stock_img
 {
 	width: 100%;
+}
+
+#scroll_button
+{
+	background-color: #A62139;
+	border-color: #A62139;
+	border-radius: 10rem;
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
 }
 
 #review_header_text
