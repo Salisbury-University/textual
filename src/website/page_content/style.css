@@ -284,10 +284,35 @@
 	display: table;
 }
 
+#review_navbar
+{
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	width: 100%;
+}
+
+#nav_button_links
+{
+	background-color: #A62139;
+	border-color: #A62139;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: auto;
+	margin-right: auto;
+	color: #D9D9D9;
+	font-size: 1.0rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	font-weight: bold;
+	width: 15rem;
+	height: 3.5rem;
+}
+
 #review_analysis_paragraph_15
 {
 	font-family: 'Sora', sans-serif;
-	background-color: #414141;
+	background-color: #1A1A1A;
 	padding: 2rem;
 	width: 50rem;
 	border-radius: 2rem;
