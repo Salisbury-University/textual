@@ -6,6 +6,7 @@
 /* MAIN CONTENT BACKGROUND COLOR */
 #page_content
 {
+	scroll-behavior: smooth;
 	background: #0D0D0D; !important
 	padding-bottom: 80px;
 }
