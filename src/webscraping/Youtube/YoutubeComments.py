@@ -100,7 +100,7 @@ def getVideos(youtube, category):
         part="id,snippet,statistics",
         chart="mostPopular",
         regionCode="US",
-        maxResults=50,
+        maxResults=25,
         videoCategoryId = category['id']
         )
     
@@ -108,7 +108,7 @@ def getVideos(youtube, category):
         response = request.execute() # Request 50 most popular videos from this category
         items = response["items"]
 
-        #store metadata about the 50 videos in this category
+        #store metadata about the 25 videos in this category
         videos = []
         for item in items:
             try:
@@ -138,7 +138,7 @@ def getComments(youtube, video, sortBy):
     order=sortBy,
     textFormat="plainText",
     videoId=video['vId'],
-    maxResults=50,
+    maxResults=25,
     )
 
     try: # Try to get 50 comments from this video
@@ -278,4 +278,3 @@ if __name__ == "__main__":
 
     print("Current number of documents in YoutubeComment Collection: ", DocumentCount[0])
     print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[1])
- 
