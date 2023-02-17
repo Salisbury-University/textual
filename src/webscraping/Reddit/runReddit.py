@@ -10,16 +10,18 @@ I added some error catching just for a clear place where it failed or was interr
 while True:
     try:
         try:
-            fd=open("subreddit.txt","r")
+            fd=open("subreddit.txt","r") # open file with some popular subreddits (PG-13 of course)
             sub_reddits=""
             next_line=fd.readline()
             while next_line!="":
                 sub_reddits+=next_line[:-1]
                 next_line=fd.readline()
+                # Just a check for the last item in the file and adjusts accordingly
                 if next_line=="":
-                    sub_reddits+="w "
+                    sub_reddits+="w"
                 else:
                     sub_reddits+=" "
+            # runs the reddit scraper
             os.system("python3.7 readRedditDB" + sub_reddits)
         except:
             print("\nProgram Failed")
