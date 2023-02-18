@@ -176,7 +176,7 @@ def iterate_in_collection(collection_name, database, entries):
             else:
                 continue
 
-        unique_document_topics = topic_words[str(temp[0])]
+        unique_document_topics = topic_words["Topic_" + str(temp[0])]
         f.write(f"Document number {counter}: ")
         
         for item in unique_document_topics:
