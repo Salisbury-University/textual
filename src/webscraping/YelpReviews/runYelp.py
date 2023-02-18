@@ -11,7 +11,7 @@ while True:
     try:
         try:
             # runs the reddit scraper
-            os.system("python3 readRedditDB" + sub_reddits)
+            os.system("./run_yelp.sh")
         except:
             print("\nProgram Failed")
             sys.exit()
