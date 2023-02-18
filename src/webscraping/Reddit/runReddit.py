@@ -22,11 +22,10 @@ while True:
                 else:
                     sub_reddits+=" "
             # runs the reddit scraper
-            os.system("python3.7 readRedditDB" + sub_reddits)
+            os.system("python3 readRedditDB" + sub_reddits)
         except:
             print("\nProgram Failed")
             sys.exit()
-        print(sub_reddits)
         sleep(20) # this sleep  makes sure it is only run every day
     except:
         print("\nScraper Terminated")
