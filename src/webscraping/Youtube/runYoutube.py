@@ -10,7 +10,7 @@ I added some error catching just for a clear place where it failed or was interr
 while True:
     try:
         try:
-            os.system("python3 YoutubeComments.py" + sub_reddits)
+            os.system("python3 YoutubeComments.py")
         except:
             print("\nProgram Failed")
             sys.exit()
