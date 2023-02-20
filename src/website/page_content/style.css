@@ -464,15 +464,16 @@
 	border-radius: 2rem;
 }
 
-network_run_img
+#network_run_img
 {
+	padding: 1rem;
 	display: block;
   	margin-left: auto;
   	margin-right: auto;
 	width: 90%;
-	border: 1px solid;
+	border: 3px solid;
 	border-color: #FFFFFF;
-	border-radius: 2rem;
+	border-radius: 1rem;
 }
 
 
