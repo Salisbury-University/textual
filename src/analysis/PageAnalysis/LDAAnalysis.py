@@ -95,7 +95,7 @@ def iterate_in_collection(collection_name, database, entries):
 
     processed_entries = [pre_process(entry) for entry in entries]
     results = get_dictionary(processed_entries) 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 3)
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 10, workers = 3)
 
     temp_file = datapath(collection_name+"_model")
     lda_model.save(temp_file)
