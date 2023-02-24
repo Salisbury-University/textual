@@ -21,6 +21,7 @@ import os
 from pymongo import MongoClient
 from gensim.test.utils import datapath
 from nltk.corpus import stopwords
+from gensim.parsing.preprocessing import STOPWORDS
 
 # Get authoriazation from file
 def get_credentials():
@@ -67,15 +68,9 @@ def lemmatize_stemming(text):
 
 def pre_process(text):
 
-    return [token for token in gensim.utils.simple_preprocess(text) if token not in gensim.parsing.preprocessing.STOPWORDS and len(token) > 3]
+    stopwords = STOPWORDS.union(set(['https', 'reddit', 'thread', 'post', 'wiki', 'search', 'like']))
+    return [token for token in gensim.utils.simple_preprocess(text) if token not in stopwords and len(token) > 3]
 
-    '''
-    results=[]
-    for token in gensim.utils.simple_preprocess(text):
-        if token not in gensim.parsing.preprocessing.STOPWORDS and len(token) > 3:
-            results.append(lemmatize_stemming(token))
-    return results
-    '''
 
 def get_single_bow(doc):
 
@@ -95,7 +90,7 @@ def iterate_in_collection(collection_name, database, entries):
 
     processed_entries = [pre_process(entry) for entry in entries]
     results = get_dictionary(processed_entries) 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 10, workers = 3)
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 10, workers = 4)
 
     temp_file = datapath(collection_name+"_model")
     lda_model.save(temp_file)
@@ -159,34 +154,37 @@ def iterate_in_collection(collection_name, database, entries):
 
     for doc in documents: 
 
+        # document ID 
         id = doc['_id']
 
+        # preprocess the documents to get the LDA model
         processed = pre_process(doc[key])
         bow = get_single_bow(processed)
         topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
 
-        '''
-        topics contains a list of tuples where the first entry correspons to the index
-        of the topic word in the model 
-        '''
+        #topics contains a list of tuples where the first entry correspons to the index
+        #of the topic word in the model 
         temp = (0,0)
         for item in topics:
             if item[1] > temp[1]:
                 temp = item
             else:
                 continue
-
+            
+        # gets the unique document topics for each individual document
         unique_document_topics = topic_words["Topic_" + str(temp[0])]
-        f.write(f"Document number {counter}: ")
-        
-        for item in unique_document_topics:
-            f.write(item + " ")
-        counter+=1
 
+        # write to ouput file 
+        f.write(f"Document number {counter}: ")
+        f.write(f'{id}: ', end=" ")
+        f.write(*unique_document_topics)
+
+        # putting the information into the database
         new_val = {"$set" : {"topic_words": unique_document_topics}}
         query = {'_id':id}
-
         collection.update_one(query, new_val)
+
+        counter+=1
 
     f.close()
     
