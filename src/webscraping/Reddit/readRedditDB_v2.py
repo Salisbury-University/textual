@@ -46,7 +46,7 @@ def get_data(api_obj, subreddit, depth):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
 
-    posts = api_obj.search_submissions(subreddit="science", limit=1000)
+    posts = api_obj.search_submissions(subreddit="rust", limit=10)
 
     # |                                POST INFO                                 |
     # |--------------------------------------------------------------------------|
@@ -60,15 +60,19 @@ def get_data(api_obj, subreddit, depth):
     # |Upvotes: How many upvotes the post has                                    |
     # |Downvotes: How many downvotes the post has                                |
     # |--------------------------------------------------------------------------|
-
+    
+    index = 0
     for post in posts:
-        print(post)
+        subreddit_content = {"subreddit" : post["subreddit"], "title" : post["title"], "author" : post["author"], "post_id" : post["id"], "selftext" : post["selftext"], "created_utc" : post["created_utc"], "link" : post["url"], "score" : post["score"]}
+
+        print(subreddit_content)
+        print("===================================================================================================")
 
 if __name__ == "__main__":
     credentials = get_credentials()
     api_obj = api_connection(credentials)
     
-    praw_api = PushshiftAPI(praw=api_obj)
+    praw_api = PushshiftAPI() # (praw=api_obj)
 
     get_data(praw_api, "rust", 10000)
     
