@@ -42,11 +42,14 @@ def api_connection(credentials):
     # Return the authenticated API object
     return reddit_api
 
-def get_data(api_obj, subreddit, depth):
+def get_data(credentials, subreddit):
+    api_obj = api_connection(credentials)
+    praw_api = PushshiftAPI(praw=api_obj)
+    
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
 
-    posts = api_obj.search_submissions(subreddit="rust", limit=10)
+    posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
 
     # |                                POST INFO                                 |
     # |--------------------------------------------------------------------------|
@@ -69,11 +72,12 @@ def get_data(api_obj, subreddit, depth):
         print("===================================================================================================")
 
 if __name__ == "__main__":
-    credentials = get_credentials()
-    api_obj = api_connection(credentials)
-    
-    praw_api = PushshiftAPI() # (praw=api_obj)
+    credentials = get_credentials() 
+    subreddit_list = ["formula1", "apple", "nfl", "space"]
 
-    get_data(praw_api, "rust", 10000)
-    
+    pool=mp.Pool(mp.cpu_count())
+    partial_get_data = functools.partial(get_data, credentials)
+    results=pool.map(partial_get_data, subreddit_list)
+    pool.close()
+ 
     print("Script end...")
