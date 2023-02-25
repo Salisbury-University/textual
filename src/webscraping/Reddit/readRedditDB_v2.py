@@ -35,15 +35,15 @@ def get_credentials():
     return lines
 
 def api_connection(credentials):
-    client_id = credentials[0]
-    client_secret = credentials[1]
-    user_agent = credentials[2]
-    user_id = credentials[3]
-    user_password = credentials[4]
+    # Connect to the Reddit API using the credentials read in from the authentication file
+    reddit_api = praw.Reddit(client_id = credentials[0], client_secret = credentials[1], user_agent = credentials[2], username = credentials[3], password = credentials[4])
 
-    reddit_api = praw.Reddit(client_id = client_id, client_secret = client_secret, user_agent = user_agent, username = user_id, password = user_password)
-
+    # Return the authenticated API object
     return reddit_api
+
+def get_data(reddit_api, subreddit):
+    #Pandas dataframe to hold data
+    subreddit_content = pd.DataFrame()
 
 if __name__ == "__main__":
     credentials = get_credentials()
@@ -54,4 +54,4 @@ if __name__ == "__main__":
     for element in new:
         print(element.title)
 
-    print("Program end...")
+    print("Script end...")
