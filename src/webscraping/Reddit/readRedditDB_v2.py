@@ -21,6 +21,7 @@ from string import punctuation
 import itertools
 
 import praw # Reddit API
+from pmaw import PushshiftAPI
 
 # Used to connect to the mongo DB
 from pymongo import MongoClient
@@ -45,19 +46,30 @@ def get_data(api_obj, subreddit, depth):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
 
-    # Connect to the specified subreddit
-    subreddit_api = api_obj.subreddit(subreddit)
+    posts = api_obj.search_submissions(subreddit="science", limit=1000)
 
-    # Get content of subreddit, depth specifies number of posts to retrieve
-    subreddit_api = subreddit_api.new(limit=depth)
+    # |                                POST INFO                                 |
+    # |--------------------------------------------------------------------------|
+    # |Go through each post and add its data                                     |
+    # |Subbreddit: Name of the subreddit the post was obtained from              |
+    # |Title: Title of the current post                                          |
+    # |Post_ID: Unique identifier to find the post within the subreddit          |
+    # |Selftext: Text body of the post                                           |
+    # |Created_UTC: Time and date of the post's creation                         |
+    # |Link: The to the specific post                                            |
+    # |Upvotes: How many upvotes the post has                                    |
+    # |Downvotes: How many downvotes the post has                                |
+    # |--------------------------------------------------------------------------|
 
-    for post in subreddit_api:
-        print(post.title)
+    for post in posts:
+        print(post)
 
 if __name__ == "__main__":
     credentials = get_credentials()
     api_obj = api_connection(credentials)
     
-    get_data(api_obj, "rust", 10)
+    praw_api = PushshiftAPI(praw=api_obj)
+
+    get_data(praw_api, "rust", 10000)
     
     print("Script end...")
