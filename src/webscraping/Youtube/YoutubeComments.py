@@ -9,6 +9,14 @@ import functools
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
+# Maximum number of videos requested 
+NUMBER_OF_VIDEOS = 100
+
+# Maximum number of Comments requested per video
+NUMBER_OF_COMMENTS = 200
+
+
+
 def initialize_lock(this_lock):
     # Initialize each process with a shared lock variable
 
@@ -100,7 +108,7 @@ def getVideos(youtube, category):
         part="id,snippet,statistics",
         chart="mostPopular",
         regionCode="US",
-        maxResults=25,
+        maxResults=NUMBER_OF_VIDEOS,
         videoCategoryId = category['id']
         )
     
@@ -138,7 +146,7 @@ def getComments(youtube, video, sortBy):
     order=sortBy,
     textFormat="plainText",
     videoId=video['vId'],
-    maxResults=25,
+    maxResults=(NUMBER_OF_COMMENTS/2),
     )
 
     try: # Try to get 50 comments from this video
@@ -193,9 +201,9 @@ def scrape_comments(youtube, category):
             video_collection.insert_one(video)
             numVideosInserted += 1
         else:
-            with lock:
+            #with lock:
                 #print("Thread " + str(mp.current_process().pid) + ":", "video", video['vId'], "is already in database")
-                pass
+            pass
 
         if commentThreadsT != None: # if the list is not empty
             #store metadata of most recent comments
@@ -205,9 +213,9 @@ def scrape_comments(youtube, category):
                     comment_collection.insert_one(comment)
                     numCommentsInserted += 1
                 except DuplicateKeyError: # two threads tried to insert the same comment at the same time.
-                    with lock:
+                    #with lock:
                         #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
-                        pass
+                    pass
 
         if commentThreadsR != None: # if the list is not empty
             #store metadata of most relevant comments
@@ -218,9 +226,9 @@ def scrape_comments(youtube, category):
                     numCommentsInserted += 1
 
                 except DuplicateKeyError:
-                    with lock:
+                    #with lock:
                         #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
-                        pass
+                    pass
     
     with lock:
         print()
