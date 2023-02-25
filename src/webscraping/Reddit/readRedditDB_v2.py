@@ -20,8 +20,19 @@ from collections import Counter
 from string import punctuation
 import itertools
 
+import praw # Reddit API
+
 # Used to connect to the mongo DB
 from pymongo import MongoClient
+
+# Read in password store in file (file is used to avoid pushing credentials to GitHub.)
+def get_credentials():
+    with open("redditPassword.txt", "r") as credentials: # Open file containing credentials as read only
+        # Read each line in and store in a list
+        lines = credentials.read().splitlines()
+    # Close the file and return the list
+    credentials.close()
+    return lines
 
 if __name__ == "__main__":
     print("Program end...")
