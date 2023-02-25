@@ -64,12 +64,12 @@ def get_data(credentials, subreddit):
     # |Downvotes: How many downvotes the post has                                |
     # |--------------------------------------------------------------------------|
     
-    index = 0
+    count = 0
     for post in posts:
         subreddit_content = {"subreddit" : post["subreddit"], "title" : post["title"], "author" : post["author"], "post_id" : post["id"], "selftext" : post["selftext"], "created_utc" : post["created_utc"], "link" : post["url"], "score" : post["score"]}
+        count += 1
 
-        print(subreddit_content)
-        print("===================================================================================================")
+    print("The total count for {} was {}".format(subreddit, count))
 
 if __name__ == "__main__":
     credentials = get_credentials() 
