@@ -26,6 +26,45 @@ from pmaw import PushshiftAPI
 # Used to connect to the mongo DB
 from pymongo import MongoClient
 
+# Get authoriazation from file
+def get_db_credentials():
+    with open("mongopassword.txt", "r") as pass_file:
+        # Read each line from the file, splitting on newline
+        lines = pass_file.read().splitlines()
+    # Close the file and return the list of lines
+    pass_file.close()
+    return lines
+
+# Connect to the database
+def get_client():
+    # Needs to be done this way, can't push credentials to github
+    # Call the get pass function to open the file and extract the credentials
+    lines = get_db_credentials()
+
+    # Get the username from the file
+    username = lines[0]
+
+    # Get the password from the file
+    password = lines[1]
+
+    # Set up a new client to the database
+    # Using database address and port number
+    client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
+    
+    # Return the client
+    return client
+
+# Get a database from the client
+# In this case use the textual database
+def get_database(client):
+    return client.textual
+
+# Close the connection to the database after data has been written
+def close_database(client):
+    # Close database connection
+    client.close()
+
+
 # Read in password store in file (file is used to avoid pushing credentials to GitHub.)
 def get_credentials():
     with open("redditPassword.txt", "r") as credentials: # Open file containing credentials as read only
@@ -43,6 +82,20 @@ def api_connection(credentials):
     return reddit_api
 
 def get_data(credentials, subreddit):
+    
+    # =====================================================================================================
+    # GET DATABASE, MUST BE DONE INSIDE EACH THREAD | MONGODB CLIENT CANNOT BE CONVERTED INTO LOCKED OBJECT
+    # =====================================================================================================
+
+    # Get client
+    client = get_client()
+
+    # Get the specific database
+    db = get_database(client)
+
+    # Get the specific collection
+    collection = db.RedditPosts
+
     api_obj = api_connection(credentials)
     praw_api = PushshiftAPI(praw=api_obj)
     
@@ -68,6 +121,9 @@ def get_data(credentials, subreddit):
     for post in posts:
         subreddit_content = {"subreddit" : post["subreddit"], "title" : post["title"], "author" : post["author"], "post_id" : post["id"], "selftext" : post["selftext"], "created_utc" : post["created_utc"], "link" : post["url"], "score" : post["score"]}
         count += 1
+
+        # Add DataFrame file to collection
+        collection.insert_one(subreddit_content)
 
     print("The total count for {} was {}".format(subreddit, count))
 
