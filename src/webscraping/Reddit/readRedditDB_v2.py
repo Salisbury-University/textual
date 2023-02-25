@@ -48,7 +48,10 @@ def api_connection(credentials):
 if __name__ == "__main__":
     credentials = get_credentials()
     api_obj = api_connection(credentials)
-    
-    print(api_obj)
+   
+    curr_subreddit = api_obj.subreddit("rust")
+    new = curr_subreddit.new(limit=10)
+    for element in new:
+        print(element.title)
 
     print("Program end...")
