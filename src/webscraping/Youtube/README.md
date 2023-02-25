@@ -7,13 +7,13 @@
 
 # Algorithm:
 
-  * Uses YouTube API to Request every available YouTube video category in the US region.
-  * Uses a multiprocessing pool with the YouTube API to request up to 100 videos from every video category in parallel.
-  * Each process in the pool is assigned a different video category.
-  * After each process in the pool finishes getting the videos for its assigned category, it will request up to 100 of the most recent comments and up to 100 of the most relevant comments for each video it received.
-  * This results in up to 100 videos retrieved and up to 20,000 comments retrieved per available video category.
-  * Each process will try to insert all the metadata it retrieved into the database.
-  * Before the Program terminates, It prints the results of its execution.
+  1. Uses YouTube API to Request every available YouTube video category in the US region.
+  2. Uses a multiprocessing pool with the YouTube API to request up to 100 videos from every video category in parallel.
+  3. Each process in the pool is assigned a different video category.
+  4. After each process in the pool finishes getting the videos for its assigned category, it will request up to 100 of the most recent comments and up to 100 of the most relevant comments for each video it received.
+  5. This results in up to 100 videos retrieved and up to 20,000 comments retrieved per available video category.
+  6. Each process will try to insert all the metadata it retrieved into the database.
+  7. Before the Program terminates, It prints the results of its execution.
 
 
 
