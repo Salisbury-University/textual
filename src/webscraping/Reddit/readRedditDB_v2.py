@@ -41,17 +41,23 @@ def api_connection(credentials):
     # Return the authenticated API object
     return reddit_api
 
-def get_data(reddit_api, subreddit):
+def get_data(api_obj, subreddit, depth):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
+
+    # Connect to the specified subreddit
+    subreddit_api = api_obj.subreddit(subreddit)
+
+    # Get content of subreddit, depth specifies number of posts to retrieve
+    subreddit_api = subreddit_api.new(limit=depth)
+
+    for post in subreddit_api:
+        print(post.title)
 
 if __name__ == "__main__":
     credentials = get_credentials()
     api_obj = api_connection(credentials)
-   
-    curr_subreddit = api_obj.subreddit("rust")
-    new = curr_subreddit.new(limit=10)
-    for element in new:
-        print(element.title)
-
+    
+    get_data(api_obj, "rust", 10)
+    
     print("Script end...")
