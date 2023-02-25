@@ -34,5 +34,21 @@ def get_credentials():
     credentials.close()
     return lines
 
+def api_connection(credentials):
+    client_id = credentials[0]
+    client_secret = credentials[1]
+    user_agent = credentials[2]
+    user_id = credentials[3]
+    user_password = credentials[4]
+
+    reddit_api = praw.Reddit(client_id = client_id, client_secret = client_secret, user_agent = user_agent, username = user_id, password = user_password)
+
+    return reddit_api
+
 if __name__ == "__main__":
+    credentials = get_credentials()
+    api_obj = api_connection(credentials)
+    
+    print(api_obj)
+
     print("Program end...")
