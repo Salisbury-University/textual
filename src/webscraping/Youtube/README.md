@@ -13,7 +13,7 @@
   4. After each process in the pool finishes getting the videos for its assigned category, it will request up to 100 of the most recent comments and up to 100 of the most relevant comments for each video it received.
   5. This results in up to 100 videos retrieved and up to 20,000 comments retrieved per available video category.
   6. Each process will try to insert all the metadata it retrieved into the database.
-  7. Before the Program terminates, It prints the results of its execution.
+  7. Before the program terminates, it prints the results of its execution.
 
 
 
