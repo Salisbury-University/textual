@@ -128,9 +128,25 @@ def get_data(credentials, subreddit):
     print("The total count for {} was {}".format(subreddit, count))
 
 if __name__ == "__main__":
+    
+    # Check that the user input at least one subreddit
+    if (len(sys.argv) < 2):
+        print("Please enter the name of a subreddit as a command line argument")
+        sys.exit()
+    
+    # Get credentials for the Reddit API
     credentials = get_credentials() 
-    subreddit_list = ["formula1", "apple", "nfl", "space"]
 
+    subreddit_list = [] # Create a list to hold all the user's subreddits
+   
+    # Append each command line argument start with the second (First is the script name)
+    index = 1
+    while i < len(sys.argv):
+        subreddit_list.append(sys.argv[index])
+        index += 1 
+
+
+    # Start the parallel processing pool
     pool=mp.Pool(mp.cpu_count())
     partial_get_data = functools.partial(get_data, credentials)
     results=pool.map(partial_get_data, subreddit_list)
