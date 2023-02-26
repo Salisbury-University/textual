@@ -46,15 +46,19 @@ I added some error catching just for a clear place where it failed or was interr
 """
 while True:
     try:
-        database=get_client()
-        
+        database=get_database(get_client())
+        collection_stats = database.YouTubeComments.command("stats")
+        if collection_stats.freeMemoryStorage==0:
+            print("Collection Full!\nScraper Terminated")
+            close_database(database)
+            break
         try:
             # runs the YouTubeComments scraper
             os.system("python3 YoutubeComments.py")
         except:
             print("\nProgram Failed")
-            sys.exit()
+            break
         sleep(20) # this sleep  makes sure it is only run every day
     except:
         print("\nScraper Terminated")
-        sys.exit()
+        break

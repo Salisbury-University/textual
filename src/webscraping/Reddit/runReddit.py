@@ -46,26 +46,32 @@ I added some error catching just for a clear place where it failed or was interr
 """
 while True:
     try:
-        fd = open("subreddit.txt","r") # open file with some popular subreddits (PG-13 of course)
         sub_reddits=""
-        next_line=fd.readline()
-        while next_line!="":
-            sub_reddits+=next_line[:-1]
+        with open("subreddit.txt","r") as fd: # open file with some popular subreddits (PG-13 of course)
             next_line=fd.readline()
-            # Just a check for the last item in the file and adjusts accordingly
-            if next_line=="":
-                sub_reddits+="w"
-            else:
-                sub_reddits+=" "
+            while next_line!="":
+                sub_reddits+=next_line[:-1]
+                next_line=fd.readline()
+                # Just a check for the last item in the file and adjusts accordingly
+                if next_line=="":
+                    sub_reddits+="w"
+                else:
+                    sub_reddits+=" "
         database=get_database(get_client())
+        collection_stats = database.RedditPosts.command("stats")
+        if collection_stats.freeMemoryStorage==0:
+            print("Collection Full!\nScraper Terminated")
+            close_database(database)
+            break
         try:
             # runs the reddit scraper
-            print(database.command("dbstats"))
-            #os.system("python3 readRedditDB" + sub_reddits)
+            os.system("python3 readRedditDB" + sub_reddits)
         except:
             print("\nProgram Failed")
-            sys.exit()
+            close_database(database)
+            break
         sleep(20) # this sleep  makes sure it is only run every day
     except:
         print("\nScraper Terminated")
-        sys.exit()
+        close_database(database)
+        break
