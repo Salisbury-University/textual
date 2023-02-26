@@ -47,8 +47,8 @@ I added some error catching just for a clear place where it failed or was interr
 while True:
     try:
         database=get_database(get_client())
-        collection_stats = database.YouTubeComments.command("stats")
-        if collection_stats.freeMemoryStorage==0:
+        collection_stats = database.command("collStats","YouTubeComments")
+        if collection_stats.freeStorageSize==0:
             print("Collection Full!\nScraper Terminated")
             close_database(database)
             break

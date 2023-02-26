@@ -58,14 +58,14 @@ while True:
                 else:
                     sub_reddits+=" "
         database=get_database(get_client())
-        collection_stats = database.RedditPosts.command("stats")
-        if collection_stats.freeMemoryStorage==0:
+        collection_stats = database.command("collStats","RedditPosts")
+        if collection_stats.freeStorageSize==0:
             print("Collection Full!\nScraper Terminated")
             close_database(database)
             break
         try:
             # runs the reddit scraper
-            os.system("python3 readRedditDB" + sub_reddits)
+            os.system("python3 readRedditDB_V2" + sub_reddits)
         except:
             print("\nProgram Failed")
             close_database(database)
