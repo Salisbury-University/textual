@@ -13,6 +13,19 @@
 
 ## Current Status 
 
+### **Sprint Two***: 20 February 2023 - 12 March 2023
+
+    This sprint is continuing the work we began in the last sprint with touching up on parts of the project
+    that we looked at last sprint. This includes a focus on demos for the website, restructuring scrapers
+    and polishing up analyzers. It is planned for the search page to be finished during this sprint as well,
+    which seeks to solve the usability issue for those not directly familiar with the project.
+        
+    We will also look to create more fleshed out documentation for use by others. This is accomplished
+    primarily by the tutorials page on the website, but also by written documentation that will go
+    on the repository and potentially on the site itself. Each of the tools should be fully documented.
+    Code itself should be as well for the chance that only group picks up the project once the current
+    team graduates in the coming spring. 
+
 ### **Sprint One**: 30 January 2023 - 19 February 2023
 
     As we move into COSC426, we are looking more at polishing the code written and parts of the
@@ -22,7 +35,7 @@
     
     This sprint in particular we will be focused on cleaning up and getting refamiliarized with the 
     code base, since it has been several weeks since we have worked on the project. Members of the
-    team will continue where they left off in December in order to polishh the website - specifically
+    team will continue where they left off in December in order to polish the website - specifically
     the backend - for a more streamlined experience for the user. This includes a fleshed out search page 
     in addition to more tutorials. There will be additional work on the various analysis tools. 
 
