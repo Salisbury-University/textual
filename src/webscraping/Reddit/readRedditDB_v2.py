@@ -141,7 +141,7 @@ if __name__ == "__main__":
    
     # Append each command line argument start with the second (First is the script name)
     index = 1
-    while i < len(sys.argv):
+    while index < len(sys.argv):
         subreddit_list.append(sys.argv[index])
         index += 1 
 
