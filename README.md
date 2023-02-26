@@ -13,7 +13,7 @@
 
 ## Current Status 
 
-### **Sprint Two***: 20 February 2023 - 12 March 2023
+### **Sprint Two**: 20 February 2023 - 12 March 2023
 
     This sprint is continuing the work we began in the last sprint with touching up on parts of the project
     that we looked at last sprint. This includes a focus on demos for the website, restructuring scrapers
