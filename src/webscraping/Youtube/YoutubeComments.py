@@ -1,10 +1,18 @@
+# <---------------------------SUMMARY--------------------------->
 # YoutubeComments.py
+
 # This program uses the YouTube API v3 to scrape comments from a large amount
 # of YouTube videos. You can change the maximum number of comments that will
 # be requested from the API by changing the value of these two variables: 
 # 
 # NUMBER_OF_VIDEOS
 # NUMBER_OF_COMMENTS
+# 
+# After running this program, up to <NUMBER_OF_VIDEOS> videos and up to
+# <NUMBER_OF_COMMENTS> comments will be added to the database. The videos
+# will be stored in youtube video collection and the comments will be stored
+# in youtube comment collection in the textual Database.
+# <------------------------------------------------------------->
 
 import googleapiclient._auth
 import googleapiclient.discovery
@@ -21,18 +29,29 @@ NUMBER_OF_VIDEOS = 100
 # Maximum number of Comments requested per video
 NUMBER_OF_COMMENTS = 200
 
+# <--------------------------------------------------------------------->
+# This function is called to initialize a lock to synchronize each process's
+# print statements.
+# <--------------------------------------------------------------------->
 def initialize_lock(this_lock):
-    # Initialize each process with a shared lock variable
 
     global lock # each process creates this global variable
     lock = this_lock # and assigns the shared lock to each process
 
+# <--------------------------------------------------------------------->
+# This function reads in the API key from the text file. It is read from
+# the file for security reasons.
+# <--------------------------------------------------------------------->
 def getKey():
     with open("YTkey.txt", 'r') as keyFile:
         text = keyFile.read()
     keyFile.close()
     return text
 
+# <--------------------------------------------------------------------->
+# This function reads in the mongodb credentials from a text file. It is
+# read from the file for security reasons.
+# <--------------------------------------------------------------------->
 def get_credentials():
     with open("mongopassword.txt", "r") as pass_file:
         # Read each line from the file, splitting on newline
@@ -40,8 +59,10 @@ def get_credentials():
     # Close the file and return the list of lines
     pass_file.close()
     return lines
-
-# Connect to the database
+# <--------------------------------------------------------------------->
+# This function allows the program to connect to the database and returns
+# a the MongoClient object used to access the database.
+# <--------------------------------------------------------------------->
 def get_client():
     # Needs to be done this way, can't push credentials to github
 
@@ -61,15 +82,27 @@ def get_client():
     # Return the client
     return client
 
-# Get the database, we are using the textual database | hardcoded currently (bad)
+# <--------------------------------------------------------------------->
+# Get the database, we are using the textual database
+# hardcoded currently (bad)
+# <--------------------------------------------------------------------->
 def get_database(client):
     return client.textual
 
-# Important, close the database
+# <--------------------------------------------------------------------->
+# This function closes the connection to the database.
+# <--------------------------------------------------------------------->
 def close_database(client):
     # Close the connection to the database
     client.close()
 
+# <--------------------------------------------------------------------->
+# Connects to the database and gets the number of documents in the
+# YoutubeComment collection and the YoutubeComment collection. Returns a
+# list of 2 integers. 
+# list[0] = number of videos
+# list[1] = number of comments
+# <--------------------------------------------------------------------->
 def getDocumentCount():
     client = get_client()
 
@@ -90,6 +123,9 @@ def getDocumentCount():
     #return the number of documents in both collection
     return [videoCount, commentCount]
 
+# <--------------------------------------------------------------------->
+# Returns a list of Youtube Video Categories used in the US Region
+# <--------------------------------------------------------------------->
 def getCategories(youtube):
     #request a list of all youtube categories used in the US
     request = youtube.videoCategories().list(
@@ -107,6 +143,10 @@ def getCategories(youtube):
 
     return categories
 
+# <--------------------------------------------------------------------->
+# Uses the YouTube API and one category to return a list of Videos that 
+# have been posted under that category.
+# <--------------------------------------------------------------------->
 def getVideos(youtube, category):
     request = youtube.videos().list(
         part="id,snippet,statistics",
@@ -142,7 +182,15 @@ def getVideos(youtube, category):
 
     return videos
     
-    
+# <--------------------------------------------------------------------->
+# Using the Youtube API and Youtube video, requests a list of YouTube 
+# comments. Depending on the value of "sortBy," this function returns 
+# either a list of the most recent or most relevant comments under that
+# video.
+#  
+# sortBy = "time" : most recent
+# sortBy = "relevance" : most relevant
+# <--------------------------------------------------------------------->
 def getComments(youtube, video, sortBy):
     # Comment Request Parameters
     request = youtube.commentThreads().list(
@@ -177,6 +225,12 @@ def getComments(youtube, video, sortBy):
         print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available. Next video...")
 
 
+# <--------------------------------------------------------------------->
+# Each process in the multiprocessing pool runs this function in parallel
+# with each process being given a different YouTube category. Once this 
+# process finishes with their category, they are assigned a new category
+# to scrape comments from. 
+# <--------------------------------------------------------------------->
 def scrape_comments(youtube, category):
 
     with lock:
@@ -205,8 +259,6 @@ def scrape_comments(youtube, category):
             video_collection.insert_one(video)
             numVideosInserted += 1
         else:
-            #with lock:
-                #print("Thread " + str(mp.current_process().pid) + ":", "video", video['vId'], "is already in database")
             pass
 
         if commentThreadsT != None: # if the list is not empty
@@ -217,8 +269,6 @@ def scrape_comments(youtube, category):
                     comment_collection.insert_one(comment)
                     numCommentsInserted += 1
                 except DuplicateKeyError: # two threads tried to insert the same comment at the same time.
-                    #with lock:
-                        #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
                     pass
 
         if commentThreadsR != None: # if the list is not empty
@@ -230,10 +280,7 @@ def scrape_comments(youtube, category):
                     numCommentsInserted += 1
 
                 except DuplicateKeyError:
-                    #with lock:
-                        #print("Thread " + str(mp.current_process().pid) + ":", "comment", comment['cId'], "is already in the database")
                     pass
-    
     with lock:
         print()
 
@@ -244,6 +291,9 @@ def scrape_comments(youtube, category):
     
     return [numVideosInserted, numCommentsInserted]
 
+# <--------------------------------------------------------------------->
+# Main Function
+# <--------------------------------------------------------------------->
 if __name__ == "__main__":
     
     api_service_name = "youtube"
