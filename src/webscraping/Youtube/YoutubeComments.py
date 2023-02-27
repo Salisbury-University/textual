@@ -1,4 +1,10 @@
-#YoutubeComments.py
+# YoutubeComments.py
+# This program uses the YouTube API v3 to scrape comments from a large amount
+# of YouTube videos. You can change the maximum number of comments that will
+# be requested from the API by changing the value of these two variables: 
+# 
+# NUMBER_OF_VIDEOS
+# NUMBER_OF_COMMENTS
 
 import googleapiclient._auth
 import googleapiclient.discovery
@@ -14,8 +20,6 @@ NUMBER_OF_VIDEOS = 100
 
 # Maximum number of Comments requested per video
 NUMBER_OF_COMMENTS = 200
-
-
 
 def initialize_lock(this_lock):
     # Initialize each process with a shared lock variable
@@ -133,7 +137,7 @@ def getVideos(youtube, category):
                 # print("'KeyERROR': This video has no comments available. Next video...")
                 pass
     except HttpError:
-            print("Thread " + str(mp.current_process().pid) + ": ", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
+            print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
             return []
 
     return videos
