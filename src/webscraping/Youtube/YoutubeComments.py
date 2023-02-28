@@ -24,7 +24,7 @@ from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
 # Maximum number of videos requested 
-NUMBER_OF_VIDEOS = 100
+NUMBER_OF_VIDEOS = 50
 
 # Maximum number of Comments requested per video
 NUMBER_OF_COMMENTS = 200
@@ -291,6 +291,124 @@ def scrape_comments(youtube, category):
     
     return [numVideosInserted, numCommentsInserted]
 
+def getSearches():
+    searchTopics = []
+    with open("YoutubeSearch.txt", 'r') as file:
+        for line in file:
+            if line[0] == '#':
+                continue
+            topic = file.readline().replace("\n", "")
+            searchTopics.append(topic)
+    return searchTopics
+
+def searchVideos(youtube, categories, topic):
+    request = youtube.search().list(
+        part="snippet",
+        maxResults=50, # Unfortunately this is the highest integar accepted as a parameter
+        q=topic,
+        relevanceLanguage="en",
+        type="video"
+    )
+
+    try:
+        response = request.execute() # Request 50 most relevant videos using this keyword
+        items = response["items"]
+
+        #store metadata about the 50 videos in this category
+        videos = []
+        for item in items:
+
+            thisCategory = item["snippet"]["categoryId"]
+
+            # get the category id number
+            for category in categories:
+                if category["title"] == thisCategory:
+                    thisCategory = category["id"]
+            
+            try:
+                #check if each video has comments
+                if item["statistics"]["commentCount"] is not None and item["statistics"]["commentCount"] != '0':
+                    thisDict = {'vId': item['id'], 
+                                "vidTitle": item['snippet']['title'],
+                                "channelTitle": item['snippet']['channelTitle'],
+                                "commentCount": item['statistics']['commentCount'],
+                                "category": thisCategory
+                                }
+                    videos.append(thisDict)
+            except KeyError:
+                # print("'KeyERROR': This video has no comments available. Next video...")
+                pass
+    except HttpError:
+            print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError'")
+            return []
+
+    return videos
+
+
+def scrape_comments_by_search(youtube, categories, topic):
+
+    with lock:
+        print("Thread " + str(mp.current_process().pid) + ": Searching for videos with relevance to: " + topic)
+    
+    # Get a connection to the server
+    client = get_client()
+
+    # Get a database from the connection
+    database = get_database(client)
+
+    # Get a collection from the database (YoutubeVideo, holds video metadata, YoutubeComment holds comment metadata)
+    video_collection = database.YoutubeVideo
+    comment_collection = database.YoutubeComment
+
+    numVideosInserted = 0 
+    numCommentsInserted = 0
+
+    videos = searchVideos(youtube, categories, topic) # request 50 most popular videos per category
+
+    for video in videos:
+        commentThreadsT = getComments(youtube, video, "time") # request 50 most recent commentThreads per video
+        commentThreadsR = getComments(youtube, video, "relevance") # request 50 most relevent commentThreads per video
+
+        #store video metadata
+        if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0: #check if this video is in the database
+            #video_collection.insert_one(video)
+            numVideosInserted += 1
+        else:
+            pass
+
+        if commentThreadsT != None: # if the list is not empty
+            #store metadata of most recent comments
+            for comment in commentThreadsT:
+                # prevents a race condition between threads inserting the same comments
+                try:
+                    #comment_collection.insert_one(comment)
+                    numCommentsInserted += 1
+                except DuplicateKeyError: # two threads tried to insert the same comment at the same time.
+                    pass
+
+        if commentThreadsR != None: # if the list is not empty
+            #store metadata of most relevant comments
+            for comment in commentThreadsR:
+                # prevents a race condition between threads inserting the same comments
+                try:
+                    #comment_collection.insert_one(comment)
+                    numCommentsInserted += 1
+
+                except DuplicateKeyError:
+                    pass
+    with lock:
+        print()
+
+    close_database(client)
+
+    with lock:
+        print("Thread " + str(mp.current_process().pid) + ": finished Topic: " + topic + "\ninserted", numCommentsInserted, "comments and", numVideosInserted,"videos\n")
+    
+    return [numVideosInserted, numCommentsInserted]
+
+
+
+
 # <--------------------------------------------------------------------->
 # Main Function
 # <--------------------------------------------------------------------->
@@ -311,12 +429,29 @@ if __name__ == "__main__":
     # get the initial number of documents before inserting more into the database 
     DocumentCount = getDocumentCount() 
 
+    """
     # Make a partial function since using multiple parameters
     partial_scrape_comments = functools.partial(scrape_comments, youtube,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
 
     # Run each process on a different category
     results=pool.map(partial_scrape_comments, categories,)
+    pool.close()
+
+    totalV = 0
+    totalC = 0
+    for total in results:
+        totalV += total[0]
+        totalC += total[1]
+    """
+    topics = getSearches()
+
+    # Make a partial function since using multiple parameters
+    partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories)
+    pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
+
+    # Run each process on a different category
+    results=pool.map(partial_scrape_comments_by_search, topics,)
     pool.close()
 
     totalV = 0
