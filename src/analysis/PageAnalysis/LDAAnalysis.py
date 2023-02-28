@@ -68,7 +68,7 @@ def lemmatize_stemming(text):
 
 def pre_process(text):
 
-    stopwords = STOPWORDS.union(set(['https', 'reddit', 'thread', 'post', 'wiki', 'search', 'like']))
+    stopwords = STOPWORDS.union(set(['https', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
     return [token for token in gensim.utils.simple_preprocess(text) if token not in stopwords and len(token) > 3]
 
 
@@ -89,15 +89,18 @@ def get_dictionary(processed_docs):
 def iterate_in_collection(collection_name, database, entries): 
 
     processed_entries = [pre_process(entry) for entry in entries]
-    results = get_dictionary(processed_entries) 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 10, workers = 4)
+    empty_removed = [element for element in processed_entries if element != []]
+    results = get_dictionary(empty_removed) 
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 4)
 
     temp_file = datapath(collection_name+"_model")
     lda_model.save(temp_file)
-
+    
+    '''
     for i in range(0, lda_model.num_topics-1):
         print(lda_model.print_topic(i))
-
+    '''
+        
     # dictionary containing all of the words in each topic
 
     topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10)] for i in range(0, lda_model.num_topics)}
@@ -159,31 +162,44 @@ def iterate_in_collection(collection_name, database, entries):
 
         # preprocess the documents to get the LDA model
         processed = pre_process(doc[key])
-        bow = get_single_bow(processed)
-        topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
+        
+        if processed != []: 
+        
+            bow = get_single_bow(processed)
+            topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
 
-        #topics contains a list of tuples where the first entry correspons to the index
-        #of the topic word in the model 
-        temp = (0,0)
-        for item in topics:
-            if item[1] > temp[1]:
-                temp = item
-            else:
-                continue
+            #topics contains a list of tuples where the first entry correspons to the index
+            #of the topic word in the model 
             
-        # gets the unique document topics for each individual document
-        unique_document_topics = topic_words["Topic_" + str(temp[0])]
+            temp = (0,0)
+            for item in topics:
+                if item[1] > temp[1]:
+                    temp = item
+                else:
+                    continue
+            
+            # gets the unique document topics for each individual document
+            unique_document_topics = topic_words["Topic_" + str(temp[0])]
 
-        # write to ouput file 
-        f.write(f"Document number {counter}: ")
-        f.write(f'{id}: ', end=" ")
-        f.write(*unique_document_topics)
+            # write to ouput file 
+            f.write(f"Document number {counter}: ")
+            f.write(f'{id}: ')
+            
+            for item in unique_document_topics:
+                f.write(item + " ")
+            f.write("\n")
 
-        # putting the information into the database
-        new_val = {"$set" : {"topic_words": unique_document_topics}}
-        query = {'_id':id}
-        collection.update_one(query, new_val)
-
+            # putting the information into the database
+            new_val = {"$set" : {"topic_words": unique_document_topics}}
+            query = {'_id':id}
+            collection.update_one(query, new_val)
+        
+        else: 
+            
+            new_val = {"$set" : {"topic_words": "Not enough information."}}
+            query = {'_id':id}
+            collection.update_one(query, new_val)
+            
         counter+=1
 
     f.close()
