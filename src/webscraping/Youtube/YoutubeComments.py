@@ -325,11 +325,16 @@ def searchToVideo(youtube, searchResult, categories):
     print("this Category TITLE: (AF) ", thisCategory)
 
     for item in items:
-        thisVideo = {'vId': item['id'], 
-                     "vidTitle": item['snippet']['title'], 
-                     "channelTitle": item['snippet']['channelTitle'], 
-                     "commentCount": item['statistics']['commentCount'], 
-                     "category": thisCategory}
+        try:
+            thisVideo = {'vId': item['id'], 
+                        "vidTitle": item['snippet']['title'], 
+                        "channelTitle": item['snippet']['channelTitle'], 
+                        "commentCount": item['statistics']['commentCount'], 
+                        "category": thisCategory}
+            
+        except KeyError: # Occurs when comments are disabled for this video
+            print( "Thread " + str(mp.current_process().pid) + ":", "'KeyError': This video has no comments available. Next video...")
+            thisVideo = "noComments"
 
     print("This Video = ", thisVideo)
     
@@ -350,6 +355,8 @@ def searchVideos(youtube, categories, topic):
     videos = []
     for searchResult in items:
         thisVideo = searchToVideo(youtube, searchResult, categories)
+        if thisVideo == "noComments":
+            continue
         videos.append(thisVideo)
 
     return videos
