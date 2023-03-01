@@ -308,6 +308,7 @@ def searchToVideo(youtube, searchResult, categories):
     request = youtube.videos().list(
         part="id,snippet,statistics",
         videoCategoryId = thisId
+        chart="mostPopular"
         )
     response = request.execute()
     items = response["items"]
@@ -454,7 +455,7 @@ if __name__ == "__main__":
         totalV += total[0]
         totalC += total[1]
     """
-    
+
     topics = getSearchTopics()
 
     # Make a partial function since using multiple parameters
