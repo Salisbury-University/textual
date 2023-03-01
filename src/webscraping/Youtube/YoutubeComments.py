@@ -307,23 +307,22 @@ def searchToVideo(youtube, searchResult, categories):
     #request this specific video with this id
     request = youtube.videos().list(
         part="id,snippet,statistics",
-        videoCategoryId = thisId,
-        chart="mostPopular"
+        id = thisId,
         )
     response = request.execute()
     items = response["items"]
     
     # get this video's category id
     for item in items:
-        thisCategory = item["snippet"]["categoryId"]
-    print("this Category: (B4) ", thisCategory)
+        vidCategoryId = item["snippet"]["categoryId"]
+    print("this Category  ID: (B4) ", vidCategoryId)
 
     # get the video's category title
     for category in categories:
-        if category["id"] == thisCategory:
+        if category["id"] == vidCategoryId:
             thisCategory = category["title"]
 
-    print("this Category: (AF) ", thisCategory)
+    print("this Category TITLE: (AF) ", thisCategory)
 
     for item in items:
         thisVideo = {'vId': item['id'], 
