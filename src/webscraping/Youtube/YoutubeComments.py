@@ -291,7 +291,7 @@ def scrape_comments(youtube, category):
     
     return [numVideosInserted, numCommentsInserted]
 
-def getSearches():
+def getSearchTopics():
     searchTopics = []
     with open("YoutubeSearch.txt", 'r') as file:
         for line in file:
@@ -301,6 +301,41 @@ def getSearches():
             searchTopics.append(topic)
     return searchTopics
 
+
+def searchToVideo(youtube, searchResult, categories):
+    thisId = searchResult["id"]["videoId"]
+    
+    #request this specific video with this id
+    request = youtube.videos().list(
+        part="id,snippet,statistics",
+        videoCategoryId = thisId
+        )
+    response = request.execute()
+    items = response["items"]
+    
+    # get this video's category id
+    for item in items:
+        thisCategory = item["snippet"]["categoryId"]
+    print("this Category: (B4) ", thisCategory)
+
+    # get the video's category title
+    for category in categories:
+        if category["id"] == thisCategory:
+            thisCategory = category["title"]
+
+    print("this Category: (AF) ", thisCategory)
+
+    for item in items:
+        thisVideo = {'vId': item['id'], 
+                     "vidTitle": item['snippet']['title'], 
+                     "channelTitle": item['snippet']['channelTitle'], 
+                     "commentCount": item['statistics']['commentCount'], 
+                     "category": thisCategory}
+
+    print("This Video = ", thisVideo)
+    
+    return thisVideo
+
 def searchVideos(youtube, categories, topic):
     request = youtube.search().list(
         part="snippet",
@@ -309,38 +344,14 @@ def searchVideos(youtube, categories, topic):
         relevanceLanguage="en",
         type="video"
     )
+    response = request.execute() # Request 50 most relevant videos using this keyword
+    items = response["items"]
 
-    try:
-        response = request.execute() # Request 50 most relevant videos using this keyword
-        items = response["items"]
-
-        #store metadata about the 50 videos in this category
-        videos = []
-        for item in items:
-
-            thisCategory = item["snippet"]["categoryId"]
-
-            # get the category id number
-            for category in categories:
-                if category["title"] == thisCategory:
-                    thisCategory = category["id"]
-            
-            try:
-                #check if each video has comments
-                if item["statistics"]["commentCount"] is not None and item["statistics"]["commentCount"] != '0':
-                    thisDict = {'vId': item['id'], 
-                                "vidTitle": item['snippet']['title'],
-                                "channelTitle": item['snippet']['channelTitle'],
-                                "commentCount": item['statistics']['commentCount'],
-                                "category": thisCategory
-                                }
-                    videos.append(thisDict)
-            except KeyError:
-                # print("'KeyERROR': This video has no comments available. Next video...")
-                pass
-    except HttpError:
-            print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError'")
-            return []
+    #store metadata about the 50 videos in this category
+    videos = []
+    for searchResult in items:
+        thisVideo = searchToVideo(youtube, searchResult, categories)
+        videos.append(thisVideo)
 
     return videos
 
@@ -444,7 +455,7 @@ if __name__ == "__main__":
         totalV += total[0]
         totalC += total[1]
     """
-    topics = getSearches()
+    topics = getSearchTopics()
 
     # Make a partial function since using multiple parameters
     partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories)
