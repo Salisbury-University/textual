@@ -27,7 +27,7 @@ from pymongo.errors import DuplicateKeyError
 NUMBER_OF_VIDEOS = 50
 
 # Maximum number of Comments requested per video
-NUMBER_OF_COMMENTS = 200
+NUMBER_OF_COMMENTS = 10
 
 # <--------------------------------------------------------------------->
 # This function is called to initialize a lock to synchronize each process's
@@ -224,7 +224,6 @@ def getComments(youtube, video, sortBy):
     except HttpError: # Occurs when comments are disabled for this video
         print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available. Next video...")
 
-
 # <--------------------------------------------------------------------->
 # Each process in the multiprocessing pool runs this function in parallel
 # with each process being given a different YouTube category. Once this 
@@ -339,7 +338,7 @@ def searchToVideo(youtube, searchResult, categories):
 def searchVideos(youtube, categories, topic):
     request = youtube.search().list(
         part="snippet",
-        maxResults=50, # Unfortunately this is the highest integar accepted as a parameter
+        maxResults=10, # 50 is the highest integar accepted as a parameter
         q=topic,
         relevanceLanguage="en",
         type="video"
@@ -455,10 +454,11 @@ if __name__ == "__main__":
         totalV += total[0]
         totalC += total[1]
     """
+    
     topics = getSearchTopics()
 
     # Make a partial function since using multiple parameters
-    partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories)
+    partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
 
     # Run each process on a different category
