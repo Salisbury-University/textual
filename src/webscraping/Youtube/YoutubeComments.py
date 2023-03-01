@@ -27,7 +27,7 @@ from pymongo.errors import DuplicateKeyError
 NUMBER_OF_VIDEOS = 50
 
 # Maximum number of Comments requested per video
-NUMBER_OF_COMMENTS = 10
+NUMBER_OF_COMMENTS = 200
 
 # <--------------------------------------------------------------------->
 # This function is called to initialize a lock to synchronize each process's
@@ -315,14 +315,11 @@ def searchToVideo(youtube, searchResult, categories):
     # get this video's category id
     for item in items:
         vidCategoryId = item["snippet"]["categoryId"]
-    print("this Category  ID: (B4) ", vidCategoryId)
 
     # get the video's category title
     for category in categories:
         if category["id"] == vidCategoryId:
             thisCategory = category["title"]
-
-    print("this Category TITLE: (AF) ", thisCategory)
 
     for item in items:
         try:
@@ -343,7 +340,7 @@ def searchToVideo(youtube, searchResult, categories):
 def searchVideos(youtube, categories, topic):
     request = youtube.search().list(
         part="snippet",
-        maxResults=10, # 50 is the highest integar accepted as a parameter
+        maxResults=50, # 50 is the highest integar accepted as a parameter
         q=topic,
         relevanceLanguage="en",
         type="video"
@@ -355,12 +352,12 @@ def searchVideos(youtube, categories, topic):
     videos = []
     for searchResult in items:
         thisVideo = searchToVideo(youtube, searchResult, categories)
-        if thisVideo == "noComments":
-            continue
+
+        if thisVideo == "noComments": # if there are no comments for this video,
+            continue                  # move on to the next search result
         videos.append(thisVideo)
 
     return videos
-
 
 def scrape_comments_by_search(youtube, categories, topic):
 
@@ -398,8 +395,9 @@ def scrape_comments_by_search(youtube, categories, topic):
             for comment in commentThreadsT:
                 # prevents a race condition between threads inserting the same comments
                 try:
-                    #comment_collection.insert_one(comment)
+                    comment_collection.insert_one(comment)
                     numCommentsInserted += 1
+
                 except DuplicateKeyError: # two threads tried to insert the same comment at the same time.
                     pass
 
@@ -408,7 +406,7 @@ def scrape_comments_by_search(youtube, categories, topic):
             for comment in commentThreadsR:
                 # prevents a race condition between threads inserting the same comments
                 try:
-                    #comment_collection.insert_one(comment)
+                    comment_collection.insert_one(comment)
                     numCommentsInserted += 1
 
                 except DuplicateKeyError:
