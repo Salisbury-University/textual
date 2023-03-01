@@ -307,7 +307,7 @@ def searchToVideo(youtube, searchResult, categories):
     #request this specific video with this id
     request = youtube.videos().list(
         part="id,snippet,statistics",
-        videoCategoryId = thisId
+        videoCategoryId = thisId,
         chart="mostPopular"
         )
     response = request.execute()
