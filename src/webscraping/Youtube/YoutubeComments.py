@@ -30,7 +30,7 @@ NUMBER_OF_VIDEOS = 50
 NUMBER_OF_COMMENTS = 200
 
 # Number of searches done.
-NUMBER_OF_SEARCHES = 50
+NUMBER_OF_SEARCHES = 25
 
 # <--------------------------------------------------------------------->
 # This function is called to initialize a lock to synchronize each process's
@@ -131,12 +131,16 @@ def getDocumentCount():
 # <--------------------------------------------------------------------->
 def getCategories(youtube):
     #request a list of all youtube categories used in the US
-    request = youtube.videoCategories().list(
-        part="snippet",
-        regionCode="US"
-    )
-    response = request.execute()
-    
+    try:
+        request = youtube.videoCategories().list(
+            part="snippet",
+            regionCode="US"
+        )
+        response = request.execute()
+    except HttpError:
+        print("YouTube API request quota has been reached. Please try again tomorrow.")
+        exit()
+        
     # get all youtube categories used in the US (there's 32 categories)
     categories = []
     items = response["items"]
@@ -225,7 +229,11 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError: # Occurs when comments are disabled for this video
-        print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available. Next video...")
+        if HttpError.status_code == 403:
+            print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError 403': The YouTube API request quota has been reached. Please try again tomorrow.")
+            exit()
+        else:
+            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available. Next video...")
 
 # <--------------------------------------------------------------------->
 # Each process in the multiprocessing pool runs this function in parallel
@@ -233,6 +241,7 @@ def getComments(youtube, video, sortBy):
 # process finishes with their category, they are assigned a new category
 # to scrape comments from. 
 # <--------------------------------------------------------------------->
+
 def scrape_comments(youtube, category):
 
     with lock:
@@ -293,6 +302,17 @@ def scrape_comments(youtube, category):
     
     return [numVideosInserted, numCommentsInserted]
 
+# <--------------------------------------------------------------------->
+# This function makes use of a file named "YoutubeSearch.txt" to return a
+# list of search topics to use as an argument for the API request. Since
+# there is a limit to the number of requests that can be made per day, the
+# full list of search topics are not all read in at once. Instead, the first
+# <NUMBER_OF_SEARCHES> topics to appear are read and stored into a list. 
+# The program then leaves a placeholder ("*") in the text file to remember
+# the last topic it searched for and will then begin searching from that 
+# point in the text file the next time the program is run.
+# <--------------------------------------------------------------------->
+
 def getSearchTopics():
     searchTopics = []
     newFileLines = []
@@ -324,6 +344,13 @@ def getSearchTopics():
 
     return searchTopics
 
+# <--------------------------------------------------------------------->
+# This Function takes the youtube API object, the search result dictionary,
+# and the list of categories as input. It uses the API to request the metadata 
+# of the youtube video that corresponds to the given search result. it uses the
+# category list to determine what category this video belongs to based on the
+# video's category ID.
+# <--------------------------------------------------------------------->
 def searchToVideo(youtube, searchResult, categories):
     thisId = searchResult["id"]["videoId"]
     
@@ -360,6 +387,13 @@ def searchToVideo(youtube, searchResult, categories):
     
     return thisVideo
 
+# <--------------------------------------------------------------------->
+# This function takes the youtube api, a list of categories, and one topic.
+# The API is used to request 50 videos from a single topic. Then it gets
+# data from the search results and stores them into a video dictionary.
+# Each dictionary is stored into a list and the function returns a list 
+# of video dictionaries.
+# <--------------------------------------------------------------------->
 def searchVideos(youtube, categories, topic):
     request = youtube.search().list(
         part="snippet",
@@ -378,10 +412,17 @@ def searchVideos(youtube, categories, topic):
 
         if thisVideo == "noComments": # if there are no comments for this video,
             continue                  # move on to the next search result
-        videos.append(thisVideo)
+        else:
+            videos.append(thisVideo)
 
     return videos
 
+# <--------------------------------------------------------------------->
+# Each process in the multiprocessing pool runs this function in parallel
+# with each process being given a different search topic. Once this 
+# process finishes with their topic, they are assigned a new topic
+# to scrape comments from. 
+# <--------------------------------------------------------------------->
 def scrape_comments_by_search(youtube, categories, topic):
 
     with lock:
@@ -408,7 +449,7 @@ def scrape_comments_by_search(youtube, categories, topic):
 
         #store video metadata
         if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0: #check if this video is in the database
-            #video_collection.insert_one(video)
+            video_collection.insert_one(video)
             numVideosInserted += 1
         else:
             pass
@@ -445,8 +486,6 @@ def scrape_comments_by_search(youtube, categories, topic):
     return [numVideosInserted, numCommentsInserted]
 
 
-
-
 # <--------------------------------------------------------------------->
 # Main Function
 # <--------------------------------------------------------------------->
@@ -459,42 +498,42 @@ if __name__ == "__main__":
     key = getKey()
     youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=key)
 
+    # Get a list of YouTube video categories using YouTube API
     categories = getCategories(youtube)
-
+    
     # Create a Lock for the processes to share
     lock = mp.Lock()
 
     # get the initial number of documents before inserting more into the database 
     DocumentCount = getDocumentCount() 
 
-    """
     # Make a partial function since using multiple parameters
     partial_scrape_comments = functools.partial(scrape_comments, youtube,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
 
-    # Run each process on a different category
+    # Map each process to scrape comments from a different category in the list
     results=pool.map(partial_scrape_comments, categories,)
     pool.close()
 
+    # counts the total number of videos and comments inserted by each process.
     totalV = 0
     totalC = 0
     for total in results:
         totalV += total[0]
         totalC += total[1]
-    """
 
+    # get a list of Search topics from a txt file.
     topics = getSearchTopics()
 
     # Make a partial function since using multiple parameters
     partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
 
-    # Run each process on a different category
+    # Map each process to scrape comments from each search topic in the list
     results=pool.map(partial_scrape_comments_by_search, topics,)
     pool.close()
 
-    totalV = 0
-    totalC = 0
+    # add the total number of videos and comments scraped by search 
     for total in results:
         totalV += total[0]
         totalC += total[1]
