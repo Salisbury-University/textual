@@ -23,11 +23,14 @@ import functools
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-# Maximum number of videos requested 
+# Maximum number of videos requested from each category
 NUMBER_OF_VIDEOS = 50
 
 # Maximum number of Comments requested per video
 NUMBER_OF_COMMENTS = 200
+
+# Number of searches done.
+NUMBER_OF_SEARCHES = 50
 
 # <--------------------------------------------------------------------->
 # This function is called to initialize a lock to synchronize each process's
@@ -292,14 +295,34 @@ def scrape_comments(youtube, category):
 
 def getSearchTopics():
     searchTopics = []
-    with open("YoutubeSearch.txt", 'r') as file:
-        for line in file:
-            if line[0] == '#':
-                continue
-            topic = file.readline().replace("\n", "")
-            searchTopics.append(topic)
-    return searchTopics
+    newFileLines = []
+    placeholderFound = False
+    with open("YoutubeSearch.txt", 'r+') as file:
+        
+        for index, line in enumerate(file):
 
+            if '*' not in line:
+                if len(searchTopics) < NUMBER_OF_SEARCHES and placeholderFound:
+                    searchTopics.append(line.replace("\n", ""))
+
+            else:
+                placeholderFound = True
+                newStarIndex = index + NUMBER_OF_SEARCHES
+                continue
+
+            newFileLines.append(line)
+        
+        if newStarIndex >= index:
+            newStarIndex = newStarIndex - index
+
+        newFileLines.insert(newStarIndex, "*\n")
+
+        if len(newFileLines) > 0:
+            file.seek(0)
+            for line in newFileLines:
+                file.write(line)
+
+    return searchTopics
 
 def searchToVideo(youtube, searchResult, categories):
     thisId = searchResult["id"]["videoId"]
