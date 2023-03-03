@@ -88,7 +88,6 @@ def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj):
     comment_content = pd.DataFrame()
 
     print("Starting {}".format(subreddit))
-
     posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
 
     # |                                POST INFO                                 |
@@ -121,15 +120,22 @@ def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj):
             for comment in comments:
                 print("Pushing comment {}".format(iteration))
                 comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "body" : comment.body, "created_utc" : str(comment.created_utc)}
-                comment_collection.insert_one(comment_content)
-                comment_count += 1
+                
+                try:
+                    comment_collection.insert_one(comment_content)
+                    comment_count += 1
+                except:
+                    print("Comment insertion failed")
                 iteration += 1
 
         subreddit_content = {"subreddit" : str(post["subreddit"]), "title" : str(post["title"]), "author" : str(post["author"]), "post_id" : str(post["id"]), "selftext" : str(post["selftext"]), "created_utc" : str(post["created_utc"]), "link" : str(post["url"]), "score" : str(post["score"])}
         count += 1
 
         # Add DataFrame file to collection
-        post_collection.insert_one(subreddit_content)
+        try:
+            post_collection.insert_one(subreddit_content)
+        except:
+            print("Post insertion failed.")
 
     print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
 
