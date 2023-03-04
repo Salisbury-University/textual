@@ -127,7 +127,9 @@ app.post('/search2', function(req, res) {
                                         //Query the database and convert the result to an array
                                         db.collection('YelpReviews').find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(3).toArray(function(err, dataYelp) {
 						db.collection('RedditPosts').find({selftext:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(3).toArray(function(err, dataReddit) {
-							err ? reject(err) : resolve(dataYelp.concat(dataReddit));
+							db.collection('YoutubeComment').find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(3).toArray(function(err, dataYoutubeComments){
+								err ? reject(err) : resolve(dataYelp.concat(dataReddit.concat(dataYoutubeComments)));
+							});
 						});
                                         });	
                                 });
