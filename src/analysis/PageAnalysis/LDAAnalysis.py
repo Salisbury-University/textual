@@ -68,7 +68,7 @@ def lemmatize_stemming(text):
 
 def pre_process(text):
 
-    stopwords = STOPWORDS.union(set(['https', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
+    stopwords = STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
     return [token for token in gensim.utils.simple_preprocess(text) if token not in stopwords and len(token) > 3]
 
 
@@ -91,7 +91,7 @@ def iterate_in_collection(collection_name, database, entries):
     processed_entries = [pre_process(entry) for entry in entries]
     empty_removed = [element for element in processed_entries if element != []]
     results = get_dictionary(empty_removed) 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 4)
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 20, workers = 4)
 
     temp_file = datapath(collection_name+"_model")
     lda_model.save(temp_file)
@@ -235,43 +235,43 @@ if __name__ == '__main__':
 
             old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
             entries = [old_entry['selftext'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "WikiSourceText":
 
             old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
             entries = [old_entry['Text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "AmazonReviews":
 
             old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
             entries = [old_entry['review_body'] for old_entry in old_entries if 'review_body' in old_entry]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "RedditComments":
 
             old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
             entries = [old_entry['body'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "YelpReviews":
 
             old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
             entries = [old_entry['text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
         
         elif sys.argv[1] == "YoutubeComment":
 
             old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
             entries = [old_entry['text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "YoutubeVideo":
 
             old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
             entries = [old_entry['vidTitle'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         else:
 
