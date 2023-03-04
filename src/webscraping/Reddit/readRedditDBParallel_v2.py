@@ -81,14 +81,25 @@ def api_connection(credentials):
     # Return the authenticated API object
     return reddit_api
 
-def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj):
-        
+def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj): 
+    print("Starting {}".format(subreddit))
+    posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
+
+    pool=mp.Pool(mp.cpu_count())
+    
+    partial_posts = functools.partial(push_posts, post_collection, comment_collection) 
+
+    # Run the multiple threads on different subreddits
+    results=pool.map(partial_posts, posts)
+    pool.close() 
+
+    print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
+
+# Push comments to database
+def push_comments(post_collection, comment_collection, posts):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
     comment_content = pd.DataFrame()
-
-    print("Starting {}".format(subreddit))
-    posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
 
     # |                                POST INFO                                 |
     # |--------------------------------------------------------------------------|
@@ -136,8 +147,6 @@ def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj):
             post_collection.insert_one(subreddit_content)
         except:
             print("Post insertion failed.")
-
-    print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
 
 if __name__ == "__main__":
     # Get client
