@@ -93,10 +93,8 @@ def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj):
     results=pool.map(partial_posts, posts)
     pool.close() 
 
-    print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
-
 # Push comments to database
-def push_comments(post_collection, comment_collection, posts):
+def push_posts(post_collection, comment_collection, posts):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
     comment_content = pd.DataFrame()
@@ -147,6 +145,8 @@ def push_comments(post_collection, comment_collection, posts):
             post_collection.insert_one(subreddit_content)
         except:
             print("Post insertion failed.")
+
+    print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
 
 if __name__ == "__main__":
     # Get client
