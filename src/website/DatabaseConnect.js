@@ -10,7 +10,7 @@ var fs = require('fs');
 var express = require('express');
 var assert = require('assert');
 var lineReader = require('line-reader');
-
+let bodyParser = require('body-parser');
 //Database url, file is read in to avoid pushing login info to the GitHub
 var url;
 
@@ -18,10 +18,10 @@ var url;
 lineReader.eachLine("mongo_credentials.txt", function(line, last) {
 	url = line;
 });
-
 //Start the NodeJS express app, the contents of the page_content directory will be loaded
 var app = express();
 app.use(express.static(__dirname + "/page_content"));
+app.use(bodyParser.urlencoded({extended: true}));
 //Start the app on port 8080
 app.listen(8080);
 
@@ -103,3 +103,25 @@ app.post("/search", (req, res, next) => {
 		next(e)
 	}
 });
+/*
+Gets the form data from the search page
+let searchForm = document.getElementById("searchForm");
+
+searchForm.addEventListener("submit", (e)=>{
+	e.preventDefault();
+	let searchTerm = document.getElementById("searchTerm");
+	if (searchTerm.value == ""){
+		alert("The term you searched for was empty. Please try again.");
+	} else {
+		console.log('You searched for ${searchTerm.value}');
+	}
+});
+*/
+app.get('/search2', function(req, res) {
+	res.render('search2.html');
+})
+
+app.post('/search2', function(req, res) {
+	console.log(req.body);
+	res.send('ok');
+})
