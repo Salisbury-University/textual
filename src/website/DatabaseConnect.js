@@ -106,7 +106,6 @@ app.post("/search", (req, res, next) => {
 /*
 Gets the form data from the search page
 let searchForm = document.getElementById("searchForm");
-
 searchForm.addEventListener("submit", (e)=>{
 	e.preventDefault();
 	let searchTerm = document.getElementById("searchTerm");
@@ -122,6 +121,43 @@ app.get('/search2', function(req, res) {
 })
 
 app.post('/search2', function(req, res) {
-	console.log(req.body);
-	res.send('ok');
+	console.log(req.body.searchTerm);
+	//res.writeHead(301, { Location: "http://localhost:8080/search_results.html" });
+    	try
+        {
+                //Connect to the database
+                MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+                        assert.equal(null, err);
+                        //Get the textual database
+                        const db = client.db("textual");
+
+                        //Create new promise
+                        var myPromise = () => {
+                                return new Promise((resolve, reject) => {
+                                        //Query the database and convert the result to an array
+                                        db.collection('YelpReviews').find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(100).toArray(function(err, data) {
+                                                err ? reject(err) : resolve(data);
+                                        });
+                                });
+                        };
+
+                        //Setup async call
+                        var callMyPromise = async () => {
+                                var result = await (myPromise());
+                                return result;
+                        };
+
+                        callMyPromise().then(function(result) {
+                                //Close the connection to the database client
+                                client.close();
+				res.send(result);
+				//res.writeHead(301, { Location: "http://localhost:8080/search_results.html" });
+
+                        });
+                }); //End of MongoClient call
+		//res.writeHead(301, { Location: "http://localhost:8080/search_results.html" });
+
+        } catch (e) {
+                next(e)
+	}
 })
