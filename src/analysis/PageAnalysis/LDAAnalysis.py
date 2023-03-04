@@ -21,6 +21,7 @@ import os
 from pymongo import MongoClient
 from gensim.test.utils import datapath
 from nltk.corpus import stopwords
+from gensim.parsing.preprocessing import STOPWORDS
 
 # Get authoriazation from file
 def get_credentials():
@@ -67,15 +68,9 @@ def lemmatize_stemming(text):
 
 def pre_process(text):
 
-    return [token for token in gensim.utils.simple_preprocess(text) if token not in gensim.parsing.preprocessing.STOPWORDS and len(token) > 3]
+    stopwords = STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
+    return [token for token in gensim.utils.simple_preprocess(text) if token not in stopwords and len(token) > 3]
 
-    '''
-    results=[]
-    for token in gensim.utils.simple_preprocess(text):
-        if token not in gensim.parsing.preprocessing.STOPWORDS and len(token) > 3:
-            results.append(lemmatize_stemming(token))
-    return results
-    '''
 
 def get_single_bow(doc):
 
@@ -94,15 +89,18 @@ def get_dictionary(processed_docs):
 def iterate_in_collection(collection_name, database, entries): 
 
     processed_entries = [pre_process(entry) for entry in entries]
-    results = get_dictionary(processed_entries) 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 100, id2word = results[1], passes = 10, workers = 3)
+    empty_removed = [element for element in processed_entries if element != []]
+    results = get_dictionary(empty_removed) 
+    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 20, workers = 4)
 
     temp_file = datapath(collection_name+"_model")
     lda_model.save(temp_file)
-
+    
+    '''
     for i in range(0, lda_model.num_topics-1):
         print(lda_model.print_topic(i))
-
+    '''
+        
     # dictionary containing all of the words in each topic
 
     topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10)] for i in range(0, lda_model.num_topics)}
@@ -159,34 +157,50 @@ def iterate_in_collection(collection_name, database, entries):
 
     for doc in documents: 
 
+        # document ID 
         id = doc['_id']
 
+        # preprocess the documents to get the LDA model
         processed = pre_process(doc[key])
-        bow = get_single_bow(processed)
-        topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
-
-        '''
-        topics contains a list of tuples where the first entry correspons to the index
-        of the topic word in the model 
-        '''
-        temp = (0,0)
-        for item in topics:
-            if item[1] > temp[1]:
-                temp = item
-            else:
-                continue
-
-        unique_document_topics = topic_words["Topic_" + str(temp[0])]
-        f.write(f"Document number {counter}: ")
         
-        for item in unique_document_topics:
-            f.write(item + " ")
+        if processed != []: 
+        
+            bow = get_single_bow(processed)
+            topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
+
+            #topics contains a list of tuples where the first entry correspons to the index
+            #of the topic word in the model 
+            
+            temp = (0,0)
+            for item in topics:
+                if item[1] > temp[1]:
+                    temp = item
+                else:
+                    continue
+            
+            # gets the unique document topics for each individual document
+            unique_document_topics = topic_words["Topic_" + str(temp[0])]
+
+            # write to ouput file 
+            f.write(f"Document number {counter}: ")
+            f.write(f'{id}: ')
+            
+            for item in unique_document_topics:
+                f.write(item + " ")
+            f.write("\n")
+
+            # putting the information into the database
+            new_val = {"$set" : {"topic_words": unique_document_topics}}
+            query = {'_id':id}
+            collection.update_one(query, new_val)
+        
+        else: 
+            
+            new_val = {"$set" : {"topic_words": "Not enough information."}}
+            query = {'_id':id}
+            collection.update_one(query, new_val)
+            
         counter+=1
-
-        new_val = {"$set" : {"topic_words": unique_document_topics}}
-        query = {'_id':id}
-
-        collection.update_one(query, new_val)
 
     f.close()
     
@@ -221,43 +235,43 @@ if __name__ == '__main__':
 
             old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
             entries = [old_entry['selftext'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "WikiSourceText":
 
             old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
             entries = [old_entry['Text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "AmazonReviews":
 
             old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
             entries = [old_entry['review_body'] for old_entry in old_entries if 'review_body' in old_entry]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "RedditComments":
 
             old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
             entries = [old_entry['body'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "YelpReviews":
 
             old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
             entries = [old_entry['text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
         
         elif sys.argv[1] == "YoutubeComment":
 
             old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
             entries = [old_entry['text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         elif sys.argv[1] == "YoutubeVideo":
 
             old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
             entries = [old_entry['vidTitle'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries)
+            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
         else:
 
