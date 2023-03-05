@@ -360,7 +360,7 @@ def searchToVideo(youtube, searchResult, categories):
         id = thisId,
         )
     response = request.execute()
-    items = response["items"]o
+    items = response["items"]
     
     # get this video's category id
     for item in items:
