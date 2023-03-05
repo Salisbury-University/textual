@@ -110,7 +110,7 @@ def iterate_in_collection(collection_name, database, entries):
     documents = [] 
     key = ''
 
-    if(collection_name == "RedditPosts"):
+    if(collection_name == "RedditPosts_v2"):
     
         documents = database[collection_name].find({}, {'selftext':1, '_id':1})
         key = 'selftext'
@@ -231,7 +231,7 @@ if __name__ == '__main__':
 
     if found: 
 
-        if sys.argv[1] == "RedditPosts":
+        if sys.argv[1] == "RedditPosts_v2":
 
             old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
             entries = [old_entry['selftext'] for old_entry in old_entries]
