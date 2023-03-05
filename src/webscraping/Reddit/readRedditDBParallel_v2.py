@@ -1,4 +1,4 @@
-oject Name(s): English Contextual Baseline Database
+# Project Name(s): English Contextual Baseline Database
 # Program Name: readRedditDB_v2.py
 # Date: 10/6/2022
 # Description: Use the Reddit API (Most likely PRAW) to collect content a specified subreddit and store it directly in the database
@@ -81,20 +81,41 @@ def api_connection(credentials):
     # Return the authenticated API object
     return reddit_api
 
-def get_data(praw_api, subreddit, post_collection, comment_collection, api_obj): 
+def get_data(praw_api, subreddit, api_obj): 
     print("Starting {}".format(subreddit))
     posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
 
     pool=mp.Pool(mp.cpu_count())
     
-    partial_posts = functools.partial(push_posts, post_collection, comment_collection) 
+    partial_posts = functools.partial(push_posts, api_obj) 
+
+    # Split list of posts into sublists that can be passed into multiple threads
+    index = 0
+    split_posts = []
+    sub_list = []
+    for post in posts:
+        sub_list.append(post)
+        index += 1
+        if index % 100 == 0:
+            split_posts.append(sub_list)
+            sub_list = []
 
     # Run the multiple threads on different subreddits
-    results=pool.map(partial_posts, posts)
+    results=pool.map(partial_posts, split_posts)
     pool.close() 
 
 # Push comments to database
-def push_posts(post_collection, comment_collection, posts):
+def push_posts(api_obj, posts):
+    # Get client
+    client = get_client()
+
+    # Get the specific database
+    db = get_database(client)
+    
+    # Get the specific collection
+    post_collection = db.RedditPosts_v3
+    comment_collection = db.RedditComments_v3
+
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
     comment_content = pd.DataFrame()
@@ -114,7 +135,7 @@ def push_posts(post_collection, comment_collection, posts):
     
     count = 0
     comment_count = 0
-    for post in posts:         
+    for post in posts:        
         if int(post['num_comments']) > 0:
             # Get all comments and push to DB
             id = post["id"]
@@ -127,7 +148,7 @@ def push_posts(post_collection, comment_collection, posts):
             # Iterate through the comments and add the to database
             iteration = 0
             for comment in comments:
-                print("Pushing comment {}".format(iteration))
+                print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
                 comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "body" : comment.body, "created_utc" : str(comment.created_utc)}
                 
                 try:
@@ -146,19 +167,9 @@ def push_posts(post_collection, comment_collection, posts):
         except:
             print("Post insertion failed.")
 
-    print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
-
-if __name__ == "__main__":
-    # Get client
-    client = get_client()
-
-    # Get the specific database
-    db = get_database(client)
+    # print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
     
-    # Get the specific collection
-    post_collection = db.RedditPosts_v2
-    comment_collection = db.RedditComments_v2
-
+if __name__ == "__main__": 
     # Check that the user input at least one subreddit
     if (len(sys.argv) < 2):
         print("Please enter the name of a subreddit as a command line argument")
@@ -179,6 +190,6 @@ if __name__ == "__main__":
     praw_api = PushshiftAPI(praw=api_obj)
 
     for sub in subreddit_list:
-        get_data(praw_api, sub, post_collection, comment_collection, api_obj)
+        get_data(praw_api, sub, api_obj)
 
     print("Script end...")
