@@ -239,7 +239,7 @@ if __name__ == '__main__':
 		if sys.argv[1] == "RedditPosts_v3":
 
 			old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['selftext'] for old_entry in old_entries if 'selftext' in old_entry]
@@ -248,7 +248,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "WikiSourceText":
 
 			old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['Text'] for old_entry in old_entries if 'Text' in old_entry]
@@ -257,7 +257,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "AmazonReviews":
 
 			old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
-			if old_entries.count()) == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['review_body'] for old_entry in old_entries if 'review_body' in old_entry]
@@ -266,7 +266,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "RedditComments_v3":
 
 			old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['body'] for old_entry in old_entries if 'body' in old_entry]
@@ -275,7 +275,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "YelpReviews":
 
 			old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})	
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['text'] for old_entry in old_entries if 'text' in old_entry]
@@ -284,7 +284,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "YoutubeComment":
 
 			old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['text'] for old_entry in old_entries if 'text' in old_entry]
@@ -293,7 +293,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "YoutubeVideo":
 
 			old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['vidTitle'] for old_entry in old_entries if 'vidTitle' in old_entry]
@@ -302,7 +302,7 @@ if __name__ == '__main__':
 		elif sys.argv[1] == "TwitterTweets":
 
 			old_entries = database[sys.argv[1].find({}, {'tweet':1, '_id':0})]
-			if old_entries.count() == 0: 
+			if len(list(old_entries.clone())) == 0: 
 				print("No entries in collection.")
 				sys.exit
 			entries = [old_entry['tweet'] for old_entry in old_entries if 'tweet' in old_entry] 
