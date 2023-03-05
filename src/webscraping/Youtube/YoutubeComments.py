@@ -360,7 +360,7 @@ def searchToVideo(youtube, searchResult, categories):
         id = thisId,
         )
     response = request.execute()
-    items = response["items"]
+    items = response["items"]o
     
     # get this video's category id
     for item in items:
@@ -383,7 +383,7 @@ def searchToVideo(youtube, searchResult, categories):
             print( "Thread " + str(mp.current_process().pid) + ":", "'KeyError': This video has no comments available. Next video...")
             thisVideo = "noComments"
 
-    print("This Video = ", thisVideo)
+    # print("This Video = ", thisVideo)
     
     return thisVideo
 
@@ -410,8 +410,10 @@ def searchVideos(youtube, categories, topic):
     for searchResult in items:
         thisVideo = searchToVideo(youtube, searchResult, categories)
 
-        if thisVideo == "noComments": # if there are no comments for this video,
-            continue                  # move on to the next search result
+        # if there are no comments for this video then ignore it.
+        if thisVideo == "noComments":
+            print("This Video (with no comments) = ", thisVideo)                         
+            continue # move on
         else:
             videos.append(thisVideo)
 
