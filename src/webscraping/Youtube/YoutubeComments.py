@@ -233,8 +233,8 @@ def getComments(youtube, video, sortBy):
             print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError 403': The YouTube API request quota has been reached. Please try again tomorrow.")
             exit()
         else:
-            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.", video["commentCount"])''
-            if(video["commentCount"] > 0):
+            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.", video["commentCount"])
+            if(video["commentCount"] != 0):
                 print("THIS IS A MISTAKE:", "this video info:\n", video, "\n")
 
 # <--------------------------------------------------------------------->
