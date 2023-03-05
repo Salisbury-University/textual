@@ -113,8 +113,8 @@ def push_posts(api_obj, posts):
     db = get_database(client)
     
     # Get the specific collection
-    post_collection = db.RedditPosts_v3
-    comment_collection = db.RedditComments_v3
+    post_collection = db.RedditPosts_v2
+    comment_collection = db.RedditComments_v2
 
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
