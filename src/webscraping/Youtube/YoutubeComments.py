@@ -30,7 +30,7 @@ NUMBER_OF_VIDEOS = 50
 NUMBER_OF_COMMENTS = 200
 
 # Number of searches done.
-NUMBER_OF_SEARCHES = 25
+NUMBER_OF_SEARCHES = 10
 
 # <--------------------------------------------------------------------->
 # This function is called to initialize a lock to synchronize each process's
@@ -233,7 +233,7 @@ def getComments(youtube, video, sortBy):
             print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError 403': The YouTube API request quota has been reached. Please try again tomorrow.")
             exit()
         else:
-            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available. Next video...")
+            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.", video["commentCount"])
 
 # <--------------------------------------------------------------------->
 # Each process in the multiprocessing pool runs this function in parallel
