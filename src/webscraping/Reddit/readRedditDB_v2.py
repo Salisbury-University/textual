@@ -1,0 +1,155 @@
+# Project Name(s): English Contextual Baseline Database
+# Program Name: readRedditDB_v2.py
+# Date: 10/6/2022
+# Description: Use the Reddit API (Most likely PRAW) to collect content a specified subreddit and store it directly in the database
+
+# Import required packages
+import requests
+import json
+import requests.auth
+import sys
+import pandas as pd
+import time
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import urllib.request
+import functools
+import multiprocessing as mp
+import threading
+from collections import Counter
+from string import punctuation
+import itertools
+
+import praw # Reddit API
+from pmaw import PushshiftAPI
+
+# Used to connect to the mongo DB
+from pymongo import MongoClient
+
+# Get authoriazation from file
+def get_db_credentials():
+    with open("mongopassword.txt", "r") as pass_file:
+        # Read each line from the file, splitting on newline
+        lines = pass_file.read().splitlines()
+    # Close the file and return the list of lines
+    pass_file.close()
+    return lines
+
+# Connect to the database
+def get_client():
+    # Needs to be done this way, can't push credentials to github
+    # Call the get pass function to open the file and extract the credentials
+    lines = get_db_credentials()
+
+    # Get the username from the file
+    username = lines[0]
+
+    # Get the password from the file
+    password = lines[1]
+
+    # Set up a new client to the database
+    # Using database address and port number
+    client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
+    
+    # Return the client
+    return client
+
+# Get a database from the client
+# In this case use the textual database
+def get_database(client):
+    return client.textual
+
+# Close the connection to the database after data has been written
+def close_database(client):
+    # Close database connection
+    client.close()
+
+
+# Read in password store in file (file is used to avoid pushing credentials to GitHub.)
+def get_credentials():
+    with open("redditPassword.txt", "r") as credentials: # Open file containing credentials as read only
+        # Read each line in and store in a list
+        lines = credentials.read().splitlines()
+    # Close the file and return the list
+    credentials.close()
+    return lines
+
+def api_connection(credentials):
+    # Connect to the Reddit API using the credentials read in from the authentication file
+    reddit_api = praw.Reddit(client_id = credentials[0], client_secret = credentials[1], user_agent = credentials[2], username = credentials[3], password = credentials[4])
+
+    # Return the authenticated API object
+    return reddit_api
+
+def get_data(credentials, subreddit):
+    
+    # =====================================================================================================
+    # GET DATABASE, MUST BE DONE INSIDE EACH THREAD | MONGODB CLIENT CANNOT BE CONVERTED INTO LOCKED OBJECT
+    # =====================================================================================================
+
+    # Get client
+    client = get_client()
+
+    # Get the specific database
+    db = get_database(client)
+
+    # Get the specific collection
+    collection = db.RedditPosts
+
+    api_obj = api_connection(credentials)
+    praw_api = PushshiftAPI(praw=api_obj)
+    
+    #Pandas dataframe to hold data
+    subreddit_content = pd.DataFrame()
+
+    posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
+
+    # |                                POST INFO                                 |
+    # |--------------------------------------------------------------------------|
+    # |Go through each post and add its data                                     |
+    # |Subbreddit: Name of the subreddit the post was obtained from              |
+    # |Title: Title of the current post                                          |
+    # |Post_ID: Unique identifier to find the post within the subreddit          |
+    # |Selftext: Text body of the post                                           |
+    # |Created_UTC: Time and date of the post's creation                         |
+    # |Link: The to the specific post                                            |
+    # |Upvotes: How many upvotes the post has                                    |
+    # |Downvotes: How many downvotes the post has                                |
+    # |--------------------------------------------------------------------------|
+    
+    count = 0
+    for post in posts:
+        subreddit_content = {"subreddit" : post["subreddit"], "title" : post["title"], "author" : post["author"], "post_id" : post["id"], "selftext" : post["selftext"], "created_utc" : post["created_utc"], "link" : post["url"], "score" : post["score"]}
+        count += 1
+
+        # Add DataFrame file to collection
+        collection.insert_one(subreddit_content)
+
+    print("The total count for {} was {}".format(subreddit, count))
+
+if __name__ == "__main__":
+    
+    # Check that the user input at least one subreddit
+    if (len(sys.argv) < 2):
+        print("Please enter the name of a subreddit as a command line argument")
+        sys.exit()
+    
+    # Get credentials for the Reddit API
+    credentials = get_credentials() 
+
+    subreddit_list = [] # Create a list to hold all the user's subreddits
+   
+    # Append each command line argument start with the second (First is the script name)
+    index = 1
+    while index < len(sys.argv):
+        subreddit_list.append(sys.argv[index])
+        index += 1 
+
+
+    # Start the parallel processing pool
+    pool=mp.Pool(mp.cpu_count())
+    partial_get_data = functools.partial(get_data, credentials)
+    results=pool.map(partial_get_data, subreddit_list)
+    pool.close()
+ 
+    print("Script end...")
