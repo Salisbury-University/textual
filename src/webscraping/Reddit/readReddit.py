@@ -58,7 +58,7 @@ def authenticate():
     TOKEN = response.json()["access_token"]
 
     # Add authorization to the headers
-    headers["Authorization"] = f"bearer {TOKEN}"
+    headers["Authorization"] = f"bearer {TOKEN}" # Will fail if password is not correct
     return headers
 
 # Format time into mm-dd-yyyy H:M:S

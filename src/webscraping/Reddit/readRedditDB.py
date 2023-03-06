@@ -105,7 +105,7 @@ def authenticate():
 # Format time into mm-dd-yyyy H:M:S
 def format_time(epoch_time):
     #Takes time in epoch format and converts to human readable in local time
-    human_time = time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(epoch_time))
+ a   human_time = time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(epoch_time))
     return human_time
 
 # Get data from reddit location
