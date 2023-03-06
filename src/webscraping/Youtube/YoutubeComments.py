@@ -357,7 +357,11 @@ def searchToVideo(youtube, searchResult, categories):
         part="id,snippet,statistics",
         id = thisId,
         )
-    response = request.execute()
+    try:
+        response = request.execute()
+    except HttpError:
+        print("YouTube API request quota has been reached. Please try again tomorrow.")
+        exit()
     items = response["items"]
     
     # get this video's category id
@@ -400,7 +404,11 @@ def searchVideos(youtube, categories, topic):
         relevanceLanguage="en",
         type="video"
     )
-    response = request.execute() # Request 50 most relevant videos using this keyword
+    try:
+        response = request.execute() # Request 50 most relevant videos using this keyword
+    except HttpError:
+        print("YouTube API request quota has been reached. Please try again tomorrow.")
+        exit()
     items = response["items"]
 
     #store metadata about the 50 videos in this category
