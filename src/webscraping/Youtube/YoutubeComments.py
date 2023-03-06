@@ -30,7 +30,7 @@ NUMBER_OF_VIDEOS = 50
 NUMBER_OF_COMMENTS = 200
 
 # Number of searches done.
-NUMBER_OF_SEARCHES = 10
+NUMBER_OF_SEARCHES = 30
 
 # <--------------------------------------------------------------------->
 # This function is called to initialize a lock to synchronize each process's
@@ -229,7 +229,7 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
-            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.", video["commentCount"])
+            print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
             if(video["commentCount"] != 0):
                 print("**THIS IS A MISTAKE!**", "\nthis video's info:\n", video, "\n")
 
