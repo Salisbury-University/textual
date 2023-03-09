@@ -231,7 +231,7 @@ def getComments(youtube, video, sortBy):
     except HttpError: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
             print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
             if(video["commentCount"] != 0):
-                print("**THIS IS A MISTAKE!**", "\nthis video's info:\n", video, "\n")
+                print("status code: = ", HttpError.status_code ,"**THIS IS A MISTAKE!**", "\nthis video's info:\n", video, "\n")
 
 # <--------------------------------------------------------------------->
 # Each process in the multiprocessing pool runs this function in parallel
@@ -264,10 +264,10 @@ def scrape_comments(youtube, category):
         commentThreadsR = getComments(youtube, video, "relevance") # request 50 most relevent commentThreads per video
 
         #store video metadata
-        if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0: #check if this video is in the database
+        try: # try except if this video is already in the database
             video_collection.insert_one(video)
             numVideosInserted += 1
-        else:
+        except: # continue with the next video
             pass
 
         if commentThreadsT != None: # if the list is not empty
@@ -456,11 +456,11 @@ def scrape_comments_by_search(youtube, categories, topic):
         commentThreadsR = getComments(youtube, video, "relevance") # request 50 most relevent commentThreads per video
 
         #store video metadata
-        if video_collection.count_documents({ 'vId': video["vId"] }, limit = 1) == 0: #check if this video is in the database
+        try: # try except if this video is already in the database
             video_collection.insert_one(video)
             numVideosInserted += 1
-        else:
-            pass
+        except: # continue with the next video
+            continue
 
         if commentThreadsT != None: # if the list is not empty
             #store metadata of most recent comments
