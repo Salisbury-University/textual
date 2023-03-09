@@ -228,10 +228,10 @@ def getComments(youtube, video, sortBy):
 
         return commentThreads
 
-    except HttpError: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
+    except HttpError as error: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
             print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
             if(video["commentCount"] != 0):
-                print("reason = ", HttpError._get_reason(HttpError) ,"**THIS IS A MISTAKE!**", "\nthis video's info:\n", video, "\n")
+                print(print(f"An HTTP error {error.resp.status} occurred:\n{error.content}") ,"**THIS IS A MISTAKE!**", "\nthis video's info:\n", video, "\n")
 
 # <--------------------------------------------------------------------->
 # Each process in the multiprocessing pool runs this function in parallel
