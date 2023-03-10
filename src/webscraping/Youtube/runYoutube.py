@@ -47,8 +47,9 @@ I added some error catching just for a clear place where it failed or was interr
 while True:
     try:
         database=get_database(get_client())
-        collection_stats = database.command("collStats","YouTubeComments")
-        if collection_stats.freeStorageSize==0:
+        video_stat = database.command("collStats","YoutubeVideo")["freeStorageSize"]
+        comment_stat = database.command("collStats","YoutubeComment")["freeStorageSize"]
+        if video_stat==0 or comment_stat==0:
             print("Collection Full!\nScraper Terminated")
             close_database(database)
             break
@@ -58,7 +59,7 @@ while True:
         except:
             print("\nProgram Failed")
             break
-        sleep(20) # this sleep  makes sure it is only run every day
+        sleep(86400) # this sleep  makes sure it is only run every day
     except:
         print("\nScraper Terminated")
         break
