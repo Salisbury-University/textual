@@ -54,15 +54,13 @@ while True:
                 sub_reddits+=next_line[:-1]
                 next_line=fd.readline()
                 # Just a check for the last item in the file and adjusts accordingly
-                if next_line=="":
-                    sub_reddits+="w"
-                else:
+                if new_line!='':
                     sub_reddits+=" "
         
-        redditpost_stats = database.command("collStats","RedditPosts_v2")['freeStorageSize']
-        redditcomment_stats = database.command("collStats","RedditComments_v2")['freeStorageSize']
-        """
-        if redditpost_stats['freeStorageSize']!=0 or redditcomment_stats['freeStorageSize']!=0:
+        redditpost_stat = database.command("collStats","RedditPosts_v2")['freeStorageSize']
+        redditcomment_stat = database.command("collStats","RedditComments_v2")['freeStorageSize']
+
+        if redditpost_stat!=0 or redditcomment_stat!=0:
             try:
                 # runs the reddit scraper
                 os.system("python3 readRedditDBParallel_v2 " + sub_reddits)
@@ -74,9 +72,8 @@ while True:
             print("Insufficient Storage!\nScraper Terminated")
             close_database(database)
             break
-        """
-        print(sub_reddits)
-        sleep(20) # this sleep  makes sure it is only run every day
+
+        sleep(86400) # this sleep  makes sure it is only run every day
     except:
         close_database(database)
         break
