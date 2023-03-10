@@ -83,6 +83,7 @@ def api_connection(credentials):
 
 def get_data(praw_api, subreddit, api_obj): 
     print("Starting {}".format(subreddit))
+    
     posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
 
     pool=mp.Pool(mp.cpu_count())
@@ -132,7 +133,7 @@ def push_posts(api_obj, posts):
     # |Upvotes: How many upvotes the post has                                    |
     # |Downvotes: How many downvotes the post has                                |
     # |--------------------------------------------------------------------------|
-    
+   
     count = 0
     comment_count = 0
     for post in posts:        
@@ -142,21 +143,24 @@ def push_posts(api_obj, posts):
             curr_post = api_obj.submission(id=id)
 
             # Get comments in list form
-            curr_post.comments.replace_more(limit=0)
-            comments = curr_post.comments.list()
+            try:
+                curr_post.comments.replace_more(limit=0)
+                comments = curr_post.comments.list()
 
-            # Iterate through the comments and add the to database
-            iteration = 0
-            for comment in comments:
-                print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
-                comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "body" : comment.body, "created_utc" : str(comment.created_utc)}
-                
-                try:
-                    comment_collection.insert_one(comment_content)
-                    comment_count += 1
-                except:
-                    print("Comment insertion failed")
-                iteration += 1
+                # Iterate through the comments and add the to database
+                iteration = 0
+                for comment in comments:
+                    print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
+                    comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "body" : comment.body, "created_utc" : str(comment.created_utc)}
+                    
+                    try:
+                        comment_collection.insert_one(comment_content)
+                        comment_count += 1
+                    except:
+                        print("Comment insertion failed")
+                    iteration += 1
+            except:
+                print("Failed to push comments")
 
         subreddit_content = {"subreddit" : str(post["subreddit"]), "title" : str(post["title"]), "author" : str(post["author"]), "post_id" : str(post["id"]), "selftext" : str(post["selftext"]), "created_utc" : str(post["created_utc"]), "link" : str(post["url"]), "score" : str(post["score"])}
         count += 1
@@ -167,8 +171,6 @@ def push_posts(api_obj, posts):
         except:
             print("Post insertion failed.")
 
-    # print("The total count for {} was {} with {} comments".format(subreddit, count, comment_count))
-    
 if __name__ == "__main__": 
     # Check that the user input at least one subreddit
     if (len(sys.argv) < 2):
