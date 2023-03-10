@@ -65,7 +65,7 @@ while True:
             break
         try:
             # runs the reddit scraper
-            os.system("python3 readRedditDB_V2" + sub_reddits)
+            os.system("python3 readRedditDBParallel_V2" + sub_reddits)
         except:
             print("\nProgram Failed")
             close_database(database)
