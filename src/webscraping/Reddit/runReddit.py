@@ -58,20 +58,26 @@ while True:
                 else:
                     sub_reddits+=" "
         database=get_database(get_client())
-        collection_stats = database.command("collStats","RedditPosts")
-        if collection_stats.freeStorageSize==0:
-            print("Collection Full!\nScraper Terminated")
-            close_database(database)
-            break
-        try:
-            # runs the reddit scraper
-            os.system("python3 readRedditDBParallel_V2" + sub_reddits)
-        except:
-            print("\nProgram Failed")
-            close_database(database)
-            break
+        redditpost_stats = database.command("collStats","RedditPosts_v2")
+        redditcomment_stats = database.command("collStats","RedditComments_v2")
+        """
+        if redditpost_stats['freeStorageSize']!=0 or redditcomment_stats['freeStorageSize']!=0:
+            try:
+                # runs the reddit scraper
+                os.system("python3 readRedditDBParallel_v2 " + sub_reddits)
+            except:
+                print("\nProgram Failed")
+                close_database(database)
+                break
+        """
+        print(redditpost_stats)
+        print(redditcomment_stats)
         sleep(20) # this sleep  makes sure it is only run every day
-    except:
+    except KeyboardInterrupt:
         print("\nScraper Terminated")
+        close_database(database)
+        break
+    except:
+        print("Insufficient Storage!\nScraper Terminated")
         close_database(database)
         break
