@@ -229,9 +229,10 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError as error: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
+            if error.reason == "Quota Exceeded":
+                print("YouTube API request quota has been reached. Please try again tomorrow.")
             print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
-            if(video["commentCount"] != 0):
-                print(print(f"An HTTP error {error.resp.status} occurred:\n{error.content}") ,"**THIS IS A MISTAKE!**", "\nthis video's info:\n", video, "\n")
+            
 
 # <--------------------------------------------------------------------->
 # Each process in the multiprocessing pool runs this function in parallel
@@ -361,6 +362,7 @@ def searchToVideo(youtube, searchResult, categories):
         response = request.execute()
     except HttpError:
         print("YouTube API request quota has been reached. Please try again tomorrow.")
+        print("Reason:", HttpError.reason)
         exit()
     items = response["items"]
     
@@ -408,6 +410,7 @@ def searchVideos(youtube, categories, topic):
         response = request.execute() # Request 50 most relevant videos using this keyword
     except HttpError:
         print("YouTube API request quota has been reached. Please try again tomorrow.")
+        print("reason = ", HttpError.reason)
         exit()
     items = response["items"]
 
@@ -418,7 +421,7 @@ def searchVideos(youtube, categories, topic):
 
         # if there are no comments for this video then ignore it.
         if thisVideo == "noComments":
-            print("This Video (with no comments) = ", thisVideo)                         
+            # print("This Video (with no comments) = ", thisVideo)                         
             continue # move on
         else:
             videos.append(thisVideo)
@@ -514,7 +517,8 @@ if __name__ == "__main__":
 
     # get the initial number of documents before inserting more into the database 
     DocumentCount = getDocumentCount() 
-
+    print("     Scraping Comments from Most Popular Video Charts>")
+    print("<-------------------------------------------------------->")
     # Make a partial function since using multiple parameters
     partial_scrape_comments = functools.partial(scrape_comments, youtube,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
@@ -533,6 +537,8 @@ if __name__ == "__main__":
     # get a list of Search topics from a txt file.
     topics = getSearchTopics()
 
+    print("     Scraping Comments from Most Popular Video Charts>")
+    print("<-------------------------------------------------------->")
     # Make a partial function since using multiple parameters
     partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories,)
     pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
