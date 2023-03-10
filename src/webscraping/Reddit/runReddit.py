@@ -45,6 +45,7 @@ def close_database(client):
 I added some error catching just for a clear place where it failed or was interrupted by the user.
 """
 while True:
+    database=get_database(get_client())
     try:
         sub_reddits=""
         with open("subreddit.txt","r") as fd: # open file with some popular subreddits (PG-13 of course)
@@ -57,9 +58,9 @@ while True:
                     sub_reddits+="w"
                 else:
                     sub_reddits+=" "
-        database=get_database(get_client())
-        redditpost_stats = database.command("collStats","RedditPosts_v2")
-        redditcomment_stats = database.command("collStats","RedditComments_v2")
+        
+        redditpost_stats = database.command("collStats","RedditPosts_v2")['freeStorageSize']
+        redditcomment_stats = database.command("collStats","RedditComments_v2")['freeStorageSize']
         """
         if redditpost_stats['freeStorageSize']!=0 or redditcomment_stats['freeStorageSize']!=0:
             try:
@@ -73,8 +74,7 @@ while True:
         print(redditpost_stats)
         print(redditcomment_stats)
         sleep(20) # this sleep  makes sure it is only run every day
-    except KeyboardInterrupt:
-        print("\nScraper Terminated")
+    except:
         close_database(database)
         break
     except:
