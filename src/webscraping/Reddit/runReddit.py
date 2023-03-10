@@ -63,7 +63,7 @@ while True:
         if redditpost_stat!=0 or redditcomment_stat!=0:
             try:
                 # runs the reddit scraper
-                os.system("python3 readRedditDBParallel_v2 " + sub_reddits)
+                os.system("python3 readRedditDBParallel_v2.py " + sub_reddits)
             except:
                 print("\nProgram Failed")
                 close_database(database)
