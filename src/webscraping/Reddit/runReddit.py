@@ -54,7 +54,7 @@ while True:
                 sub_reddits+=next_line[:-1]
                 next_line=fd.readline()
                 # Just a check for the last item in the file and adjusts accordingly
-                if new_line!='':
+                if next_line!='':
                     sub_reddits+=" "
         
         redditpost_stat = database.command("collStats","RedditPosts_v2")['freeStorageSize']
