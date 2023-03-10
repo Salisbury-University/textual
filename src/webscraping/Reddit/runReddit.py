@@ -26,7 +26,7 @@ def get_client():
     
     # Set up a new client to the database
     # Using database address and port number
-    client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
+    client = db.MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
 
     # Return the client
     return client
