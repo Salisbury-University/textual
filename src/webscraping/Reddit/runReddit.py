@@ -70,14 +70,14 @@ while True:
                 print("\nProgram Failed")
                 close_database(database)
                 break
+        else:
+            print("Insufficient Storage!\nScraper Terminated")
+            close_database(database)
+            break
         """
         print(redditpost_stats)
         print(redditcomment_stats)
         sleep(20) # this sleep  makes sure it is only run every day
     except:
-        close_database(database)
-        break
-    except:
-        print("Insufficient Storage!\nScraper Terminated")
         close_database(database)
         break
