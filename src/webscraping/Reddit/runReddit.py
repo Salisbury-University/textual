@@ -75,8 +75,7 @@ while True:
             close_database(database)
             break
         """
-        print(redditpost_stats)
-        print(redditcomment_stats)
+        print(sub_reddits)
         sleep(20) # this sleep  makes sure it is only run every day
     except:
         close_database(database)
