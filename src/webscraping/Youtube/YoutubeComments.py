@@ -183,7 +183,7 @@ def getVideos(youtube, category):
             except KeyError:
                 # print("'KeyERROR': This video has no comments available. Next video...")
                 pass
-    except HttpError:
+    except HttpError as error:
             print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
             return []
 
@@ -359,7 +359,7 @@ def searchToVideo(youtube, searchResult, categories):
         )
     try:
         response = request.execute()
-    except HttpError:
+    except HttpError as error:
         print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
     items = response["items"]
