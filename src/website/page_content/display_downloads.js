@@ -44,9 +44,13 @@ function load_downloads()
 	});
 }
 
-//Download the data displayed in JSON format
+// Download the data displayed in JSON format
+// This function should call on the search_downloads function on the backend of the website.
+// Using a standard HTML input box, the user will be able to specify a collection to download from.
+// Note: This function may have issues as I am unable to test the code without being inside the Linux lab currently.
 function downloadData() {	
-	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
+	// Call the backend function to grab the specified content from the database.
+	fetch("/search_downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 	
 	//Array to hold all the documents fetched from the database
 	var document_array = JSON.parse(documents);
