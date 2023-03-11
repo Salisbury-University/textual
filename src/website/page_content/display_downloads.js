@@ -49,10 +49,13 @@ function load_downloads()
 // Using a standard HTML input box, the user will be able to specify a collection to download from.
 // Note: This function may have issues as I am unable to test the code without being inside the Linux lab currently.
 
-//The parameter of this function, user_str, will be the string passed in from the frontend
-function downloadData(user_str) {	
+function downloadData() {	
+		
+	//user_str, will be the string passed in from the frontend
+	const user_str = document.getElementById("user_collection");
+	
 	// Call the backend function to grab the specified content from the database.
-	fetch("/search_downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
+	fetch("/search_downloads/param=${user_str}", {method: "POST"}).then(data => data.text()).then((documents) => {
 	
 	//Array to hold all the documents fetched from the database
 	var document_array = JSON.parse(documents);
