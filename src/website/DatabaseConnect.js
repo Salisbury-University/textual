@@ -10,6 +10,7 @@ var fs = require('fs');
 var express = require('express');
 var assert = require('assert');
 var lineReader = require('line-reader');
+var bodyParser = require('body-parser'); // Used to get data from the frontend
 
 //Database url, file is read in to avoid pushing login info to the GitHub
 var url;
@@ -21,6 +22,11 @@ lineReader.eachLine("mongo_credentials.txt", function(line, last) {
 
 //Start the NodeJS express app, the contents of the page_content directory will be loaded
 var app = express();
+
+// Use the body-parser library
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.use(express.static(__dirname + "/page_content"));
 //Start the app on port 8080
 app.listen(8080);
@@ -67,6 +73,11 @@ app.post("/downloads", (req, res, next) => {
 });
 
 app.post("/search_downloads", (req, res, next) => {
+	// Get the user input value from the frontend
+	const { collection } = req.body; // Get the user's requested collection from the frontend
+
+	console.log('${collection}');
+
 	try
 	{
 		//Connect to the database
@@ -79,7 +90,8 @@ app.post("/search_downloads", (req, res, next) => {
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
-					db.collection('RedditPosts').find().toArray(function(err, data) {
+					//Use the user's requested collection
+					db.collection('${collection}').find().toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
