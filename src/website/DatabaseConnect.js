@@ -65,3 +65,42 @@ app.post("/downloads", (req, res, next) => {
 		next(e)
 	}
 });
+
+app.post("/search_downloads", (req, res, next) => {
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					//Query the database and convert the result to an array
+					db.collection('RedditPosts').find().toArray(function(err, data) {
+						err ? reject(err) : resolve(data);
+					});
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
