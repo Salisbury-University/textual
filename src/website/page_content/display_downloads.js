@@ -53,9 +53,10 @@ function downloadData() {
 		
 	//user_str, will be the string passed in from the frontend
 	const user_str = document.getElementById("user_collection");
+	const request_data = { collection: user_str };
 	
 	// Call the backend function to grab the specified content from the database.
-	fetch("/search_downloads/param=${user_str}", {method: "POST"}).then(data => data.text()).then((documents) => {
+	fetch("/search_downloads", {method: "POST", body: JSON.stringify(request_data)}).then(data => data.text()).then((documents) => {
 	
 	//Array to hold all the documents fetched from the database
 	var document_array = JSON.parse(documents);
