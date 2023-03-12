@@ -6,15 +6,35 @@
 # ================================================================================
 # Included libraries
 # Pandas: storing data
-# JSON: reading json file
 # ================================================================================
 
 import pandas as pd
+import collections
 
 if __name__ == "__main__":    
+    # Load csv file, minimize memory usage using chunks
     yelp_review_chunks = pd.read_csv("reviews.csv", chunksize=10000) 
 
+    # Five lists to hold the reviews based on the number of stars
+    review_stars = [ [], [], [], [], [] ]
+
+    # Iterate through the chunks
     for yelp_review_chunk in yelp_review_chunks:
-        print(yelp_review_chunk.head())
+
+        # Extract the review text based on the number of stars
+        for index, row in yelp_review_chunk.iterrows():
+            print("appending")
+            if (row["stars"] == 5.0):
+                review_stars[4].append(row["text"])
+            elif (row["stars"] == 4.0):
+                review_stars[3].append(row["text"])
+            elif (row["stars"] == 3.0):
+                review_stars[2].append(row["text"])
+            elif (row["stars"] == 2.0):
+                review_stars[1].append(row["text"])
+            else:
+                review_stars[0].append(row["text"])
+        
+
 
     print("Script done...")
