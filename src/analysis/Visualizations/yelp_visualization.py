@@ -8,3 +8,13 @@
 # Pandas: storing data
 # JSON: reading json file
 # ================================================================================
+
+import pandas as pd
+
+if __name__ == "__main__":    
+    yelp_review_chunks = pd.read_csv("reviews.csv", chunksize=10000) 
+
+    for yelp_review_chunk in yelp_review_chunks:
+        print(yelp_review_chunk.head())
+
+    print("Script done...")
