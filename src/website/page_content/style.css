@@ -477,3 +477,42 @@
 	font-size: 1.0rem;
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
+
+.search_bar_div
+{
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+ 	align-items: center;
+}
+
+#searchBar
+{
+	width: 100%;
+	height: 2.8rem;
+	background: #f5f5f5;
+	outline: none;
+	border: none;
+	border-radius: 1.625rem;
+ 	padding: 0 3.5rem 0 1.5rem;
+  	font-size: 1rem;
+}
+
+#searchSubmit{
+	padding=10;
+	background-color: #A62139;
+	border-color: #A62139;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	color: #D9D9D9;
+	font-size: 1.0rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+#searchForm{
+	width=30%;
+	margin-left: 35%;
+	margin-right: 35%;
+	text-align:center;
+}

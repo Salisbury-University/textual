@@ -77,10 +77,10 @@
 		</nav>					
 
 			<!-- HEADER -->
-			<p class="h1" style="color:#FFFFFF" id="search_header">Search</p>
-			<form action="/search2" method="POST">
-				<div id="search_bar">
-					<input type="text" name="searchTerm" placeholder="Search...">
+			<form action="/search2" method="POST" id="searchForm">
+				<p class="h1" style="color:#FFFFFF" id="search_header">Search the Database</p>
+				<div id="search_bar_div">
+					<input type="text" name="searchTerm" id="searchBar" placeholder="Search...">
 				</div>
 				<div id="database_menu">
 					<input type="checkbox" id="Reddit" name="redditCB" value="Reddit">
@@ -96,7 +96,7 @@
 	
 				</div>
 				<!--<input type="submit" value="Submit">-->
-				<button>Submit</button>
+				<button id="searchSubmit">Submit</button>
 			</form>
 			<div class="navbar" id="su_footer">Salisbury University 2022-2023</div>
 		</main>
