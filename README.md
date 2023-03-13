@@ -13,6 +13,17 @@
 
 ## Current Status 
 
+### **Sprint Three**: 13 March 2023 - 10 April 2023
+
+    As we move into the final two sprints of the semester, we are going to be focusing on data collection 
+    in order to beef up the amount of data in the database, finalize tutorials present on the website
+    for anyone who wishes to understand the different vectors of analysis, and begin looking into ways
+    to visual the data based off of the analysis that has been done. 
+    
+    These are all important tasks as they seek to reach the end goal set out at the beginning of the project: 
+    create a collection of English textual data that can be used by the public for analysis and various other
+    activities. 
+
 ### **Sprint Two**: 20 February 2023 - 12 March 2023
 
     This sprint is continuing the work we began in the last sprint with touching up on parts of the project
