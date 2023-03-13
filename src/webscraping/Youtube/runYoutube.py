@@ -40,26 +40,27 @@ def close_database(client):
     # Close the connection to the database
     client.close()
 
-# run loop continuously
 """
-I added some error catching just for a clear place where it failed or was interrupted by the user.
+This python script runs the youtube scraper continuously running it every day
 """
-while True:
-    try:
-        database=get_database(get_client())
-        video_stat = database.command("collStats","YoutubeVideo")["freeStorageSize"]
-        comment_stat = database.command("collStats","YoutubeComment")["freeStorageSize"]
-        if video_stat==0 or comment_stat==0:
-            print("Collection Full!\nScraper Terminated")
-            close_database(database)
-            break
+if __name__=='__main__':
+    # run loop continuously
+    database=get_database(get_client())
+    while True:
         try:
-            # runs the YouTubeComments scraper
-            os.system("python3 YoutubeComments.py")
+            video_stat = database.command("collStats","YoutubeVideo")["freeStorageSize"]
+            comment_stat = database.command("collStats","YoutubeComment")["freeStorageSize"]
+            if video_stat==0 or comment_stat==0:
+                print("Collection Full!\nScraper Terminated")
+                close_database(database)
+                break
+            try:
+                # runs the YouTubeComments scraper
+                os.system("python3 YoutubeComments.py")
+            except:
+                print("\nProgram Failed")
+                break
+            sleep(86400) # this sleep  makes sure it is only run every day
         except:
-            print("\nProgram Failed")
+            print("\nScraper Terminated")
             break
-        sleep(86400) # this sleep  makes sure it is only run every day
-    except:
-        print("\nScraper Terminated")
-        break

@@ -42,38 +42,42 @@ def close_database(client):
 
 # run loop continuously
 """
-I added some error catching just for a clear place where it failed or was interrupted by the user.
+This python script runs the reddit scraper continuously running it every day pulling from a text file
+with different subreddits contained in the file
 """
-while True:
+if __name__=='__main__':
     database=get_database(get_client())
-    try:
-        sub_reddits=""
-        with open("subreddit.txt","r") as fd: # open file with some popular subreddits (PG-13 of course)
-            next_line=fd.readline()
-            while next_line!="":
-                sub_reddits+=next_line[:-1]
-                next_line=fd.readline()
-                # Just a check for the last item in the file and adjusts accordingly
-                if next_line!='':
-                    sub_reddits+=" "
+    while True:
         
-        redditpost_stat = database.command("collStats","RedditPosts_v2")['freeStorageSize']
-        redditcomment_stat = database.command("collStats","RedditComments_v2")['freeStorageSize']
+        try:
+            sub_reddits=""
+            with open("subreddit.txt","r") as fd: # open file with some popular subreddits (PG-13 of course)
+                next_line=fd.readline()
+                while next_line!="":
+                    sub_reddits+=next_line[:-1]
+                    next_line=fd.readline()
+                    # Just a check for the last item in the file and adjusts accordingly
+                    if next_line!='':
+                        sub_reddits+=" "
+            
+            # pulls the freeStorageSize stat from the collection indicating the amount of free storage inside
+            redditpost_stat = database.command("collStats","RedditPosts_v2")['freeStorageSize']
+            redditcomment_stat = database.command("collStats","RedditComments_v2")['freeStorageSize']
 
-        if redditpost_stat!=0 or redditcomment_stat!=0:
-            try:
-                # runs the reddit scraper
-                os.system("python3 readRedditDBParallel_v2.py " + sub_reddits)
-            except:
-                print("\nProgram Failed")
+            if redditpost_stat!=0 or redditcomment_stat!=0:
+                try:
+                    # runs the reddit scraper
+                    os.system("python3 readRedditDBParallel_v2.py " + sub_reddits)
+                except:
+                    print("\nProgram Failed")
+                    close_database(database)
+                    break
+            else:
+                print("Insufficient Storage!\nScraper Terminated")
                 close_database(database)
                 break
-        else:
-            print("Insufficient Storage!\nScraper Terminated")
+
+            sleep(86400) # this sleep  makes sure it is only run every day
+        except:
             close_database(database)
             break
-
-        sleep(86400) # this sleep  makes sure it is only run every day
-    except:
-        close_database(database)
-        break
