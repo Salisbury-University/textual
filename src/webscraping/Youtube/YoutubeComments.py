@@ -138,7 +138,7 @@ def getCategories(youtube):
         )
         response = request.execute()
     except HttpError as error:
-        print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+        # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
         
     # get all youtube categories used in the US (there's 32 categories)
@@ -229,7 +229,7 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError as error: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
-            print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+            # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
             #print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
             
 
@@ -360,7 +360,7 @@ def searchToVideo(youtube, searchResult, categories):
     try:
         response = request.execute()
     except HttpError as error:
-        print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+        # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
     items = response["items"]
     
@@ -407,7 +407,7 @@ def searchVideos(youtube, categories, topic):
     try:
         response = request.execute() # Request 50 most relevant videos using this keyword
     except HttpError as error:
-        print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+        # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
     items = response["items"]
 
