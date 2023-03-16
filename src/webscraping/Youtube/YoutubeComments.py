@@ -229,6 +229,7 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError as error: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
+            pass
             # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
             #print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
             
@@ -241,7 +242,6 @@ def getComments(youtube, video, sortBy):
 # <--------------------------------------------------------------------->
 
 def scrape_comments(youtube, category):
-
     with lock:
         print("Thread " + str(mp.current_process().pid) + ": Looking at Category: " + category["title"])
     # Get a connection to the server
