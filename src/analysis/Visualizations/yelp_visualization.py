@@ -77,6 +77,23 @@ if __name__ == "__main__":
         
         print()
 
+    # Print blank lines
     print("\n\n")
+
+    # Specify graph parameters for each set of words
+    # The font_sizes are all set to 30
+    # Colors are chosen such that they are easy to dinstiguish from each other
+    # Colors and corresponding ASCII values are as follows:
+    # #FF5733 (Orange)
+    # #F1C40F (Yellow)
+    # #1ABC9C (Turquoise)
+    # #3498DB (Blue)
+    # #9B59B6 (Purple)
+    
+    review_1star_parameters = {"color" : "#FF5733", "font_size": 30}
+    review_2star_parameters = {"color" : "#F1C40F", "font_size": 30}
+    review_3star_parameters = {"color" : "#1ABC9C", "font_size": 30}
+    review_4star_parameters = {"color" : "#3498DB", "font_size": 30}
+    review_5star_parameters = {"color" : "#9B59B6", "font_size": 30} 
 
     print("Script done...")
