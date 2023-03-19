@@ -1,5 +1,5 @@
 # Project Name(s): English Contextual Baseline Database
-# Program Name: yelp_visualization.py
+# Program Name: yelp_WordCloud.py
 # Date: 03/11/2023
 # Description: Reads in the reviews.json file containing a large subset of the Yelp Review data dump and generates visual information explaining details regarding the dataset
 
