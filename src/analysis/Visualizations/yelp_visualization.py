@@ -98,16 +98,18 @@ if __name__ == "__main__":
     # Generate graph for each review category
     for i in range(len(review_words)):
         # Initialize graph
-        review_words_graph = WordCloud(width = 750, height = 750, background_color = "white", collocations=False)
+        review_words_graph = WordCloud(width = 1024, height = 1024, background_color = "white", collocations=False)
         
         # Create graph using string (Convert from list of words to single string using .join)
         review_words_graph.generate_from_text(" ".join(review_words[i]))
         
         # Change WordCloud display color
         axs[i].imshow(review_words_graph.recolor(color_func = lambda *args, **kwargs: color_list[i]), interpolation = "bilinear")
-        axs[i].set_title("Yelp {} star reviews".format(i))
+        axs[i].axis("off")
+        axs[i].set_title("Yelp {} star reviews".format(i+1))
 
     # Display complete graph
+    plt.savefig("YelpWordClouds.png")
     plt.show()
     
     print("Script done...")
