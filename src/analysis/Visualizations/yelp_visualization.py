@@ -68,20 +68,24 @@ if __name__ == "__main__":
         most_common = num_words.most_common(25)
         
         for word, freq in most_common:
-            review_words[i].append(word)
+            # Append the word for the number of occurrences
+            for count in range(freq):
+                review_words[i].append(word)
 
+    # Print the lists
+    
     for i in range(len(review_words)):
         print("The 25 most common words in " + str(i + 1) + " star reviews are: ")
         for word in review_words[i]:
             print(word, end=" ")
-        
+    
         print()
+    
 
     # Print blank lines
     print("\n\n")
 
     # Specify graph parameters for each set of words
-    # The font_sizes are all set to 30
     # Colors are chosen such that they are easy to dinstiguish from each other
     # Colors and corresponding ASCII values are as follows:
     # #FF5733 (Orange)
@@ -90,10 +94,16 @@ if __name__ == "__main__":
     # #3498DB (Blue)
     # #9B59B6 (Purple)
     
-    review_1star_parameters = {"color" : "#FF5733", "font_size": 30}
-    review_2star_parameters = {"color" : "#F1C40F", "font_size": 30}
-    review_3star_parameters = {"color" : "#1ABC9C", "font_size": 30}
-    review_4star_parameters = {"color" : "#3498DB", "font_size": 30}
-    review_5star_parameters = {"color" : "#9B59B6", "font_size": 30} 
+    color_list = ["#FF5733", "#F1C40F", "#1ABC9C", "#3498DB", "#9B59B6"]
 
+    # Initialize graph
+    review_words_graph = WordCloud(width = 350, height = 350, background_color = "white", collocations=False)
+
+    # Generate graph for each review category
+    for i in range(len(review_words)):
+        review_words_graph.generate_from_text(" ".join(review_words[i]))
+        plt.imshow(review_words_graph.recolor(color_func = lambda *args, **kwargs: color_list[i]), interpolation = "bilinear")
+        plt.axis("off")
+        plt.show()
+    
     print("Script done...")
