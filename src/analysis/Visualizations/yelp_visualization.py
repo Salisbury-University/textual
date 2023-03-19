@@ -13,6 +13,8 @@ import collections
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 def remove_punc(input_string):
     # Punctuation string
@@ -74,5 +76,7 @@ if __name__ == "__main__":
             print(word, end=" ")
         
         print()
+
+    print("\n\n")
 
     print("Script done...")
