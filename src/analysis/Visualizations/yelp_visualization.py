@@ -73,17 +73,14 @@ if __name__ == "__main__":
                 review_words[i].append(word)
 
     # Print the lists
-    
+    """ 
     for i in range(len(review_words)):
         print("The 25 most common words in " + str(i + 1) + " star reviews are: ")
         for word in review_words[i]:
             print(word, end=" ")
     
         print()
-    
-
-    # Print blank lines
-    print("\n\n")
+    """
 
     # Specify graph parameters for each set of words
     # Colors are chosen such that they are easy to dinstiguish from each other
@@ -96,14 +93,21 @@ if __name__ == "__main__":
     
     color_list = ["#FF5733", "#F1C40F", "#1ABC9C", "#3498DB", "#9B59B6"]
 
-    # Initialize graph
-    review_words_graph = WordCloud(width = 350, height = 350, background_color = "white", collocations=False)
+    figure, axs = plt.subplots(nrows=1, ncols=5, figsize=(15, 10))
 
     # Generate graph for each review category
     for i in range(len(review_words)):
+        # Initialize graph
+        review_words_graph = WordCloud(width = 750, height = 750, background_color = "white", collocations=False)
+        
+        # Create graph using string (Convert from list of words to single string using .join)
         review_words_graph.generate_from_text(" ".join(review_words[i]))
-        plt.imshow(review_words_graph.recolor(color_func = lambda *args, **kwargs: color_list[i]), interpolation = "bilinear")
-        plt.axis("off")
-        plt.show()
+        
+        # Change WordCloud display color
+        axs[i].imshow(review_words_graph.recolor(color_func = lambda *args, **kwargs: color_list[i]), interpolation = "bilinear")
+        axs[i].set_title("Yelp {} star reviews".format(i))
+
+    # Display complete graph
+    plt.show()
     
     print("Script done...")
