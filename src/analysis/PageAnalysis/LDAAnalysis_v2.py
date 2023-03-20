@@ -35,7 +35,7 @@ def get_client():
 
 	client = MongoClient("mongodb://10.251.12.108:30000", username=username, password=password)
 
- 	return client
+	return client
 
 # returns a reference to our specific database
 def get_database(client):
@@ -61,8 +61,7 @@ def preprocess(text_input):
 	stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
 
 	# creates a list of preprocessed tokens if they are not in the stop words and are longer than 2 letters
-	preprocessed_results = [token for token in gensim.utils.simple_preprocess(text_input) if token not in \
-	stopwords and len(token) > 3] 
+	preprocessed_results = [lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(text_input) if token not in stopwords and len(token) > 3] 
 
 	return preprocessed_results 
 
@@ -106,7 +105,9 @@ def lda_bow_models(bow_corpus, dictionary, print_topics=False):
 
 	if print_topics: 
 		for idx, topic in lda_model.print_topics(-1):
-    	print(f'Topic: {idx} \nWords: {topic}')
+			print(f'Topic: {idx} \nWords: {topic}')
+
+	return lda_model 
 
 # running an LDA using TF-IDF
 def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
@@ -115,7 +116,7 @@ def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 	lda_model_tfidf = gensim.models.LdaMulticore(corpus_tfidf, num_topics=10, id2word=dictionary, passes=2, workers=2) 
 	if print_topics: 
 		for idx, topic in lda_model_tfidf.print_topics(-1):
-    	print(f'Topic: {idx} Word: {topic}')
+			print(f'Topic: {idx} Word: {topic}')
 
 # classifies a previously seen document
 def classify_seen(bow_corpus, model, seen_documents):
@@ -131,7 +132,7 @@ def classify_unseen(dictionary, model, unseen_documents):
 
 	for vector in bow_vectors:
 		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-    	print("Score: {score}\t Topic: {model.print_topic(index, 5)}")
+			print("Score: {score}\t Topic: {model.print_topic(index, 5)}")
 
 if __name__ == "__main__": 
 
@@ -170,7 +171,7 @@ if __name__ == "__main__":
 
 	# check to make sure that new collections haven't been added, exits if the case so you can add it to the dict
 	for col in all_collections:
-		if col not in collections and not in ignore_collections: 
+		if col not in collections and col not in ignore_collections: 
 			print(f'New collection added: {col}.') 
 
 	# check to make sure the inputted collection is correct
@@ -180,7 +181,7 @@ if __name__ == "__main__":
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
-	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]:1, '_id':0}) 	
+	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]]:1, '_id':0}) 	
 	
 	# check to see if entries is empty
 	if len(list(initial_entries.clone())) == 0:
@@ -204,6 +205,11 @@ if __name__ == "__main__":
 	# create a list of the entries that will be passed into the model to be trained
 	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indicies] 
 
+	# results[0] is the dictionary, results[1] is the bag of words
+	results = get_dictionary_BOW(preprocess(training_data), True) 
 
+	# training the LDA model on the BOW data
+	lda_model = lda_bow_model(results[1], reults[0], True)
 
+	
 
