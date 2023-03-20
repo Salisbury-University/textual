@@ -189,7 +189,7 @@ if __name__ == "__main__":
 		sys.exit
 
 	# clears out any entries that may throw a key error
-	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries if collection[sys.argv[1]] in entry] 
+	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries if collections[sys.argv[1]] in entry] 
  
 	# randomly get values for 25% of the length of the collection
 	entries_25 = int(len(checked_entries)*.25)
@@ -198,12 +198,12 @@ if __name__ == "__main__":
 	
 	for i in range(entries_25):
 		val = random.randint(0, len(checked_entries)-1)
-		while val in indicies:
+		while val in indices:
 			val = random.randint(0, len(checked_entries)-1)
-		indicies.append(val) 
+		indices.append(val) 
 
 	# create a list of the entries that will be passed into the model to be trained
-	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indicies] 
+	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
 
 	# results[0] is the dictionary, results[1] is the bag of words
 	results = get_dictionary_BOW(preprocess(training_data), True) 
