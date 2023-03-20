@@ -180,8 +180,30 @@ if __name__ == "__main__":
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
+	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]:1, '_id':0}) 	
 	
+	# check to see if entries is empty
+	if len(list(initial_entries.clone())) == 0:
+		print("No entries in collection.")
+		sys.exit
+
+	# clears out any entries that may throw a key error
+	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries if collection[sys.argv[1]] in entry] 
+ 
+	# randomly get values for 25% of the length of the collection
+	entries_25 = int(len(checked_entries)*.25)
 	
-	 
+	indices = [] 
+	
+	for i in range(entries_25):
+		val = random.randint(0, len(checked_entries)-1)
+		while val in indicies:
+			val = random.randint(0, len(checked_entries)-1)
+		indicies.append(val) 
+
+	# create a list of the entries that will be passed into the model to be trained
+	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indicies] 
+
+
 
 
