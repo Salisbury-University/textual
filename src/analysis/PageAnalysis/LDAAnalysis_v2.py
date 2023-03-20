@@ -13,6 +13,7 @@ import numpy as np
 import nltk
 from  gensim import corpora, models
 from pprint import pprint
+import random
 
 nltk.download('wordnet')
 np.random.seed(2018) 
@@ -134,5 +135,53 @@ def classify_unseen(dictionary, model, unseen_documents):
 
 if __name__ == "__main__": 
 
-    pass
+	''' 
+		Collections: 
+	
+			AmazonReviews: 'review_body'
+			PGText: 'text' 
+			RedditComments_v2: 'body'
+			RedditPosts_v2: 'selftext'
+			WikiSourceText: 'Text' 
+			YelpReviews: 'text'
+			YoutubeComment: 'text'
+			YoutubeVideo: 'vidTitle' 
+			TwitterTweets: 'tweet' 
+
+	'''
+
+	# dictionary containing the collection names as the key and the name of the attribute holding their data
+	# as the value 
+	collections = {'AmazonReviews':'review_body', 'PGText':'text', 'RedditComments_v2':'body', \
+	'RedditPosts_v2':'selftext', 'WikiSourceText':'Text', 'YelpReviews':'text', 'YoutubeCommment':'text', \
+	'YoutubeVideo':'vidTitle', 'TwitterTweets':'tweet'}
+
+	ignore_collections = ['PGHTML', 'WikiSourceHTML']  
  
+	# get collection name from command line
+	if len(sys.argv) < 2:
+		print("Please provide a collection name.")
+		sys.exit
+
+	# access database
+	client = get_client()
+	database = get_database(client)
+	all_collections = database.list_collection_names()
+
+	# check to make sure that new collections haven't been added, exits if the case so you can add it to the dict
+	for col in all_collections:
+		if col not in collections and not in ignore_collections: 
+			print(f'New collection added: {col}.') 
+
+	# check to make sure the inputted collection is correct
+	if sys.argv[1] not in collections:
+		print('Invalid collection.')
+		sys.exit
+
+	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
+	# in order to classify those using the seen_model function rather than the unseen_model one
+	
+	
+	 
+
+
