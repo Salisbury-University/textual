@@ -121,9 +121,10 @@ def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 # classifies a previously seen document
 def classify_seen(bow_corpus, model, seen_documents):
 
-	for i in range(len(seen_documents)): 
+	for i in range(len(seen_documents)):
+		id = seen_documents[i]['_id'] 
 		for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
-			print(f'\nScore: {score}\t \nTopic: {model.print_topic(index, 10)}.') 
+			print(f'ID: {id}\t Score: {score}\t Topic: {model.print_topic(index, 10)}.\n') 
 
 # classifies unseen documents
 def classify_unseen(dictionary, model, unseen_documents): 
@@ -181,7 +182,7 @@ if __name__ == "__main__":
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
-	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]]:1, '_id':0}) 	
+	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]]:1, '_id':1}) 	
 	
 	# check to see if entries is empty
 	if len(list(initial_entries.clone())) == 0:
@@ -190,7 +191,8 @@ if __name__ == "__main__":
 
 	# clears out any entries that may throw a key error
 	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries if collections[sys.argv[1]] in entry] 
- 
+	entries_with_id = [entry for entry in initial_entries if collections[sys.argv[1]] in entry]  
+
 	# randomly get values for 25% of the length of the collection
 	entries_25 = int(len(checked_entries)*.25)
 	
@@ -211,5 +213,6 @@ if __name__ == "__main__":
 	# training the LDA model on the BOW data
 	lda_model = lda_bow_model(results[1], results[0], True)
 
-	
+	# classifying seen data
+	classify_seen(results[1], lda_model, entries_with_id)
 
