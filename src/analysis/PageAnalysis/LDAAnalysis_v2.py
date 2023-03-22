@@ -61,7 +61,9 @@ def preprocess(text_input):
 	stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
 
 	# creates a list of preprocessed tokens if they are not in the stop words and are longer than 2 letters
-	preprocessed_results = [lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(text_input) if token not in stopwords and len(token) > 3] 
+	results = []
+	for doc in text_input:
+		results.append([lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(doc) if token not in stopwords and len(token) > 3]) 
 
 	return preprocessed_results 
 
@@ -69,17 +71,15 @@ def preprocess(text_input):
 def get_dictionary_BOW(processed_documents, print_words=False):
 	
 	# creates the dictionary
-	dictionary = (gensim.corpora.Dictionary(processed_documents)).filter_extremes(no_below=15, no_above=0.5, keep_n=100000) 
+	dictionary = gensim.corpora.Dictionary(processed_documents)
+
   # bow corpus
 	bow_corpus = [dictionary.doc2bow(doc) for doc in processed_documents] 
 
 	# prints out the amount of times each word appears
 	if print_words: 
-
 		for doc in bow_corpus:
-
 			for i in range(len(doc)):
-
 				print(f'Word: {doc[i][0]} ("{dictionary[doc[i][0]]}") appears {doc[i][1]} time(s).')
 
 	return dictionary, bow_corpus 
@@ -98,7 +98,7 @@ def make_TFIDF(bow_corpus, print_values=False):
 	return tfidf, corpus_tfidf
 
 # running an LDA using a BOW
-def lda_bow_models(bow_corpus, dictionary, print_topics=False):
+def lda_bow_model(bow_corpus, dictionary, print_topics=False):
 
 	# creates the model 
 	lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=10, id2word=dictionary, passes=2, workers=2)
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 	results = get_dictionary_BOW(preprocess(training_data), True) 
 
 	# training the LDA model on the BOW data
-	lda_model = lda_bow_model(results[1], reults[0], True)
+	lda_model = lda_bow_model(results[1], results[0], True)
 
 	
 
