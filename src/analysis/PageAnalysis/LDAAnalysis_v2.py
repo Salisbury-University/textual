@@ -118,15 +118,39 @@ def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 		for idx, topic in lda_model_tfidf.print_topics(-1):
 			print(f'Topic: {idx} Word: {topic}')
 
-# classifies a previously seen document
+# classifies a previously seen document -- used for testing 
 def classify_seen(bow_corpus, model, seen_documents, ids):
 
 	for i in range(len(seen_documents)):
-		id_ = ids[i] 
+		id_ = ids[i]
 		for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
 			print(f'ID: {id}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}.')
 			break
 		print('----------------------------------------------------------------------') 
+
+# classifies seen documents and updates their entry in the database
+def update_seen_documents(bow_corpus, model, seen_documents, ids):
+	
+	# get all of the topics
+	
+	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics()}
+
+	print(topic_words) 	
+
+	for i in range(len(seen_documents)): 
+		
+		# get ID
+		_id = ids[i]
+		
+		topic = ()		
+
+		# get the top topic from the sorted model, ignore the score
+		for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
+			topic = model.print_topic(index, 10)
+			break 
+		
+		doc_topics = topic_words["Topic_" + str(topic[0])] 
+		print(doc_topics) 
 
 # classifies unseen documents
 def classify_unseen(dictionary, model, unseen_documents, ids): 
@@ -224,10 +248,11 @@ if __name__ == "__main__":
 	# classifying seen data
 	seen = list(initial_entries.clone())
 	ids = [entry['_id'] for entry in seen if collections[sys.argv[1]] in entry and seen.index(entry) in indices]
-	classify_seen(results[1], lda_model, entries_with_id)
+	#classify_seen(results[1], lda_model, entries_with_id)
+	update_seen_documents(results[1], lda_model, training_data, ids)
 
 	# classifying unseen data
 	unseen = list(initial_entries.clone())
 	ids = [entry['_id'] for entry in unseen if collections[sys.argv[1]] in entry and unseen.index(entry) not in indices] 
-	classify_unseen(results[0], lda_model, unseen_data, ids)
+	#classify_unseen(results[0], lda_model, unseen_data, ids)
 	
