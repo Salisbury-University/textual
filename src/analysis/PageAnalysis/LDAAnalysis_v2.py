@@ -119,21 +119,26 @@ def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 			print(f'Topic: {idx} Word: {topic}')
 
 # classifies a previously seen document
-def classify_seen(bow_corpus, model, seen_documents):
+def classify_seen(bow_corpus, model, seen_documents, ids):
 
 	for i in range(len(seen_documents)):
-		id = seen_documents[i]['_id'] 
+		id_ = ids[i] 
 		for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
-			print(f'ID: {id}\t Score: {score}\t Topic: {model.print_topic(index, 10)}.\n') 
+			print(f'ID: {id}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}.')
+			break
+		print('----------------------------------------------------------------------') 
 
 # classifies unseen documents
-def classify_unseen(dictionary, model, unseen_documents): 
+def classify_unseen(dictionary, model, unseen_documents, ids): 
 	
 	bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents]
 
 	for vector in bow_vectors:
+		id_ = ids[i]
 		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-			print("Score: {score}\t Topic: {model.print_topic(index, 5)}")
+			print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
+			break
+		print('----------------------------------------------------------------------') 
 
 if __name__ == "__main__": 
 
@@ -190,29 +195,39 @@ if __name__ == "__main__":
 		sys.exit
 
 	# clears out any entries that may throw a key error
-	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries if collections[sys.argv[1]] in entry] 
-	entries_with_id = [entry for entry in initial_entries if collections[sys.argv[1]] in entry]  
+	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries.clone() if collections[sys.argv[1]] in entry] 
 
 	# randomly get values for 25% of the length of the collection
 	entries_25 = int(len(checked_entries)*.25)
 	
 	indices = [] 
+	val = -1
 	
 	for i in range(entries_25):
 		val = random.randint(0, len(checked_entries)-1)
-		while val in indices:
+		if val in indices:
 			val = random.randint(0, len(checked_entries)-1)
 		indices.append(val) 
 
 	# create a list of the entries that will be passed into the model to be trained
 	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
 
+	# get the list of none training entries 
+	unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices] 
+
 	# results[0] is the dictionary, results[1] is the bag of words
-	results = get_dictionary_BOW(preprocess(training_data), True) 
+	results = get_dictionary_BOW(preprocess(training_data), False) 
 
 	# training the LDA model on the BOW data
-	lda_model = lda_bow_model(results[1], results[0], True)
+	lda_model = lda_bow_model(results[1], results[0], False)
 
 	# classifying seen data
+	seen = list(initial_entries.clone())
+	ids = [entry['_id'] for entry in seen if collections[sys.argv[1]] in entry and seen.index(entry) in indices]
 	classify_seen(results[1], lda_model, entries_with_id)
 
+	# classifying unseen data
+	unseen = list(initial_entries.clone())
+	ids = [entry['_id'] for entry in unseen if collections[sys.argv[1]] in entry and unseen.index(entry) not in indices] 
+	classify_unseen(results[0], lda_model, unseen_data, ids)
+	
