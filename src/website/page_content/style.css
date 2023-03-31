@@ -308,6 +308,26 @@
 	font-family: 'Fjalla One', sans-serif;
 }
 
+#visualizations_title
+{
+	padding-top: 1.5rem;
+       	text-align: center;	
+	color: #D9D9D9;
+	font-size: 4rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#visualizations_title_border
+{
+	margin-top: 45rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 2.5rem;
+	border-top: 0.5rem #D9D9D9 solid;
+	width: 85%;
+}
+
 #review_analysis_logo
 {
 	display: table;
