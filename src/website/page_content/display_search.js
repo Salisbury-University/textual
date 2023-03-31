@@ -1,6 +1,6 @@
-function load_search_data()
-{
-	fetch("/search", {method: "POST"}).then(data => data.text()).then((documents) => {
+function load_search_data(){
+	console.log("TEST FUNCTION");
+	fetch("/search2", {method: "POST"}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
 		var table = $("#search_table tbody");	
 		//Keep track of the current document
@@ -11,21 +11,15 @@ function load_search_data()
 		
 		//Count how many documents are in the query
 		const count = document_array.length;
-		console.log("Test")
 		//Loop through all the documents
 		while(index < count)
 		{
 			//Get the values for each document. This includes the document title, text, category (subreddit), and the date.
-			var title = document_array[index]["stars"];
-			var text = document_array[index]["text"];
-			var date = document_array[index]["date"];
+			var searchResult = document_array[index];
 
 			//If the text from the query is empty, write a message
-			if (text == "")
-				text = "No Text Found.";	
-
 			//Create a new row with the current content
-			var row = $("<tr><td>" + title + "</td><td>" + date + "</td><td>" + text + "</td><td>" + "YelpReviews" + "</td></tr>");
+			var row = $("<tr><td>" + searchResult+"</td></tr>");
 
 			//Append the new row to the table
 			table.append(row);
