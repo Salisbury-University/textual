@@ -238,6 +238,20 @@
 	max-width: 100%;
 }
 
+#visualization_header_div
+{
+	text-align: center;
+	padding: 0;
+	position: absolute;
+	left: 0;
+	max-width: 100%;
+}
+
+#stock_visualization_img
+{
+	width: 100%;
+}
+
 #stock_img
 {
 	width: 100%;
