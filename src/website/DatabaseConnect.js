@@ -46,7 +46,7 @@ app.post("/downloads", (req, res, next) => {
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
-					db.collection('RedditPosts').find().toArray(function(err, data) {
+					db.collection('RedditPosts').find().limit(10000).toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
@@ -74,9 +74,7 @@ app.post("/downloads", (req, res, next) => {
 
 app.post("/search_downloads", (req, res, next) => {
 	// Get the user input value from the frontend
-	const { collection } = req.body; // Get the user's requested collection from the frontend
-
-	console.log('${collection}');
+	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
 
 	try
 	{
@@ -91,7 +89,7 @@ app.post("/search_downloads", (req, res, next) => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
 					//Use the user's requested collection
-					db.collection('${collection}').find().toArray(function(err, data) {
+					db.collection(collection).find().toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
