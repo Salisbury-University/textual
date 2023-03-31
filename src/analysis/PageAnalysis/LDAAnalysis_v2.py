@@ -164,28 +164,31 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
 			break
 		print('----------------------------------------------------------------------') 
 
+def update_seen_documents(dictionary, model, unseen_documents, ids): 
+
+    bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
+
+    topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics()}
+
+    print(topic_words)
+
+    i=0 
+
+    for vector in bow_vectors: 
+
+        _id = ids[i]
+        i += 1 
+
+        topic = () 
+
+        for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
+            topic = model.print_topic(index, 10)
+            break
+
+        doc_topics = topic_words['Topic_' + str(topic[0])]
+        print(doc_topics) 
+
 if __name__ == "__main__": 
-
-	''' 
-		Collections: 
-	
-			AmazonReviews: 'review_body'
-			PGText: 'text' 
-			RedditComments_v2: 'body'
-			RedditPosts_v2: 'selftext'
-			WikiSourceText: 'Text' 
-			YelpReviews: 'text'
-			YoutubeComment: 'text'
-			YoutubeVideo: 'vidTitle' 
-			TwitterTweets: 'tweet' 
-
-	'''
-
-	# dictionary containing the collection names as the key and the name of the attribute holding their data
-	# as the value 
-	collections = {'AmazonReviews':'review_body', 'PGText':'text', 'RedditComments_v2':'body', \
-	'RedditPosts_v2':'selftext', 'WikiSourceText':'Text', 'YelpReviews':'text', 'YoutubeCommment':'text', \
-	'YoutubeVideo':'vidTitle', 'TwitterTweets':'tweet'}
 
 	ignore_collections = ['PGHTML', 'WikiSourceHTML']  
  
@@ -199,19 +202,15 @@ if __name__ == "__main__":
 	database = get_database(client)
 	all_collections = database.list_collection_names()
 
-	# check to make sure that new collections haven't been added, exits if the case so you can add it to the dict
-	for col in all_collections:
-		if col not in collections and col not in ignore_collections: 
-			print(f'New collection added: {col}.') 
 
 	# check to make sure the inputted collection is correct
-	if sys.argv[1] not in collections:
+	if sys.argv[1] not in all_collections:
 		print('Invalid collection.')
 		sys.exit
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
-	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]]:1, '_id':1}) 	
+	initial_entries = database[sys.argv[1]].find({}, {'text':1, '_id':1}) 	
 	
 	# check to see if entries is empty
 	if len(list(initial_entries.clone())) == 0:
@@ -219,7 +218,7 @@ if __name__ == "__main__":
 		sys.exit
 
 	# clears out any entries that may throw a key error
-	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries.clone() if collections[sys.argv[1]] in entry] 
+	checked_entries = [entry['text'] for entry in initial_entries.clone() if 'text' in entry] 
 
 	# randomly get values for 25% of the length of the collection
 	entries_25 = int(len(checked_entries)*.25)
@@ -247,12 +246,12 @@ if __name__ == "__main__":
 
 	# classifying seen data
 	seen = list(initial_entries.clone())
-	ids = [entry['_id'] for entry in seen if collections[sys.argv[1]] in entry and seen.index(entry) in indices]
+	ids = [entry['_id'] for entry in seen if 'text' in entry and seen.index(entry) in indices]
 	#classify_seen(results[1], lda_model, entries_with_id)
 	update_seen_documents(results[1], lda_model, training_data, ids)
 
 	# classifying unseen data
 	unseen = list(initial_entries.clone())
-	ids = [entry['_id'] for entry in unseen if collections[sys.argv[1]] in entry and unseen.index(entry) not in indices] 
+	ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
 	#classify_unseen(results[0], lda_model, unseen_data, ids)
 	
