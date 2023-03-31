@@ -227,7 +227,7 @@ def get_page_dictionary(metadata, text):
             "Date Published" : metadata[1],
             "Date Modified" : metadata[2],
             "Document Date" : metadata[3],
-            "Text" : text,
+            "text" : text,
             "ID" : get_id(metadata[0])} 
     # Return the dictionary
     return data
@@ -239,7 +239,7 @@ def get_html_dictionary(metadata, html):
     # Add the page ID
 
     # Compress the HTML to save space, about 7x better space usage
-    data = {"HTML" : zlib.compress(html.encode()),
+    data = {"text" : zlib.compress(html.encode()),
             "ID" : get_id(metadata[0])} 
     # Return the dictionary
     return data
