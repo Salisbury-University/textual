@@ -84,7 +84,7 @@ def get_recent_tweets(client,search,collection,wanted_results=100,):
                                  expansions='author_id',tweet_fields=['created_at','public_metrics'],
                                  sort_order='relevancy',max_results=100).flatten(limit=wanted_results):
         dic = { "user":"Unknown",
-                "tweet":response.text,
+                "text":response.text,
                 "Likes":response.public_metrics['like_count'],
                 "Retweets":response.public_metrics['retweet_count'],
                 "Posted":response.created_at}
