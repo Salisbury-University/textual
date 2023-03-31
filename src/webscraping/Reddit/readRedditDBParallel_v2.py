@@ -151,7 +151,7 @@ def push_posts(api_obj, posts):
                 iteration = 0
                 for comment in comments:
                     print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
-                    comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "body" : comment.body, "created_utc" : str(comment.created_utc)}
+                    comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "text" : comment.body, "created_utc" : str(comment.created_utc)}
                     
                     try:
                         comment_collection.insert_one(comment_content)
@@ -162,7 +162,7 @@ def push_posts(api_obj, posts):
             except:
                 print("Failed to push comments")
 
-        subreddit_content = {"subreddit" : str(post["subreddit"]), "title" : str(post["title"]), "author" : str(post["author"]), "post_id" : str(post["id"]), "selftext" : str(post["selftext"]), "created_utc" : str(post["created_utc"]), "link" : str(post["url"]), "score" : str(post["score"])}
+        subreddit_content = {"subreddit" : str(post["subreddit"]), "title" : str(post["title"]), "author" : str(post["author"]), "post_id" : str(post["id"]), "text" : str(post["selftext"]), "created_utc" : str(post["created_utc"]), "link" : str(post["url"]), "score" : str(post["score"])}
         count += 1
 
         # Add DataFrame file to collection
