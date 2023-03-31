@@ -267,6 +267,22 @@
 	left: 10px;
 }
 
+#visualization_text
+{
+	width: 100%;
+	padding-top: 3rem;
+	padding-bottom: 1rem;
+	background-color: #000000;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #D9D9D9;
+	font-size: 7rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
 #review_header_text
 {
 	width: 100%;
