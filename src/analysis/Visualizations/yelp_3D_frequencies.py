@@ -19,6 +19,7 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import mpld3
 
 def remove_punc(input_string):
     # Punctuation string
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     for i in range(len(review_stars)): 
         # Count the occurence of each word
         num_words = collections.Counter(word.lower() for word in remove_punc(" ".join(review_stars[i])).split() if word.lower() not in stop_words)
-        most_common = num_words.most_common(25)
+        most_common = num_words.most_common(42)
         
         for word, freq in most_common:
             review_words[i].append(word)
@@ -107,14 +108,19 @@ if __name__ == "__main__":
     ax = figure.add_subplot(111, projection="3d")
     for i in range(len(review_words)):
         # Only plot words with a non-zero sentiment value
-        if word_sent[i] > 0.1 or word_sent[i] < -0.1: 
-            ax.scatter(word_freq[i], word_sent[i], i+1, c=sentiment_color_grades[0])
-            for j in range(len(review_words[i])):
-                ax.text(word_freq[i][j], word_sent[i][j], i+1, review_words[i][j], color="black")
+        for j in range(len(review_words[i])):
+            if word_sent[i][j] != 0: 
+                ax.scatter(word_freq[i][j], word_sent[i][j], i+1, c=sentiment_color_grades[i][j])
+                ax.text(word_freq[i][j], word_sent[i][j], i+1, review_words[i][j], color="black", size=7)
 
     ax.set_xlabel("Frequency")
     ax.set_ylabel("Sentiment")
     ax.set_zlabel("Stars")
-    
+        
+    html_str = mpld3.fig_to_html(figure)
+    Html_file= open("plt.html","w")
+    Html_file.write(html_str)
+    Html_file.close()
+
     plt.show()
     print("Script done...")

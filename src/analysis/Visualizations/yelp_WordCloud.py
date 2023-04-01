@@ -15,6 +15,7 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import mpld3
 
 def remove_punc(input_string):
     # Punctuation string
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     for i in range(len(review_stars)): 
         # Count the occurence of each word
         num_words = collections.Counter(word.lower() for word in remove_punc(" ".join(review_stars[i])).split() if word.lower() not in stop_words)
-        most_common = num_words.most_common(25)
+        most_common = num_words.most_common(35)
         
         for word, freq in most_common:
             # Append the word for the number of occurrences
@@ -107,6 +108,12 @@ if __name__ == "__main__":
         axs[i].imshow(review_words_graph.recolor(color_func = lambda *args, **kwargs: color_list[i]), interpolation = "bilinear")
         axs[i].axis("off")
         axs[i].set_title("Yelp {} star reviews".format(i+1))
+
+    # Save the figure in HTML format
+    html_str = mpld3.fig_to_html(figure)
+    Html_file= open("WordCloud.html","w")
+    Html_file.write(html_str)
+    Html_file.close()
 
     # Display complete graph
     plt.savefig("YelpWordClouds.png")
