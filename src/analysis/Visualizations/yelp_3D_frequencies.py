@@ -106,9 +106,11 @@ if __name__ == "__main__":
     figure = plt.figure(figsize=(10, 8))
     ax = figure.add_subplot(111, projection="3d")
     for i in range(len(review_words)):
-        ax.scatter(word_freq[i], word_sent[i], i+1, c=sentiment_color_grades[0])
-        for j in range(len(review_words[i])):
-            ax.text(word_freq[i][j], word_sent[i][j], i+1, review_words[i][j], color="black")
+        # Only plot words with a non-zero sentiment value
+        if word_sent[i] > 0.1 or word_sent[i] < -0.1: 
+            ax.scatter(word_freq[i], word_sent[i], i+1, c=sentiment_color_grades[0])
+            for j in range(len(review_words[i])):
+                ax.text(word_freq[i][j], word_sent[i][j], i+1, review_words[i][j], color="black")
 
     ax.set_xlabel("Frequency")
     ax.set_ylabel("Sentiment")

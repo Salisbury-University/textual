@@ -102,11 +102,50 @@ if __name__ == "__main__":
             # 0 corresponds to blue
             else:
                 sentiment_color_grades[i].append("blue")
- 
-    plt.bar(word_freq[0], word_sent[0])
-    
-    for i in range(len(review_words[0])):
-        plt.text(word_freq[0][i], word_sent[0][i], str(review_words[0][i]), ha="center", va="top")
+
+    # Create subsets for the positive and negative words
+    positive_words = [ [], [], [], [], [] ]
+    positive_freq = [ [], [], [], [], [] ]
+    positive_sent = [ [], [], [], [], [] ]
+    positive_colors = [ [], [], [], [], [] ]
+
+    negative_words = [ [], [], [], [], [] ]
+    negative_freq = [ [], [], [], [], [] ]
+    negative_sent = [ [], [], [], [], [] ]
+    negative_colors = [ [], [], [], [], [] ]
+
+    # Extract each type of word (neutral are considered positive for the purposes of this visualization)
+    for i in range(len(review_words)):
+        for j in range(len(review_words[i])):
+            if word_sent[i][j] < 0:
+                negative_words[i].append(review_words[i][j])
+                negative_freq[i].append(word_freq[i][j])
+                negative_sent[i].append(word_sent[i][j])
+                negative_colors[i].append(sentiment_color_grades[i][j])
+
+                positive_words[i].append(review_words[i][j])
+                positive_freq[i].append(word_freq[i][j])
+                positive_sent[i].append(0)
+                positive_colors[i].append(sentiment_color_grades[i][j])
+            else:
+                positive_words[i].append(review_words[i][j])
+                positive_freq[i].append(word_freq[i][j])
+                positive_sent[i].append(word_sent[i][j])
+                positive_colors[i].append(sentiment_color_grades[i][j])
+                
+                negative_words[i].append(review_words[i][j])
+                negative_freq[i].append(word_freq[i][j])
+                negative_sent[i].append(0)
+                negative_colors[i].append(sentiment_color_grades[i][j])
+
+    plt.bar(word_freq[0], positive_sent[0], width=1500, color=positive_colors[0])
+    plt.bar(word_freq[0], negative_sent[0], width=1500, color=negative_colors[0])
+
+    for i in range(len(positive_words[0])):
+        plt.text(word_freq[0][i], positive_sent[0][i], str(positive_words[0][i]), ha="center", va="bottom")
+
+    for i in range(len(negative_words[0])):
+        plt.text(word_freq[0][i], negative_sent[0][i], str(negative_words[0][i]), ha="center", va="bottom")
 
     plt.xlabel("Frequency")
     plt.ylabel("Sentiment")
