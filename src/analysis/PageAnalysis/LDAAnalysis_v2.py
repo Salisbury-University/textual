@@ -129,7 +129,7 @@ def classify_seen(bow_corpus, model, seen_documents, ids):
 		print('----------------------------------------------------------------------') 
 
 # classifies seen documents and updates their entry in the database
-def update_seen_documents(bow_corpus, model, seen_documents, ids):
+def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
 	
 	# get all of the topics
 	
@@ -151,6 +151,11 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids):
 		
 		doc_topics = topic_words["Topic_" + str(topic[0])] 
 		print(doc_topics) 
+		print(topic[0]) 
+	
+		new_val = {"$set": {"topic_words" : topic[0]}}
+		query = {'_id':_id} 
+		collection.update_one(query, new_val) 
 
 # classifies unseen documents
 def classify_unseen(dictionary, model, unseen_documents, ids): 
@@ -164,7 +169,7 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
 			break
 		print('----------------------------------------------------------------------') 
 
-def update_seen_documents(dictionary, model, unseen_documents, ids): 
+def update_seen_documents(dictionary, model, unseen_documents, ids, collection): 
 
     bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
 
@@ -186,7 +191,13 @@ def update_seen_documents(dictionary, model, unseen_documents, ids):
             break
 
         doc_topics = topic_words['Topic_' + str(topic[0])]
-        print(doc_topics) 
+        print(doc_topics)
+
+				new_val = {"$set" : "topic_words": topic[0]}} 
+				query = {'_id': _id} 
+				collection.update_one(query, new_val) 
+
+				 
 
 if __name__ == "__main__": 
 
@@ -248,10 +259,11 @@ if __name__ == "__main__":
 	seen = list(initial_entries.clone())
 	ids = [entry['_id'] for entry in seen if 'text' in entry and seen.index(entry) in indices]
 	#classify_seen(results[1], lda_model, entries_with_id)
-	update_seen_documents(results[1], lda_model, training_data, ids)
+	update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
 
 	# classifying unseen data
 	unseen = list(initial_entries.clone())
 	ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
 	#classify_unseen(results[0], lda_model, unseen_data, ids)
+	update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
 	
