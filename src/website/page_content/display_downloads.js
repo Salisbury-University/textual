@@ -1,5 +1,51 @@
 function load_downloads()
 {
+        fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
+                //Fetch the table from the HTML page
+                var table = $("#database_table tbody");
+                
+                //Keep track of the current document
+                var index = 0;  
+
+                //Array to hold all the documents fetched from the database (This way is 100x easier and super fast, I'm just stupid and didn't think of this before).
+                var document_array = JSON.parse(documents);
+                
+                //Count how many documents are in the query
+                const count = document_array.length;
+
+                //Loop through all the documents
+                while(index < count)
+                {
+                        //Get the values for each document. This includes the document title, text, category (subreddit), and the date.
+                        var title = document_array[index]["title"];
+                        var text = document_array[index]["text"];
+                        var subreddit = document_array[index]["subreddit"];
+                        var date = document_array[index]["created_utc"];
+
+                        //If the text from the query is empty, write a message
+                        if (text == "")
+                                text = "No Text Found.";        
+
+                        //Create a new row with the current content
+                        var row = $("<tr><td>" + title + "</td><td>" + subreddit + "</td><td>" + date + "</td><td>" + text + "</td></tr>");
+
+                        //Append the new row to the table
+                        table.append(row);
+
+                        //Increment the number of pages
+                        index++;
+                }
+
+                //Create the bootstrap table dynamically
+                $("#database_table").DataTable();
+                $('.dataTables_length').addClass('bs-select');
+        }).catch(function (error) {
+                alert(error);
+        });
+}
+/*
+function load_downloads()
+{
 	fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
 		var table = $("#database_table tbody");
@@ -18,7 +64,7 @@ function load_downloads()
 		{
 			//Get the values for each document. This includes the document title, text, category (subreddit), and the date.
 			var title = document_array[index]["title"];
-			var text = document_array[index]["selftext"];
+			var text = document_array[index]["text"];
 			var subreddit = document_array[index]["subreddit"];
 			var date = document_array[index]["created_utc"];
 
@@ -43,7 +89,7 @@ function load_downloads()
 		alert(error);
 	});
 }
-
+*/
 // Download the data displayed in JSON format
 // This function should call on the search_downloads function on the backend of the website.
 // Using a standard HTML input box, the user will be able to specify a collection to download from.
@@ -52,12 +98,12 @@ function load_downloads()
 function downloadData() {	
 		
 	//user_str, will be the string passed in from the frontend
-	const user_str = document.getElementById("user_collection");
-	const request_data = { collection: user_str };
-	
+	const user_str = document.getElementById("user_collection").value;
+	const data = {collection: user_str};
+
 	// Call the backend function to grab the specified content from the database.
-	fetch("/search_downloads", {method: "POST", body: JSON.stringify(request_data)}).then(data => data.text()).then((documents) => {
-	
+	fetch("/search_downloads", {method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(data => data.text()).then((documents) => {
+
 	//Array to hold all the documents fetched from the database
 	var document_array = JSON.parse(documents);
 	var document_strings = JSON.stringify(document_array);
@@ -85,6 +131,7 @@ function downloadData() {
 	});
 }
 
+/*
 // Download function for the neural network code
 function downloadNetworkCode(file, text) {	 
 	//creating an invisible element
@@ -116,3 +163,4 @@ function downloadNetworkCode(file, text) {
 	download(filename, text);
     }, false);	
 }
+*/
