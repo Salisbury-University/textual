@@ -92,7 +92,9 @@
 
 			<div class="container" id="wordcloud_visualizations_container">
 				<div id="worldcloud_text">
-				The Yelp review data dump provides access to a large collection of reviews for various establishments.
+					&emsp;The Yelp review data dump provides access to a large collection of reviews for various establishments. This data dump contains roughly 7.5 million reviews, each containing the text content of the review, metadata like the date the review was posted, and the number of stars the reviewer left. This dataset was collected using a Python script which loaded in the Yelp review data dump in JSON format and saved each review into our MongoDB database. For create a better representation of this data, 1,000,000 reviews (200,000 of each category) were extracted from the database. Each extracted review contains the textual information associated with each review along with the number of stars the review left the establishment.
+					<br/>
+					&emsp;In order to better understand this dataset, the following visualizations were created using the Python WordCloud library. This library allows for the displaying of words in a plot, scaled based on their relative frequencies in the source text. This visualization depicts the top 35 most frequent non-filler (and, or, not, etc...) words from each of the review categories. This provides an intuitive and straightforward way to understand the content of each of the different kinds of reviews contained in this open source dataset.
 				</div>
 				
 				<div id="wordcloud_img_section">
