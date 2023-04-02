@@ -137,7 +137,7 @@ def pageDict(metadata,text):
     return pDict
 
 def htmlDict(html, URL):
-    hDict={'HTML': zlib.compress(html.encode()), 'ID': makeID(URL)}
+    hDict={'text': zlib.compress(html.encode()), 'ID': makeID(URL)}
     return hDict
 def readWebpage(pageCount):
     client=get_client()
