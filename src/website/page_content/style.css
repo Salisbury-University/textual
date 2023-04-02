@@ -801,6 +801,8 @@
 #wordcloud_graph
 {
 	width: 100%;
+	font-size: 1.0rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
 g.mpld3-xaxis, g.mpld3-yaxis 
@@ -816,7 +818,6 @@ g.mpld3-texts
 
 #fig_el301281402125324000808520220736
 {
-	padding-left: 4.5%;
 	border: 1px #FFFFFF solid;
 	border-radius: 0.75rem;
 	margin: auto;
