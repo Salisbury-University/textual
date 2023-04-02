@@ -21,6 +21,6 @@
   * Link to Youtube API V3 Documentation: https://developers.google.com/youtube/v3/docs
   * You can change the number of requested comments and videos by changing the constants NUMBER_OF_COMMENTS and NUMBER_OF_VIDEOS
   If the assigned video category chart is not available, the process will be given a new category to request videos from.
-  * The program will not insert comments that are already in the database.
+  * The program will not insert videos or comments that are already in the database.
   * The program will not insert shorts or videos that do not have any comments, have comments disabled.
   * Our project can make up to 10,000 requests to the Youtube API every day.
