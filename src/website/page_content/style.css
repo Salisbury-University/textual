@@ -798,11 +798,6 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
-#wordcloud_graph
-{
-	width: 100%;
-}
-
 g.mpld3-xaxis, g.mpld3-yaxis 
 {
 	 display: none;
@@ -818,15 +813,16 @@ g.mpld3-xaxis, g.mpld3-yaxis
 
 .mpld3-figure
 {
-	width: 90%;
-	margin: auto;
+	display: flex !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
 }
 
 #fig_el301281402125324000808520220736
 {
 	border: 1px #FFFFFF solid;
 	border-radius: 0.75rem;
+	width: 75%;
 	margin: auto;
-	width: 50%;
 	background-color: #FFFFFF;
 }
