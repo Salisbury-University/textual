@@ -168,7 +168,7 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
 			break
 		print('----------------------------------------------------------------------') 
 
-def update_seen_documents(dictionary, model, unseen_documents, ids, collection):
+def update_unseen_documents(dictionary, model, unseen_documents, ids, collection):
 
 		bow_vectors = [] 
 		for doc in unseen_docs: 
@@ -258,14 +258,21 @@ if __name__ == "__main__":
 	lda_model = lda_bow_model(results[1], results[0], False)
 
 	# classifying seen data
-	seen = list(initial_entries.clone())
-	ids = [entry['_id'] for entry in seen if 'text' in entry and seen.index(entry) in indices]
+	#seen = list(initial_entries.clone())
+	#ids = [entry['_id'] for entry in seen if 'text' in entry and seen.index(entry) in indices]
 	#classify_seen(results[1], lda_model, entries_with_id)
-	update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
+	#update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
 
 	# classifying unseen data
 	unseen = list(initial_entries.clone())
-	ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
+	
+	# list comprehension was not working 
+	ids = [] 
+	for entry in unseen:
+		if unseen.index(entry) not in indices:
+			ids.append(entry['_id'])
+
+	#ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
 	#classify_unseen(results[0], lda_model, unseen_data, ids)
 	update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
 	
