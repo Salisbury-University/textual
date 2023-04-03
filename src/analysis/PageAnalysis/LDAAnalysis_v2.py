@@ -66,7 +66,7 @@ def preprocess(text_input):
 	for doc in text_input:
 		results.append([lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(doc) if token not in stopwords and len(token) > 3]) 
 
-	return preprocessed_results 
+	return results 
 
 # creates the dictionary and BOW, prints words if specified
 def get_dictionary_BOW(processed_documents, print_words=False):
@@ -114,7 +114,7 @@ def lda_bow_model(bow_corpus, dictionary, print_topics=False):
 def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 	
 	# creates the model
-	lda_model_tfidf = gensim.models.LdaMulticore(corpus_tfidf, num_topics=10, id2word=dictionary, passes=2, workers=2) 
+	lda_model_tfidf = gensim.models.LdaMulticore(corpus_tfidf, num_topics=10, id2word=dictionary, passes=2, workers=5) 
 	if print_topics: 
 		for idx, topic in lda_model_tfidf.print_topics(-1):
 			print(f'Topic: {idx} Word: {topic}')
@@ -178,7 +178,7 @@ def update_seen_documents(dictionary, model, unseen_documents, ids, collection):
 
     #bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
 
-    topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics()}
+    topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
 
     print(topic_words)
 
@@ -195,8 +195,7 @@ def update_seen_documents(dictionary, model, unseen_documents, ids, collection):
             topic = model.print_topic(index, 10)
             break
 
-        doc_topics = topic_words['Topic_' + str(topic[0])]
-        print(doc_topics)
+				print(topic[0])
 
 				new_val = {"$set" : "topic_words": topic[0]}} 
 				query = {'_id': _id} 
