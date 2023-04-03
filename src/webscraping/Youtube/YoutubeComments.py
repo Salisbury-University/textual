@@ -9,9 +9,9 @@
 # NUMBER_OF_COMMENTS
 # 
 # After running this program, up to <NUMBER_OF_VIDEOS> videos and up to
-# <NUMBER_OF_COMMENTS> comments will be added to the database. The videos
-# will be stored in youtube video collection and the comments will be stored
-# in youtube comment collection in the textual Database.
+# <NUMBER_OF_COMMENTS> comments will be added to the database for each video topic and category.
+# The videos will be stored in YoutubeVideo collection and the comments will be stored
+# in YoutubeComment collection in the textual Database.
 # <------------------------------------------------------------->
 
 import googleapiclient._auth
@@ -184,7 +184,7 @@ def getVideos(youtube, category):
                 # print("'KeyERROR': This video has no comments available. Next video...")
                 pass
     except HttpError as error:
-            print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
+            # print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
             return []
 
     return videos
@@ -305,10 +305,10 @@ def scrape_comments(youtube, category):
 # list of search topics to use as an argument for the API request. Since
 # there is a limit to the number of requests that can be made per day, the
 # full list of search topics are not all read in at once. Instead, the first
-# <NUMBER_OF_SEARCHES> topics to appear are read and stored into a list. 
-# The program then leaves a placeholder ("*") in the text file to remember
-# the last topic it searched for and will then begin searching from that 
-# point in the text file the next time the program is run.
+# <NUMBER_OF_SEARCHES> topics to appear after the placeholder are read and 
+# stored into a list. The program then leaves a placeholder ("*") in the 
+# text file to remember the last topic it searched for and will then begin 
+# searching from that point in the text file the next time the program is run.
 # <--------------------------------------------------------------------->
 
 def getSearchTopics():
@@ -382,7 +382,7 @@ def searchToVideo(youtube, searchResult, categories):
                         "category": thisCategory}
             
         except KeyError: # Occurs when comments are disabled for this video
-            print( "Thread " + str(mp.current_process().pid) + ":", "'KeyError': This video has no comments available. Next video...")
+            # print( "Thread " + str(mp.current_process().pid) + ":", "'KeyError': This video has no comments available. Next video...")
             thisVideo = "noComments"
 
     # print("This Video = ", thisVideo)
@@ -514,27 +514,31 @@ if __name__ == "__main__":
 
     # get the initial number of documents before inserting more into the database 
     DocumentCount = getDocumentCount() 
-    print("     Scraping Comments from Most Popular Video Charts>")
-    print("<-------------------------------------------------------->")
-    # Make a partial function since using multiple parameters
-    partial_scrape_comments = functools.partial(scrape_comments, youtube,)
-    pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
+    
+    getMostPopular = False
 
-    # Map each process to scrape comments from a different category in the list
-    results=pool.map(partial_scrape_comments, categories,)
-    pool.close()
+    if getMostPopular == True:
+        print("     Scraping Comments from Most Popular Video Charts>")
+        print("<-------------------------------------------------------->")
+        # Make a partial function since using multiple parameters
+        partial_scrape_comments = functools.partial(scrape_comments, youtube,)
+        pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
 
-    # counts the total number of videos and comments inserted by each process.
-    totalV = 0
-    totalC = 0
-    for total in results:
-        totalV += total[0]
-        totalC += total[1]
+        # Map each process to scrape comments from a different category in the list
+        results=pool.map(partial_scrape_comments, categories,)
+        pool.close()
+
+        # counts the total number of videos and comments inserted by each process.
+        totalV = 0
+        totalC = 0
+        for total in results:
+            totalV += total[0]
+            totalC += total[1]
 
     # get a list of Search topics from a txt file.
     topics = getSearchTopics()
 
-    print("     Scraping Comments from Most Popular Video Charts>")
+    print("     Scraping Comments from Search Queries>")
     print("<-------------------------------------------------------->")
     # Make a partial function since using multiple parameters
     partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories,)
@@ -552,8 +556,8 @@ if __name__ == "__main__":
     print("                     <RESULTS>                           ")
     print("<-------------------------------------------------------->")
 
-    print("Initial number of documents in YoutubeComment Collection: ", DocumentCount[0])
-    print("Initial number of documents in YoutubeVideo Collection: ", DocumentCount[1])
+    print("Initial number of documents in YoutubeVideo Collection: ", DocumentCount[0])
+    print("Initial number of documents in YoutubeComment Collection: ", DocumentCount[1])
     print()
 
     print("Total Videos inserted: ", totalV)
@@ -562,5 +566,5 @@ if __name__ == "__main__":
 
     DocumentCount = getDocumentCount()
 
-    print("Current number of documents in YoutubeComment Collection: ", DocumentCount[0])
-    print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[1])
+    print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[0])
+    print("Current number of documents in YoutubeComment Collection: ", DocumentCount[1])
