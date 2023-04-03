@@ -49,8 +49,9 @@ def close_database(client):
 
 # lemmatizes the words that are input
 # lemmatize essentially means to remove any endings to find the root of the word input
-def lemmatize_stemming(text_input): 
-    
+def lemmatize_stemming(text_input):
+	 
+	stemmer = SnowballStemmer(language="english")     
 	return stemmer.stem(WordNetLemmatizer().lemmatize(text_input, pos='v'))
 
 # preprocesses the text (removes stop words and words shorter than 3 letters) 
@@ -149,9 +150,7 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
 			topic = model.print_topic(index, 10)
 			break 
 		
-		doc_topics = topic_words["Topic_" + str(topic[0])] 
-		print(doc_topics) 
-		print(topic[0]) 
+		print(f'ID: {_id}, topic: {topic[0]}') 
 	
 		new_val = {"$set": {"topic_words" : topic[0]}}
 		query = {'_id':_id} 
@@ -169,9 +168,15 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
 			break
 		print('----------------------------------------------------------------------') 
 
-def update_seen_documents(dictionary, model, unseen_documents, ids, collection): 
+def update_seen_documents(dictionary, model, unseen_documents, ids, collection):
 
-    bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
+		bow_vectors = [] 
+		for doc in unseen_docs: 
+			
+			preprocessed_doc = preprocess(doc) 
+			bow_vectors.append(dictionary.doc2bow(preprocessed_doc))  
+
+    #bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
 
     topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics()}
 
@@ -195,9 +200,7 @@ def update_seen_documents(dictionary, model, unseen_documents, ids, collection):
 
 				new_val = {"$set" : "topic_words": topic[0]}} 
 				query = {'_id': _id} 
-				collection.update_one(query, new_val) 
-
-				 
+				#collection.update_one(query, new_val) 		 
 
 if __name__ == "__main__": 
 
