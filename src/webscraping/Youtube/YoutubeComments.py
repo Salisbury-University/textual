@@ -127,6 +127,43 @@ def getDocumentCount():
     return [videoCount, commentCount]
 
 # <--------------------------------------------------------------------->
+# Reads a file to determine whether or not to scrape from the most popular charts
+# returns True if it does and False if it doesn't.
+# 
+# the decision is based on the following variables:
+# 
+# YesOrNo: this variable is either "yes" or "no". this determines whether or not the scraper
+# scrapes from the most popular chart. 
+#
+# howManyLeft: this variable is a string that contains the number of days the scraper
+# should wait until scraping from the most popular chart.
+#
+# This allows the scraper to only scrape from the most popular chart once every 5 days.
+# This will save time and API quota.
+# <--------------------------------------------------------------------->
+def checkMostPopular():
+    with open("mostPopular.txt", "r+") as file:
+        check = file.read()
+
+        YesOrNo = check.split()[0]
+        howManyLeft = check.split()[1]
+
+        if YesOrNo == "yes":
+            file.seek(0)
+            file.write("no  5")
+            return True
+        
+        else:
+            if howManyLeft == '0':
+                file.seek(0)
+                file.write("yes 0")
+                return True
+            else:
+                file.seek(0)
+                file.write("no  " + (str((int(howManyLeft) - 1))))
+                return False
+
+# <--------------------------------------------------------------------->
 # Returns a list of Youtube Video Categories used in the US Region
 # <--------------------------------------------------------------------->
 def getCategories(youtube):
@@ -515,7 +552,11 @@ if __name__ == "__main__":
     # get the initial number of documents before inserting more into the database 
     DocumentCount = getDocumentCount() 
     
-    getMostPopular = False
+    getMostPopular = checkMostPopular()
+
+    # counts the total number of videos and comments inserted by each process.
+    totalV = 0
+    totalC = 0
 
     if getMostPopular == True:
         print("     Scraping Comments from Most Popular Video Charts>")
@@ -528,9 +569,8 @@ if __name__ == "__main__":
         results=pool.map(partial_scrape_comments, categories,)
         pool.close()
 
-        # counts the total number of videos and comments inserted by each process.
-        totalV = 0
-        totalC = 0
+        
+        
         for total in results:
             totalV += total[0]
             totalC += total[1]
