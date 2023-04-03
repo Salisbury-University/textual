@@ -134,7 +134,7 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
 	
 	# get all of the topics
 	
-	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics()}
+	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
 
 	print(topic_words) 	
 
