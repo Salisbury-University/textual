@@ -98,8 +98,9 @@ function load_downloads()
 function downloadData() {	
 		
 	//user_str, will be the string passed in from the frontend
-	const user_str = document.getElementById("user_collection").value;
-	const data = {collection: user_str};
+	const user_opt = document.getElementById("user_downloads");
+	const user_text = user_opt.options[user_opt.selectedIndex].text;
+	const data = {collection: user_text};
 
 	// Call the backend function to grab the specified content from the database.
 	fetch("/search_downloads", {method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(data => data.text()).then((documents) => {
@@ -113,7 +114,7 @@ function downloadData() {
 
 	//Create a new link in the DOM and append the blob to it
 	var a = document.createElement('a');
-	a.download = "RedditPosts.json";
+	a.download = user_text + ".json";
 	a.href = URL.createObjectURL(blob);
 	a.dataset.downloadurl = ["application/json", a.download, a.href].join(':');
 	a.style.display = "none";
