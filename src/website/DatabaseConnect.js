@@ -90,7 +90,7 @@ app.post("/search_downloads", (req, res, next) => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
 					//Use the user's requested collection
-					db.collection(collection).find().toArray(function(err, data) {
+					db.collection(collection).find().limit(500000).toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
