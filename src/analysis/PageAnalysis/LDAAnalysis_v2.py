@@ -170,36 +170,40 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
 
 def update_unseen_documents(dictionary, model, unseen_documents, ids, collection):
 
-		bow_vectors = [] 
-		for doc in unseen_docs: 
-			
-			preprocessed_doc = preprocess(doc) 
-			bow_vectors.append(dictionary.doc2bow(preprocessed_doc))  
+	bow_vectors = [] 
+	for doc in unseen_documents: 
+		
+		# forgive me father for i have sinned
+		preprocessed_doc = preprocess(doc)
+		preprocessed_doc_string = " ".join(str(v) for v in preprocessed_doc) 
+		preprocessed_list = preprocessed_doc_string.split(" ") 
+		bow_vectors.append(dictionary.doc2bow(preprocessed_list))  
 
-    #bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
+	#bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
 
-    topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
+	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
 
-    print(topic_words)
+	print(topic_words)
 
-    i=0 
+	i=0 
 
-    for vector in bow_vectors: 
+	for vector in bow_vectors: 
 
-        _id = ids[i]
-        i += 1 
+		if i < len(ids): 
 
-        topic = () 
+			_id = ids[i]
+			i += 1 
+		topic = [] 
 
-        for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-            topic = model.print_topic(index, 10)
-            break
+		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
+			topic.append(model.print_topic(index, 10))
+		
+		print(f'{_id}', end=" ") 
+		print(*topic)
 
-				print(topic[0])
-
-				new_val = {"$set" : "topic_words": topic[0]}} 
-				query = {'_id': _id} 
-				#collection.update_one(query, new_val) 		 
+		new_val = {"$set" : {"topic_words": topic}} 
+		query = {'_id': _id} 
+		#collection.update_one(query, new_val) 		 
 
 if __name__ == "__main__": 
 
