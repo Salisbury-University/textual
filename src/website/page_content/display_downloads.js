@@ -1,5 +1,7 @@
 function load_downloads()
 {
+	fetchCollections(); // Load the collection names into the dropdown selector
+
         fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
                 //Fetch the table from the HTML page
                 var table = $("#database_table tbody");
@@ -130,6 +132,31 @@ function downloadData() {
 	}).catch(function (error) {
 		alert(error);
 	});
+}
+
+function fetchCollections()
+{
+	fetch("/collections", {method: "POST"}).then(data => data.text()).then((documents) => {
+		//Array to hold all the collections fetched from the database.
+		var collection_array = JSON.parse(documents);
+		
+		//Count how many documents are in the query
+		const collection_length = collection_array.length;
+
+		var download_selector = document.getElementById("user_downloads");
+		
+		for (var index = 0; index < collection_length; index++)
+		{
+			// Create selector element with the values pulled from the database
+			var option = collection_array[index];
+			var element = document.createElement("option");
+			element.textContent = option;
+			element.value = option;
+
+			// Append the option the end of the select element
+			download_selector.appendChild(element);
+		}
+	}
 }
 
 /*
