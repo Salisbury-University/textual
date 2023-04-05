@@ -55,18 +55,27 @@ def lemmatize_stemming(text_input):
 	return stemmer.stem(WordNetLemmatizer().lemmatize(text_input, pos='v'))
 
 # preprocesses the text (removes stop words and words shorter than 3 letters) 
-def preprocess(text_input): 
+def preprocess(text_input, print_=False): 
 	
 	# adding more stopwords that tend to appear in the documents
 
-	stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
+        stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
 
 	# creates a list of preprocessed tokens if they are not in the stop words and are longer than 2 letters
-	results = []
-	for doc in text_input:
-		results.append([lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(doc) if token not in stopwords and len(token) > 3]) 
+        results = []
+        for doc in text_input:
 
-	return results 
+            result = [lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(doc) if token not in stopwords and len(token) >= 3]
+
+            results.append(result)
+
+        if print_: 
+            print(results)
+            print(len(results)) 
+   
+        new_results = [res for res in results if res != []] 
+
+        return new_results 
 
 # creates the dictionary and BOW, prints words if specified
 def get_dictionary_BOW(processed_documents, print_words=False):
@@ -150,23 +159,36 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
 			topic = model.print_topic(index, 10)
 			break 
 		
-		print(f'ID: {_id}, topic: {topic[0]}') 
+		print(f'ID: {_id}, topic: {topic}') 
 	
-		new_val = {"$set": {"topic_words" : topic[0]}}
+		new_val = {"$set": {"topic_words" : topic}}
 		query = {'_id':_id} 
-		collection.update_one(query, new_val) 
+		#collection.update_one(query, new_val) 
 
 # classifies unseen documents
-def classify_unseen(dictionary, model, unseen_documents, ids): 
-	
-	bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents]
+def classify_unseen(dictionary, model, unseen_documents, ids):
 
-	for vector in bow_vectors:
-		id_ = ids[i]
-		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-			print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
-			break
-		print('----------------------------------------------------------------------') 
+    bow_vectors = [] 
+    for doc in unseen_documents: 
+                
+        # forgive me father for i have sinned
+        preprocessed_doc = preprocess(doc.split(" "),True) 
+        print(preprocessed_doc)
+        preprocessed_doc_string = " ".join(str(v) for v in preprocessed_doc)
+        #print(preprocessed_doc_string) 
+        preprocessed_list = preprocessed_doc_string.split(" ") 
+        #print(preprocessed_list) 
+        bow_vectors.append(dictionary.doc2bow(preprocessed_list))  
+
+        #bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents]
+
+    for vector in bow_vectors:
+        #print(vector)
+        id_ = ids[i]
+        for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
+            print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
+            break
+        print('----------------------------------------------------------------------') 
 
 def update_unseen_documents(dictionary, model, unseen_documents, ids, collection):
 
@@ -187,19 +209,20 @@ def update_unseen_documents(dictionary, model, unseen_documents, ids, collection
 
 	i=0 
 
-	for vector in bow_vectors: 
+	for vector in bow_vectors:
 
 		if i < len(ids): 
 
 			_id = ids[i]
-			i += 1 
-		topic = [] 
+			i += 1
+
+		topic = ()
 
 		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-			topic.append(model.print_topic(index, 10))
+			topic = model.print_topic(index, 10)
 		
-		print(f'{_id}', end=" ") 
-		print(*topic)
+		#print(f'{_id}', end=" ") 
+		#print(topic)
 
 		new_val = {"$set" : {"topic_words": topic}} 
 		query = {'_id': _id} 
@@ -207,59 +230,60 @@ def update_unseen_documents(dictionary, model, unseen_documents, ids, collection
 
 if __name__ == "__main__": 
 
-	ignore_collections = ['PGHTML', 'WikiSourceHTML']  
+        ignore_collections = ['PGHTML', 'WikiSourceHTML']  
  
 	# get collection name from command line
-	if len(sys.argv) < 2:
-		print("Please provide a collection name.")
-		sys.exit
+        if len(sys.argv) < 2:
+            print("Please provide a collection name.")
+            sys.exit
 
 	# access database
-	client = get_client()
-	database = get_database(client)
-	all_collections = database.list_collection_names()
+        client = get_client()
+        database = get_database(client)
+        all_collections = database.list_collection_names()
 
 
 	# check to make sure the inputted collection is correct
-	if sys.argv[1] not in all_collections:
-		print('Invalid collection.')
-		sys.exit
+        if sys.argv[1] not in all_collections:
+            print('Invalid collection.')
+            sys.exit
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
-	initial_entries = database[sys.argv[1]].find({}, {'text':1, '_id':1}) 	
+        initial_entries = database[sys.argv[1]].find({}, {'text':1, '_id':1}) 	
 	
 	# check to see if entries is empty
-	if len(list(initial_entries.clone())) == 0:
-		print("No entries in collection.")
-		sys.exit
+        if len(list(initial_entries.clone())) == 0:
+            print("No entries in collection.")
+            sys.exit
 
 	# clears out any entries that may throw a key error
-	checked_entries = [entry['text'] for entry in initial_entries.clone() if 'text' in entry] 
+        checked_entries = [entry['text'] for entry in initial_entries.clone() if 'text' in entry] 
 
 	# randomly get values for 25% of the length of the collection
-	entries_25 = int(len(checked_entries)*.25)
+        entries_25 = int(len(checked_entries)*.25)
 	
-	indices = [] 
-	val = -1
+        indices = [] 
+        val = -1
 	
-	for i in range(entries_25):
-		val = random.randint(0, len(checked_entries)-1)
-		if val in indices:
-			val = random.randint(0, len(checked_entries)-1)
-		indices.append(val) 
+        for i in range(entries_25):
+            val = random.randint(0, len(checked_entries)-1)
+            if val in indices:
+                val = random.randint(0, len(checked_entries)-1) 
+            indices.append(val) 
 
 	# create a list of the entries that will be passed into the model to be trained
-	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
+        training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
 
 	# get the list of none training entries 
-	unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices] 
+        unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices]  
 
-	# results[0] is the dictionary, results[1] is the bag of words
-	results = get_dictionary_BOW(preprocess(training_data), False) 
+	# results[0] is the dictionary, results[1] is the bag of wordsi
+        processed_training_data = preprocess(training_data) 
+        results = get_dictionary_BOW(processed_training_data, False) 
 
 	# training the LDA model on the BOW data
-	lda_model = lda_bow_model(results[1], results[0], False)
+        lda_model = lda_bow_model(results[1], results[0], False)
 
 	# classifying seen data
 	#seen = list(initial_entries.clone())
@@ -268,15 +292,15 @@ if __name__ == "__main__":
 	#update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
 
 	# classifying unseen data
-	unseen = list(initial_entries.clone())
+        unseen = list(initial_entries.clone())
 	
 	# list comprehension was not working 
-	ids = [] 
-	for entry in unseen:
-		if unseen.index(entry) not in indices:
-			ids.append(entry['_id'])
+        ids = [] 
+        for entry in unseen:
+            if unseen.index(entry) not in indices:
+                ids.append(entry['_id'])
 
 	#ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
-	#classify_unseen(results[0], lda_model, unseen_data, ids)
-	update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
+        classify_unseen(results[0], lda_model, unseen_data, ids)
+	#update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
 	
