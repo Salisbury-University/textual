@@ -49,23 +49,29 @@ def close_database(client):
 
 # lemmatizes the words that are input
 # lemmatize essentially means to remove any endings to find the root of the word input
-def lemmatize_stemming(text_input): 
-    
+def lemmatize_stemming(text_input):
+	 
+	stemmer = SnowballStemmer(language="english")     
 	return stemmer.stem(WordNetLemmatizer().lemmatize(text_input, pos='v'))
 
 # preprocesses the text (removes stop words and words shorter than 3 letters) 
-def preprocess(text_input): 
+def preprocess(text_input, print_=False): 
 	
 	# adding more stopwords that tend to appear in the documents
 
-	stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
+        stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
 
 	# creates a list of preprocessed tokens if they are not in the stop words and are longer than 2 letters
-	results = []
-	for doc in text_input:
-		results.append([lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(doc) if token not in stopwords and len(token) > 3]) 
+        results = []
+        for doc in text_input:
 
-	return preprocessed_results 
+            result = [lemmatize_stemming(token) for token in gensim.utils.simple_preprocess(doc) if token not in stopwords and len(token) >= 3]
+
+            results.append(result)
+
+        new_results = [res for res in results if res != []] 
+
+        return new_results 
 
 # creates the dictionary and BOW, prints words if specified
 def get_dictionary_BOW(processed_documents, print_words=False):
@@ -113,7 +119,7 @@ def lda_bow_model(bow_corpus, dictionary, print_topics=False):
 def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 	
 	# creates the model
-	lda_model_tfidf = gensim.models.LdaMulticore(corpus_tfidf, num_topics=10, id2word=dictionary, passes=2, workers=2) 
+	lda_model_tfidf = gensim.models.LdaMulticore(corpus_tfidf, num_topics=10, id2word=dictionary, passes=2, workers=5) 
 	if print_topics: 
 		for idx, topic in lda_model_tfidf.print_topics(-1):
 			print(f'Topic: {idx} Word: {topic}')
@@ -129,7 +135,7 @@ def classify_seen(bow_corpus, model, seen_documents, ids):
 		print('----------------------------------------------------------------------') 
 
 # classifies seen documents and updates their entry in the database
-def update_seen_documents(bow_corpus, model, seen_documents, ids):
+def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
 	
 	# get all of the topics
 	
@@ -149,20 +155,61 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids):
 			topic = model.print_topic(index, 10)
 			break 
 		
-		doc_topics = topic_words["Topic_" + str(topic[0])] 
-		print(doc_topics) 
+		print(f'ID: {_id}, topic: {topic}') 
+
+		topics = [token for token, score in topic for i in range(len(topic))]	
+		print(topics)
+
+		new_val = {"$set": {"topic_words" : topics}}
+		query = {'_id':_id} 
+		#collection.update_one(query, new_val) 
 
 # classifies unseen documents
-def classify_unseen(dictionary, model, unseen_documents, ids): 
-	
-	bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents]
+def classify_unseen(dictionary, model, unseen_documents, ids):
+
+		bow_vectors = []
+		preprocessed_data = preprocess(unseen_documents)  
+
+		bow_vectors = [dictionary.doc2bow(doc) for doc in preprocessed_data]
+
+		for vector in bow_vectors:
+				print(vector)
+				id_ = ids[i]
+				for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
+						print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
+						break
+				print('----------------------------------------------------------------------') 
+
+def update_unseen_documents(dictionary, model, unseen_documents, ids, collection):
+
+	preprocessed_docs = preprocess(unseen_documents) 	
+	bow_vectors = [dictionary.doc2bow(doc) for doc in preprocessed_docs] 
+
+	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
+
+	print(topic_words)
+
+	i=0 
 
 	for vector in bow_vectors:
-		id_ = ids[i]
+
+		if i < len(ids): 
+
+			_id = ids[i]
+			i += 1
+
+		topic = ()
+
 		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-			print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
-			break
-		print('----------------------------------------------------------------------') 
+			topic = model.print_topic(index, 10)
+			break		
+
+		print(f'{_id}', end=" ") 
+		print(topic)
+
+		new_val = {"$set" : {"topic_words": topic}} 
+		query = {'_id': _id} 
+		#collection.update_one(query, new_val) 		 
 
 # classifies unseen documents and updates their entry in the database
 def update_unseen_documents(dictionary, model, unseen_documents, ids): 
@@ -189,27 +236,6 @@ def update_unseen_documents(dictionary, model, unseen_documents, ids):
 
 if __name__ == "__main__": 
 
-	''' 
-		Collections: 
-	
-			AmazonReviews: 'review_body'
-			PGText: 'text' 
-			RedditComments_v2: 'body'
-			RedditPosts_v2: 'selftext'
-			WikiSourceText: 'Text' 
-			YelpReviews: 'text'
-			YoutubeComment: 'text'
-			YoutubeVideo: 'vidTitle' 
-			TwitterTweets: 'tweet' 
-
-	'''
-
-	# dictionary containing the collection names as the key and the name of the attribute holding their data
-	# as the value 
-	collections = {'AmazonReviews':'review_body', 'PGText':'text', 'RedditComments_v2':'body', \
-	'RedditPosts_v2':'selftext', 'WikiSourceText':'Text', 'YelpReviews':'text', 'YoutubeCommment':'text', \
-	'YoutubeVideo':'vidTitle', 'TwitterTweets':'tweet'}
-
 	ignore_collections = ['PGHTML', 'WikiSourceHTML']  
  
 	# get collection name from command line
@@ -217,24 +243,20 @@ if __name__ == "__main__":
 		print("Please provide a collection name.")
 		sys.exit
 
-	# access database
+	# access database	
 	client = get_client()
 	database = get_database(client)
 	all_collections = database.list_collection_names()
 
-	# check to make sure that new collections haven't been added, exits if the case so you can add it to the dict
-	for col in all_collections:
-		if col not in collections and col not in ignore_collections: 
-			print(f'New collection added: {col}.') 
 
 	# check to make sure the inputted collection is correct
-	if sys.argv[1] not in collections:
+	if sys.argv[1] not in all_collections:
 		print('Invalid collection.')
 		sys.exit
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
-	initial_entries = database[sys.argv[1]].find({}, {collections[sys.argv[1]]:1, '_id':1}) 	
+	initial_entries = database[sys.argv[1]].find({}, {'text':1, '_id':1}) 	
 	
 	# check to see if entries is empty
 	if len(list(initial_entries.clone())) == 0:
@@ -242,7 +264,7 @@ if __name__ == "__main__":
 		sys.exit
 
 	# clears out any entries that may throw a key error
-	checked_entries = [entry[collections[sys.argv[1]]] for entry in initial_entries.clone() if collections[sys.argv[1]] in entry] 
+	checked_entries = [entry['text'] for entry in initial_entries.clone() if 'text' in entry] 
 
 	# randomly get values for 25% of the length of the collection
 	entries_25 = int(len(checked_entries)*.25)
@@ -253,30 +275,37 @@ if __name__ == "__main__":
 	for i in range(entries_25):
 		val = random.randint(0, len(checked_entries)-1)
 		if val in indices:
-			val = random.randint(0, len(checked_entries)-1)
+			val = random.randint(0, len(checked_entries)-1) 
 		indices.append(val) 
 
 	# create a list of the entries that will be passed into the model to be trained
 	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
 
 	# get the list of none training entries 
-	unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices] 
+	unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices]  
 
-	# results[0] is the dictionary, results[1] is the bag of words
-	results = get_dictionary_BOW(preprocess(training_data), False) 
+	# results[0] is the dictionary, results[1] is the bag of wordsi
+	processed_training_data = preprocess(training_data) 
+	results = get_dictionary_BOW(processed_training_data, False) 
 
 	# training the LDA model on the BOW data
 	lda_model = lda_bow_model(results[1], results[0], False)
 
 	# classifying seen data
-	seen = list(initial_entries.clone())
-	ids = [entry['_id'] for entry in seen if collections[sys.argv[1]] in entry and seen.index(entry) in indices]
-	#classify_seen(results[1], lda_model, training_data, ids)
-	update_seen_documents(results[1], lda_model, training_data, ids)
+	#seen = list(initial_entries.clone())
+	#ids = [entry['_id'] for entry in seen if 'text' in entry and seen.index(entry) in indices]
+	#classify_seen(results[1], lda_model, entries_with_id)
+	#update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
 
 	# classifying unseen data
 	unseen = list(initial_entries.clone())
-	ids = [entry['_id'] for entry in unseen if collections[sys.argv[1]] in entry and unseen.index(entry) not in indices] 
-	#classify_unseen(results[0], lda_model, unseen_data, ids)
-	update_unseen_documents(results[0], lda_model, unseen_data, ids)
 	
+	# list comprehension was not working 
+	ids = [] 
+	for entry in unseen:
+		if unseen.index(entry) not in indices:
+			ids.append(entry['_id'])
+
+	#ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
+    #classify_unseen(results[0], lda_model, unseen_data, ids)
+	update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
