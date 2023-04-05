@@ -69,10 +69,6 @@ def preprocess(text_input, print_=False):
 
             results.append(result)
 
-        if print_: 
-            print(results)
-            print(len(results)) 
-   
         new_results = [res for res in results if res != []] 
 
         return new_results 
@@ -168,40 +164,23 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
 # classifies unseen documents
 def classify_unseen(dictionary, model, unseen_documents, ids):
 
-    bow_vectors = [] 
-    for doc in unseen_documents: 
-                
-        # forgive me father for i have sinned
-        preprocessed_doc = preprocess(doc.split(" "),True) 
-        print(preprocessed_doc)
-        preprocessed_doc_string = " ".join(str(v) for v in preprocessed_doc)
-        #print(preprocessed_doc_string) 
-        preprocessed_list = preprocessed_doc_string.split(" ") 
-        #print(preprocessed_list) 
-        bow_vectors.append(dictionary.doc2bow(preprocessed_list))  
+		bow_vectors = []
+		preprocessed_data = preprocess(unseen_documents)  
 
-        #bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents]
+		bow_vectors = [dictionary.doc2bow(doc) for doc in preprocessed_data]
 
-    for vector in bow_vectors:
-        #print(vector)
-        id_ = ids[i]
-        for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
-            print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
-            break
-        print('----------------------------------------------------------------------') 
+		for vector in bow_vectors:
+				print(vector)
+				id_ = ids[i]
+				for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
+						print(f"ID: {id_}\t \nScore: {score}\t \nTopic: {model.print_topic(index, 10)}")
+						break
+				print('----------------------------------------------------------------------') 
 
 def update_unseen_documents(dictionary, model, unseen_documents, ids, collection):
 
-	bow_vectors = [] 
-	for doc in unseen_documents: 
-		
-		# forgive me father for i have sinned
-		preprocessed_doc = preprocess(doc)
-		preprocessed_doc_string = " ".join(str(v) for v in preprocessed_doc) 
-		preprocessed_list = preprocessed_doc_string.split(" ") 
-		bow_vectors.append(dictionary.doc2bow(preprocessed_list))  
-
-	#bow_vectors = [dictionary.doc2bow(preprocess(doc)) for doc in unseen_documents] 
+	preprocessed_docs = preprocess(unseen_documents) 	
+	bow_vectors = [dictionary.doc2bow(doc) for doc in preprocessed_docs] 
 
 	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
 
@@ -220,9 +199,10 @@ def update_unseen_documents(dictionary, model, unseen_documents, ids, collection
 
 		for index, score in sorted(model[vector], key=lambda tup: -1*tup[1]):
 			topic = model.print_topic(index, 10)
-		
-		#print(f'{_id}', end=" ") 
-		#print(topic)
+			break		
+
+		print(f'{_id}', end=" ") 
+		print(topic)
 
 		new_val = {"$set" : {"topic_words": topic}} 
 		query = {'_id': _id} 
