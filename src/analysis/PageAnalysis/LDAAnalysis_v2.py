@@ -135,7 +135,7 @@ def classify_seen(bow_corpus, model, seen_documents, ids):
 		print('----------------------------------------------------------------------') 
 
 # classifies seen documents and updates their entry in the database
-def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
+def update_seen_documents(bow_corpus, model, seen_documents, ids, collection, print_=False):
 	
     # get all of the topics
 	
@@ -152,17 +152,19 @@ def update_seen_documents(bow_corpus, model, seen_documents, ids, collection):
         for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
             topic = model.print_topic(index, 10)
             break 
-       
-        print(f'{_id}', end=" ") 
-            
+        
+        # split up the topics into a list of words
         split_topics = [((item.split("*"))[1]).replace('"', "") for item in topic.split("+")]
-        print(*split_topics) 
-            
-        print("-------------------------------------")
+        
+        if print_:
+
+            print(f'{_id}', end=" ") 
+            print(*split_topics)     
+            print("-------------------------------------")
 
         new_val = {"$set" : {"topic_words": split_topics}} 
         query = {'_id': _id} 
-        #collection.update_one(query, new_val) 
+        collection.update_one(query, new_val) 
 
 # classifies unseen documents
 def classify_unseen(dictionary, model, unseen_documents, ids):
@@ -180,7 +182,7 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
             break
         print('----------------------------------------------------------------------') 
 
-def update_unseen_documents(dictionary, model, unseen_documents, ids, collection):
+def update_unseen_documents(dictionary, model, unseen_documents, ids, collection, print_=False):
 
         preprocessed_docs = preprocess(unseen_documents) 	
         bow_vectors = [dictionary.doc2bow(doc) for doc in preprocessed_docs] 
@@ -202,16 +204,18 @@ def update_unseen_documents(dictionary, model, unseen_documents, ids, collection
                 topic = model.print_topic(index, 10)
                 break		
 
-            print(f'{_id}', end=" ") 
-            
+            # split up the output
             split_topics = [((item.split("*"))[1]).replace('"', "") for item in topic.split("+")]
-            print(*split_topics) 
 
-            print("-------------------------------------") 
+            if print_:
+
+                print(f'{_id}', end=" ")
+                print(*split_topics) 
+                print("-------------------------------------") 
 
             new_val = {"$set" : {"topic_words": split_topics}} 
             query = {'_id': _id} 
-            #collection.update_one(query, new_val) 		 
+            collection.update_one(query, new_val) 		 
 
 if __name__ == "__main__": 
 
@@ -271,10 +275,14 @@ if __name__ == "__main__":
 	lda_model = lda_bow_model(results[1], results[0], False)
 
 	# classifying seen data
-	#seen = list(initial_entries.clone())
-	#ids = [entry['_id'] for entry in seen if 'text' in entry and seen.index(entry) in indices]
+        seen = list(initial_entries.clone())
+        ids = []
+        for entry in seen: 
+            if seen.index(entry) in indices:
+                ids.append(entry['_id']) 
+
 	#classify_seen(results[1], lda_model, entries_with_id)
-	#update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
+	update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
 
 	# classifying unseen data
 	unseen = list(initial_entries.clone())
@@ -285,6 +293,5 @@ if __name__ == "__main__":
 		if unseen.index(entry) not in indices:
 			ids.append(entry['_id'])
 
-	#ids = [entry['_id'] for entry in unseen if 'text' in entry and unseen.index(entry) not in indices] 
         #classify_unseen(results[0], lda_model, unseen_data, ids)
 	update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
