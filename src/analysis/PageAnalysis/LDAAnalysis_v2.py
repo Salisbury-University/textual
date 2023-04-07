@@ -14,6 +14,7 @@ import nltk
 from  gensim import corpora, models
 from pprint import pprint
 import random
+import multiprocessing as mp 
 
 nltk.download('wordnet')
 np.random.seed(2018) 
@@ -107,7 +108,7 @@ def make_TFIDF(bow_corpus, print_values=False):
 def lda_bow_model(bow_corpus, dictionary, print_topics=False):
 
 	# creates the model 
-	lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=10, id2word=dictionary, passes=2, workers=2)
+	lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=25, id2word=dictionary, passes=2, workers=10)
 
 	if print_topics: 
 		for idx, topic in lda_model.print_topics(-1):
@@ -135,36 +136,38 @@ def classify_seen(bow_corpus, model, seen_documents, ids):
 		print('----------------------------------------------------------------------') 
 
 # classifies seen documents and updates their entry in the database
-def update_seen_documents(bow_corpus, model, seen_documents, ids, collection, print_=False):
+def update_seen_documents(bow_corpus, model, seen_documents, ids, collection, database, print_=False):
 	
-    # get all of the topics
+	print("************************Seen Documents*****************************")
+
+	# get all of the topics
 	
-    topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
+	topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
 
-    for i in range(len(seen_documents)): 
+	for i in range(len(seen_documents)): 
 		
-        # get ID
-        _id = ids[i]
+		# get ID
+		if i < len(ids) and i < len(bow_corpus):
+			_id = ids[i]
 		
-        topic = ()		
+			topic = ()		
 
-        # get the top topic from the sorted model, ignore the score
-        for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
-            topic = model.print_topic(index, 10)
-            break 
+			# get the top topic from the sorted model, ignore the score
+			for index, score in sorted(model[bow_corpus[i]], key=lambda tup: -1*tup[1]):
+				topic = model.print_topic(index, 10)
+				break 
         
-        # split up the topics into a list of words
-        split_topics = [((item.split("*"))[1]).replace('"', "") for item in topic.split("+")]
+			# split up the topics into a list of words
+			split_topics = [((item.split("*"))[1]).replace('"', "") for item in topic.split("+")]
         
-        if print_:
+			if print_:
+				print(f'{_id}', end=" ") 
+				print(*split_topics)     
+				print("-------------------------------------")
 
-            print(f'{_id}', end=" ") 
-            print(*split_topics)     
-            print("-------------------------------------")
-
-        new_val = {"$set" : {"topic_words": split_topics}} 
-        query = {'_id': _id} 
-        collection.update_one(query, new_val) 
+			new_val = {"$set" : {"topic_words": split_topics}} 
+			query = {'_id': _id} 
+			database[collection].update_one(query, new_val) 
 
 # classifies unseen documents
 def classify_unseen(dictionary, model, unseen_documents, ids):
@@ -182,10 +185,19 @@ def classify_unseen(dictionary, model, unseen_documents, ids):
             break
         print('----------------------------------------------------------------------') 
 
-def update_unseen_documents(dictionary, model, unseen_documents, ids, collection, print_=False):
+def update_unseen_documents(dictionary, model, unseen_documents, ids, collection, database, print_=False):
 
-        preprocessed_docs = preprocess(unseen_documents) 	
-        bow_vectors = [dictionary.doc2bow(doc) for doc in preprocessed_docs] 
+        print("***********************Unseen Documents*************************")
+
+        pool = mp.Pool(mp.cpu_count())
+        size_chunks = len(unseen_documents)//mp.cpu_count() 
+        unseen_doc_chunks = [unseen_documents[x:x+size_chunks] for x in range(0, len(unseen_documents), size_chunks)] 
+        processed_unseen_chunks = pool.map(preprocess, [chunk for chunk in unseen_doc_chunks])
+        pool.close()
+
+        processed_unseen = [element for subelement in processed_unseen_chunks for element in subelement]
+
+        bow_vectors = [dictionary.doc2bow(doc) for doc in processed_unseen] 
 
         topic_words = {"Topic_" + str(i): [token for token, score in model.show_topic(i, topn=10)] for i in range(0, model.num_topics)}
 
@@ -215,83 +227,94 @@ def update_unseen_documents(dictionary, model, unseen_documents, ids, collection
 
             new_val = {"$set" : {"topic_words": split_topics}} 
             query = {'_id': _id} 
-            collection.update_one(query, new_val) 		 
+            database[collection].update_one(query, new_val) 		 
 
 if __name__ == "__main__": 
 
-	ignore_collections = ['PGHTML', 'WikiSourceHTML']  
+        ignore_collections = ['PGHTML', 'WikiSourceHTML']  
  
 	# get collection name from command line
-	if len(sys.argv) < 2:
-		print("Please provide a collection name.")
-		sys.exit
+        if len(sys.argv) < 2:
+            print("Please provide a collection name.")
+            sys.exit
 
 	# access database	
-	client = get_client()
-	database = get_database(client)
-	all_collections = database.list_collection_names()
+        client = get_client()
+        database = get_database(client)
+        all_collections = database.list_collection_names()
 
 
 	# check to make sure the inputted collection is correct
-	if sys.argv[1] not in all_collections:
-		print('Invalid collection.')
-		sys.exit
+        if sys.argv[1] not in all_collections:
+            print('Invalid collection.')
+            sys.exit
 
 	# get samples from the database in order to train a model; gets around 25% of the data, keeps the indices chosen
 	# in order to classify those using the seen_model function rather than the unseen_model one
-	initial_entries = database[sys.argv[1]].find({}, {'text':1, '_id':1}) 	
+        initial_entries = database[sys.argv[1]].find({}, {'text':1, '_id':1}) 	
 	
 	# check to see if entries is empty
-	if len(list(initial_entries.clone())) == 0:
-		print("No entries in collection.")
-		sys.exit
+        if len(list(initial_entries.clone())) == 0:
+            print("No entries in collection.")
+            sys.exit
 
 	# clears out any entries that may throw a key error
-	checked_entries = [entry['text'] for entry in initial_entries.clone() if 'text' in entry] 
+        checked_entries = [entry['text'] for entry in initial_entries.clone() if 'text' in entry] 
 
 	# randomly get values for 25% of the length of the collection
-	entries_25 = int(len(checked_entries)*.25)
+        entries_25 = int(len(checked_entries)*.25)
 	
-	indices = [] 
-	val = -1
+        indices = [] 
+        val = -1
 	
-	for i in range(entries_25):
-		val = random.randint(0, len(checked_entries)-1)
-		if val in indices:
-			val = random.randint(0, len(checked_entries)-1) 
-		indices.append(val) 
+        for i in range(entries_25):
+            val = random.randint(0, len(checked_entries)-1)
+            if val in indices:
+                val = random.randint(0, len(checked_entries)-1) 
+            indices.append(val) 
 
 	# create a list of the entries that will be passed into the model to be trained
-	training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
+        training_data = [entry for entry in checked_entries if checked_entries.index(entry) in indices] 
 
 	# get the list of none training entries 
-	unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices]  
+        unseen_data = [entry for entry in checked_entries if checked_entries.index(entry) not in indices]  
 
-	# results[0] is the dictionary, results[1] is the bag of wordsi
-	processed_training_data = preprocess(training_data) 
-	results = get_dictionary_BOW(processed_training_data, False) 
+	# results[0] is the dictionary, results[1] is the bag of words
+        # use multiprocessing to speed up the preprocessing 
+
+        pool = mp.Pool(mp.cpu_count())
+        size_chunks = len(training_data)//mp.cpu_count() 
+        training_data_chunks = [training_data[x:x+size_chunks] for x in range(0, len(training_data), size_chunks)] 
+        processed_training_data = pool.map(preprocess, [chunk for chunk in training_data_chunks])
+        pool.close()
+
+        processed_training = [element for subelement in processed_training_data for element in subelement]
+    
+        results = get_dictionary_BOW(processed_training, False) 
 
 	# training the LDA model on the BOW data
-	lda_model = lda_bow_model(results[1], results[0], False)
+        lda_model = lda_bow_model(results[1], results[0], False)
 
 	# classifying seen data
         seen = list(initial_entries.clone())
+
+        # ids because original formatting was not working 
         ids = []
         for entry in seen: 
             if seen.index(entry) in indices:
                 ids.append(entry['_id']) 
 
 	#classify_seen(results[1], lda_model, entries_with_id)
-	update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1])
+        update_seen_documents(results[1], lda_model, training_data, ids, sys.argv[1], database, True)
 
 	# classifying unseen data
-	unseen = list(initial_entries.clone())
+        unseen = list(initial_entries.clone())
 	
 	# list comprehension was not working 
-	ids = [] 
-	for entry in unseen:
-		if unseen.index(entry) not in indices:
-			ids.append(entry['_id'])
+        ids = [] 
+        for entry in unseen:
+            if unseen.index(entry) not in indices:
+                ids.append(entry['_id'])
 
         #classify_unseen(results[0], lda_model, unseen_data, ids)
-	update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1])
+        update_unseen_documents(results[0], lda_model, unseen_data, ids, sys.argv[1], database, True)
