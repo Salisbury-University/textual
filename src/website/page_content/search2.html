@@ -78,25 +78,31 @@
 
 			<!-- HEADER -->
 			<p class="h1" style="color:#FFFFFF" id="search_header">Search</p>
-			<form action="/search2" method="POST">
+			<form id="searchForm" action="/search2" method="POST">
 				<div id="search_bar">
-					<input type="text" name="searchTerm" placeholder="Search...">
+					<input id="searchBar" type="text" name="searchTerm" placeholder="Search...">
 				</div>
 				<div id="database_menu">
-					<input type="checkbox" id="Reddit" name="redditCB" value="Reddit">
-					<label for "Reddit" style="color:#FFFFFF">Reddit</label><br>
+					<input type="checkbox" id="YelpReviews" name="yelpCB" value="YelpReviews">
+                                        <label for "YelpReviews" style="color:#FFFFFF">Yelp Reviews</label><br>
+					<input type="checkbox" id="RedditPosts" name="redditCB" value="RedditPosts">
+					<label for "Reddit" style="color:#FFFFFF">Reddit Posts</label><br>
 					<input type="checkbox" id="Twitter" name="twitterCB" value="Twitter">
 					<label for "Twitter" style="color:#FFFFFF">Twitter</label><br>
 					<input type="checkbox" id="Project_Gutenberg" name="pgCB" value="Project_Gutenberg">
                         	        <label for "Project_Gutenberg" style="color:#FFFFFF">Project Gutenberg</label><br>
 					<input type="checkbox" id="Youtube" name="youtubeCB" value="Youtube">
 					<label for "Youtube" style="color:#FFFFFF">Youtube</label><br>
-					<input type="checkbox" id="Wikisource" name="wsCB" value="Wikisource">
+					<input type="checkbox" id="Wikisource" name="wsCB" value="WikiSourceText">
         	                        <label for "Wikisource" style="color:#FFFFFF">Wikisource</label><br>
+					<input type="checkbox" id="RedditComments_v2" name="RC2CB" value="RedditComments_v2">
+					<label for "RedditComments_v2" style="color:#FFFFFF">Reddit Comments</label><br>
+					<input type="checkbox" id="AmazonReviewsCB" name="amazonCB" value="AmazonReviews">
+					<label for "AmazonReviewsCB" style="color:#FFFFFF">Amazon Reviews</label><br>
 	
 				</div>
 				<!--<input type="submit" value="Submit">-->
-				<button id="searchButton" name="searchButton">Submit</button>
+				<button id="searchSubmit" name="searchButton">Submit</button>
 			</form>
 			<div class="navbar" id="su_footer">Salisbury University 2022-2023</div>
 		</main>
