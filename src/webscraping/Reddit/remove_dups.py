@@ -40,12 +40,21 @@ def close_database(client):
 if __name__=="__main__":
     client=get_client()
     db = get_database(client)
-    cur = db.TwitterTweets.aggregate(
+
+    """
+        This aggregate function is a fast way to collect certain data points within a collection
+        the one below basically just finds all the 'non unique' reddit posts form the RedditPosts_v2 
+        collection and places then inside a dictionary like object.
+    """
+    cur = db.RedditPosts_v2.aggregate(
         [
             {"$group":{"_id":"$link","unique_ids":{"$addToSet":"$_id"},"count":{"$sum":1}}},
             {"$match":{"count":{"$gte":2}}}
         ]
     )
+
+    # actual grabbing of the unique id's of where those duplicates are stored and 
+    # deletes them accordingly
     dup_ids =[]
     for data in cur:
         del data["unique_ids"][0]
