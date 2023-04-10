@@ -412,7 +412,6 @@
 
 #bargraph_visualizations_container
 {
-	display: flex;
 	width: 100%;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
@@ -424,7 +423,6 @@
 
 #frequency_visualizations_container
 {
-	display: flex;
 	width: 100%;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
@@ -641,8 +639,20 @@
 	width: 75%;
 }
 
-#wordcloud_img
+#freq_img
 {
+	border-radius: 2rem;
+	margin-top: 2rem;
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
+}
+
+#bar_img
+{
+	border-radius: 2rem;
+	margin-top: 2rem;
 	display: block;
   	margin-left: auto;
   	margin-right: auto;
