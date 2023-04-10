@@ -60,5 +60,5 @@ if __name__=="__main__":
         del data["unique_ids"][0]
         for data_id in data["unique_ids"]:
             dup_ids.append(data_id)
-    collection.remove({"_id":{"$in":dup_ids}})
+    db.YoutubeVideo.remove({"_id":{"$in":dup_ids}})
     close_database(client)
