@@ -59,3 +59,19 @@ def send_data(urban_dictionary):
 
     close_database(client) 
 
+if __name__ == "__main__":
+
+    df = pd.read_csv('urbandict-word-defs.csv')
+
+    entries = [] 
+
+    for i in range(len(df)): 
+
+        line = (df.loc[i]).tolist() 
+        entries.append({'text':[str(line[1]), str(line[5]),'author':str(line[4]), 'word_id':str(line[0])})
+
+    entries_array = np.array_split(entries, mp.cpu_count())
+
+    pool = mp.Pool(mp.cpu_count())
+    pool.map(send_data, [entry for entry in entries_array]) 
+    pool.close() 
