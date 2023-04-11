@@ -45,3 +45,17 @@ def close_database(client):
     # Close database connection
     client.close()
 
+# to read urban dictionary data to the database 
+def send_data(urban_dictionary): 
+
+    client = get_client()
+    db = get_database(client)
+    collection = db.UrbanDictionary
+
+    for i in range(len(urban_dictionary)):
+
+        print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
+        collection.insert_one(urban_dictionary[i]) 
+
+    close_database(client) 
+
