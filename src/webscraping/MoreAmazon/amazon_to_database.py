@@ -76,7 +76,7 @@ def pullReviews(input_arr):
     database = get_database(client)
 
     # Get a collection from the database (WikiSourceText, holds the wikisource pages, WikiSourceHTML holds html source)
-    yelp_collection = database.MoreAmazon
+    amazon_collection = database.MoreAmazon
 
     # Iterate through each array within the numpy array
     for i in range(0, len(input_arr)):
@@ -84,7 +84,7 @@ def pullReviews(input_arr):
         print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
         # Convert to dictionary and write to database
         
-        # yelp_collection.insert_one(dict(input_arr[i]))
+        amazon_collection.insert_one(dict(input_arr[i]))
     
     # Close the connection to the database, IMPORTANT
     client.close()
@@ -109,9 +109,9 @@ if __name__ =="__main__":
     with open(filename) as input_file: 
         for line in input_file:
             # Load the line as JSON 
-            # json_obj = json.loads(line)
+            json_obj = json.loads(line)
             # Append the JSON object to the end of the list
-            # reviews.append(json_obj)
+            reviews.append(json_obj)
 
     # Split larger array into n sub arrays where n is the number of available processors
     # This is done to allow each processor to process some of the data
