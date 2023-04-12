@@ -61,14 +61,15 @@ def send_data(urban_dictionary):
 
 if __name__ == "__main__":
 
-    df = pd.read_csv('urbandict-word-defs.csv')
+    cols = pd.read_csv('urbandict-word-defs.csv', nrows=1).columns
+    df = pd.read_csv('urbandict-word-defs.csv', usecols=cols)
 
     entries = [] 
 
     for i in range(len(df)): 
 
         line = (df.loc[i]).tolist() 
-        entries.append({'text':[str(line[1]), str(line[5]),'author':str(line[4]), 'word_id':str(line[0])})
+        entries.append({'text':[str(line[1]), str(line[5])],'author':str(line[4]), 'word_id':str(line[0])})
 
     entries_array = np.array_split(entries, mp.cpu_count())
 
