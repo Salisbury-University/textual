@@ -84,7 +84,10 @@ def pullReviews(input_arr):
         print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
         # Convert to dictionary and write to database
         
-        amazon_collection.insert_one(dict(input_arr[i]))
+        # Rename the field for the database
+        review_dict = dict(input_arr[i])
+        review_dict["text"] = review_dict.pop("reviewText")
+        amazon_collection.insert_one(review_dict)
     
     # Close the connection to the database, IMPORTANT
     client.close()
@@ -132,4 +135,4 @@ if __name__ =="__main__":
 
     # Close file
     input_file.close()
-    print("Done... pulled files written to MongoDB database")
+    print("Done... documents written to MongoDB database")
