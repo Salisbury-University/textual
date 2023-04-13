@@ -7,7 +7,7 @@ import os
 import csv
 from pymongo import MongoClient
 
-key_word = "X-Filename" 
+key_word = "X-FileName" 
 
 # Get authoriazation from file
 def get_credentials():
@@ -55,7 +55,7 @@ def read_file(path):
     keyword_index = None
 
     for i, line in enumerate(lines):
-        if keyword in line: 
+        if key_word in line: 
             keyword_index = i
             break 
 
@@ -63,12 +63,11 @@ def read_file(path):
         print(f'The keyword "{key_word}" was not found.') 
         sys.exit() 
 
-    other_lines = lines[keyword_index+1] 
+    other_lines = lines[keyword_index+1:]
 
     # convert other_lines to a string 
 
-    new_data_string = ' '.join(other_lines) 
-
+    new_data_string = ''.join(other_lines) 
     new_entry = {'text':new_data_string} 
 
     client = get_client() 
@@ -76,4 +75,30 @@ def read_file(path):
     collection = db.EnronEmails 
 
     collection.insert_one(new_entry) 
+
+def get_path(directory):
+
+    for subdir, dirs, files in os.walk(directory):
+        print(subdir) 
+        for file in files:
+            print(os.path.join(subdir, files))
+
+if __name__ == "__main__":
+
+    root = 'maildir' 
+    subdirs = [os.path.join(root, name) for name in os.listdir(root) if os.path.isdir(os.path.join(root, name))]
+    
+    for dir_ in subdirs:
+        
+        d = dir_ + "/all_documents" 
+        print(d) 
+
+        try:
+            
+            for filename in os.listdir(d):
+                f = os.path.join(d, filename) 
+                read_file(f) 
+
+        except FileNotFoundError as e: 
+            print("Error", e) 
 
