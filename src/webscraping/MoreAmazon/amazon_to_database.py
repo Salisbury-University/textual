@@ -85,9 +85,12 @@ def pullReviews(input_arr):
         # Convert to dictionary and write to database
         
         # Rename the field for the database
-        review_dict = dict(input_arr[i])
-        review_dict["text"] = review_dict.pop("reviewText")
-        amazon_collection.insert_one(review_dict)
+        try:
+            review_dict = dict(input_arr[i])
+            review_dict["text"] = review_dict.pop("reviewText")
+            amazon_collection.insert_one(review_dict)
+        except:
+            print("Key error, skipping document.")
     
     # Close the connection to the database, IMPORTANT
     client.close()
