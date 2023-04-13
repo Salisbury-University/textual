@@ -150,17 +150,6 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
-.help_intro
-{
-	color: #D9D9D9;
-	line-height: 2.5rem;
-	margin-left: auto;
-	margin-right: auto;
-	max-width: 85rem;
-	font-size: 1.5rem;
-	font-family: 'Yanone Kaffeesatz', sans-serif;
-}
-
 #second_paragraph
 {
 	margin-bottom: 2rem;
@@ -919,4 +908,26 @@ g.mpld3-xaxis, g.mpld3-yaxis
 	width: 65%;
 	margin: auto;
 	background-color: #FFFFFF;
+}
+
+#info_header 
+{
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	width: 80%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#info_icon
+{
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#info_paragraph
+{
+	display:table-cell;
+  	vertical-align: middle;	
 }
