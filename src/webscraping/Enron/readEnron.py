@@ -7,6 +7,8 @@ import os
 import csv
 from pymongo import MongoClient
 
+key_word = "X-Filename" 
+
 # Get authoriazation from file
 def get_credentials():
     with open("mongopassword.txt", "r") as pass_file:
@@ -45,4 +47,33 @@ def close_database(client):
     # Close database connection
     client.close()
 
+def read_file(path): 
+
+    with open(path, 'r') as file_: 
+        lines = file_.readlines() 
+
+    keyword_index = None
+
+    for i, line in enumerate(lines):
+        if keyword in line: 
+            keyword_index = i
+            break 
+
+    if keyword_index is None: 
+        print(f'The keyword "{key_word}" was not found.') 
+        sys.exit() 
+
+    other_lines = lines[keyword_index+1] 
+
+    # convert other_lines to a string 
+
+    new_data_string = ' '.join(other_lines) 
+
+    new_entry = {'text':new_data_string} 
+
+    client = get_client() 
+    db = get_database(client) 
+    collection = db.EnronEmails 
+
+    collection.insert_one(new_entry) 
 
