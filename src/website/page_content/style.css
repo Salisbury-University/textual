@@ -922,14 +922,18 @@ g.mpld3-xaxis, g.mpld3-yaxis
 
 #info_icon
 {
+	width: 30%;
+	height: 30%;
 	display:table-cell;
   	vertical-align: middle;	
 }
 
-#info_paragraph
+.info_paragraph
 {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	margin-left: auto;
+	width: 60%;
 	line-height: 2rem;
 	color: #D9D9D9;
-	display:table-cell;
-  	vertical-align: middle;	
 }
