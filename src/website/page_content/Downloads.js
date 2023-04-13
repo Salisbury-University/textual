@@ -23,7 +23,7 @@ window.onload = function(res) {
 		//Write table
 		res.write("<table><tr>");
 		res.write("<th>Post Title</th><th>Subreddit</th><th>Post Date</th><th>Post Content</th></tr>");
-
+		
 		//For each item, append it to the HTML content
 		cursor.each(function(err, item) {
 			//Write until empty

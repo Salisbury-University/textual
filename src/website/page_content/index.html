@@ -59,6 +59,7 @@
 			  Tutorials
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			  <a class="dropdown-item" href="visualizations.html">Visualizations</a>
 			  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
 			  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
 			  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
@@ -94,22 +95,28 @@
 			<div class="container" id="page_tiles">
 				<!-- THESE TILES WILL HOLD CONTENT ON THE HOME PAGE -->
 				<div class="row justify-content-center">
-					<div class="col-md-3 page_tile" id="page_tile_1">
+					<div class="col-md-3" id="page_tile">
 						<h2>Review Classification</h2>
-						<p id="page_tile_1_text">Reviews are often a showcase of how people really feel. The Yelp review site provides access to a large collection of reviews from various different categories ranging from restaurants to airlines. What can we learn from these reviews? This example showcases one possible area of research by attempting to classify reviews on a 5-star scale using Machine Learning.</p>
-						<p><a class="btn btn-primary" href="review_analysis.html" role="button" id="page_tile_1_btn">Review Analysis &raquo;</a></p>
+						<p id="page_tile_text">Reviews are often a showcase of how people really feel. The Yelp review site provides access to a large collection of reviews from various different categories ranging from restaurants to airlines. What can we learn from these reviews? This example showcases one possible area of research by attempting to classify reviews on a 5-star scale using Machine Learning.</p>
+						<div class="btn_holder">
+							<p><a class="btn btn-primary" href="review_analysis.html" role="button" id="page_tile_btn">Review Analysis &raquo;</a></p>
+						</div>
 					</div>
 
-					<div class="col-md-3 page_tile" id="page_tile_2">
+					<div class="col-md-3" id="page_tile">
 						<h2>Text Sentiment</h2>
-						<p id="page_tile_2_text">Sentiment analysis of the textual content can help futher classify data into categories. Using the Natural Language Tool Kit (NLTK) and SpaCy blocks of text are taken and analyized. Each piece of data is then classified into one of three categories, positive, neutral, or negative. By using this process we can categorize different time periods of the data to see if peoples sentiment changes over time.</p>
-						<p><a class="btn btn-primary" href="text_sentiment.html" role="button" id="page_tile_1_btn">Text Sentiment &raquo;</a></p>
+						<p id="page_tile_text">Sentiment analysis of the textual content can help futher classify data into categories. Using the Natural Language Tool Kit (NLTK) and SpaCy blocks of text are taken and analyized. Each piece of data is then classified into one of three categories, positive, neutral, or negative. By using this process we can categorize different time periods of the data to see if peoples sentiment changes over time.</p>
+						<div class="btn_holder">
+							<p><a class="btn btn-primary" href="text_sentiment.html" role="button" id="page_tile_btn">Text Sentiment &raquo;</a></p>
+						</div>
 					</div>
 					
-					<div class="col-md-3 page_tile" id="page_tile_3">
+					<div class="col-md-3" id="page_tile">
 						<h2>Page Categorization</h2>
-						<p> Page categorization helps understand what the content of each of the data collections is. Initially designed as a neural network, this now functions utilizing a tool called Latent Dirichlet Allocation. Topic modeling is a method for unsupervised classification of documents which is crucial for our project. This utilizes NLTK and gensim for the LDA classifier. </p>
-						<p><a class="btn btn-primary" href="page_categorization.html" role="button" id="page_tile_1_btn">Page Categorization &raquo;</a></p>
+						<p id="page_tile_text"> Page categorization helps understand what the content of each of the data collections is. Initially designed as a neural network, this now functions utilizing a tool called Latent Dirichlet Allocation. Topic modeling is a method for unsupervised classification of documents which is crucial for our project. This utilizes NLTK and gensim for the LDA classifier.</p>
+						<div class="btn_holder">
+							<p><a class="btn btn-primary" href="page_categorization.html" role="button" id="page_tile_btn">Page Categorization &raquo;</a></p>
+						</div>
 					</div>
 				</div>
 			</div> <!-- END PAGE TILES -->
