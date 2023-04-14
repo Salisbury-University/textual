@@ -911,14 +911,31 @@ g.mpld3-xaxis, g.mpld3-yaxis
 	background-color: #FFFFFF;
 }
 
-#info_header 
+.info_subheader
 {
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	font-size: 4rem;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.info_section
+{
+	margin-bottom: 3rem;
 	margin-left: auto;
 	margin-right: auto;
 	display: flex;
 	width: 80%;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
+}
+
+.info_section p
+{
+	color: #FFFFFF;
 }
 
 #info_icon
