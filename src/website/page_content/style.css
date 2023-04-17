@@ -924,13 +924,14 @@ g.mpld3-xaxis, g.mpld3-yaxis
 
 .info_section
 {
-	margin-bottom: 3rem;
+	margin-bottom: 2rem;
 	margin-left: auto;
 	margin-right: auto;
 	display: flex;
 	width: 80%;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
+	align-items: center;
 }
 
 .info_section_words
@@ -955,8 +956,8 @@ g.mpld3-xaxis, g.mpld3-yaxis
 
 #info_icon
 {
-	width: 30%;
-	height: 30%;
+	width: 25%;
+	height: 25%;
 	display:table-cell;
   	vertical-align: middle;	
 }
