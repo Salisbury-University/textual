@@ -165,23 +165,45 @@ function fetch_collections()
 
 function fetch_count()
 {
+	var stats_array; 
+
+	// Get document count from the DOM
+	const document_count = document.getElementById("document_count");
+	
 	fetch("/count", {method: "POST"}).then(data => data.text()).then((documents) => {
 		//Array to hold all the data fetched from the database.
-		var stats_array = JSON.parse(documents);
-
-		alert(stats_array["objects"]);
+		stats_array = JSON.parse(documents);
+		
+		// Get document count from the DOM
+		document_count.innerHTML = "Documents: " + stats_array["objects"];	
 	});
+
+	const interval = setInterval(function() {
+		fetch("/count", {method: "POST"}).then(data => data.text()).then((documents) => {
+			//Array to hold all the data fetched from the database.
+			stats_array = JSON.parse(documents);
+			
+			// Get document count from the DOM
+			document_count.innerHTML = "Documents: " + stats_array["objects"];
+		});
+	}, 1000);
 }
 
 function fetch_status()
 {
-	fetch("/database_status", {method: "POST"}).then(data => data.text()).then((documents) => {
-		//Array to hold all the data fetched from the database.
-		//var stats_array = JSON.parse(documents);
-
-		alert(documents);
+	fetch("/database_status", {method: "POST"}).then(data => data.text()).then((db_status) => {
+		// Get status paragraph from the DOM
+		const status_p = document.getElementById("db_status");
+		
+		// Check if the database returned true
+		if (db_status) {
+			status_p.innerHTML = "Status: Online";
+			status_p.style.color = "#00FF00";
+		} else {
+			status_p.innerHTML = "Status: Offline";
+			status_p.style.color = "#FF0000";
+		}
 	});
-
 }
 
 /*
