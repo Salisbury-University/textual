@@ -155,6 +155,46 @@ app.post("/collections", (req, res, next) => {
 	}
 });
 
+// Get the number of documents from the database
+app.post("/count", (req, res, next) => {
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					// Get the collection names from the database and return them as an array
+					db.stats(function(err, data) {
+						err ? reject(err) : resolve(data);
+					});
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
+
 /*
 Gets the form data from the search page
 let searchForm = document.getElementById("searchForm");

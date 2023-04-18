@@ -1,5 +1,6 @@
 function initialize_downloads()
 {
+	fetch_count();
 	fetch_collections();
 	load_downloads();
 }
@@ -161,6 +162,17 @@ function fetch_collections()
 			user_opt.appendChild(element);
 		}
 	});
+}
+
+function fetch_count()
+{
+	fetch("/count", {method: "POST"}).then(data => data.text()).then((documents) => {
+		//Array to hold all the data fetched from the database.
+		var stats_array = JSON.parse(documents);
+
+		alert(stats_array["objects"]);
+	});
+
 }
 
 /*
