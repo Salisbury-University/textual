@@ -1,5 +1,6 @@
 function initialize_downloads()
 {
+	fetch_status();
 	fetch_count();
 	fetch_collections();
 	load_downloads();
@@ -171,6 +172,16 @@ function fetch_count()
 		var stats_array = JSON.parse(documents);
 
 		alert(stats_array["objects"]);
+	});
+}
+
+function fetch_status()
+{
+	fetch("/database_status", {method: "POST"}).then(data => data.text()).then((documents) => {
+		//Array to hold all the data fetched from the database.
+		//var stats_array = JSON.parse(documents);
+
+		alert(documents);
 	});
 
 }
