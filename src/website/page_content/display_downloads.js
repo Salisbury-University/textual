@@ -1,7 +1,5 @@
 function initialize_downloads()
 {
-	fetch_status();
-	fetch_count();
 	fetch_collections();
 	load_downloads();
 }
