@@ -46,7 +46,7 @@ if __name__=="__main__":
         the one below basically just finds all the 'non unique' twitter posts form the TwitterTweets 
         collection and places then inside a dictionary like object.
     """
-    cur = db.TwitterTweets2.aggregate(
+    cur = db.TwitterTweets.aggregate(
         [
             {"$group":{"_id":"$text","unique_ids":{"$addToSet":"$_id"},"count":{"$sum":1}}},
             {"$match":{"count":{"$gte":2}}}
@@ -60,6 +60,6 @@ if __name__=="__main__":
         del data["unique_ids"][0]
         for data_id in data["unique_ids"]:
             dup_ids.append(data_id)
-    count = db.TwitterTweets2.delete_many({"_id":{"$in":dup_ids}})
-    print(count,"documents deleted")
+    count = db.TwitterTweets.delete_many({"_id":{"$in":dup_ids}})
+    print(count.deleted_count,"documents deleted")
     close_database(client)
