@@ -60,5 +60,6 @@ if __name__=="__main__":
         del data["unique_ids"][0]
         for data_id in data["unique_ids"]:
             dup_ids.append(data_id)
-    db.RedditPosts_v2.remove({"_id":{"$in":dup_ids}})
+    count = db.RedditPosts_v2.delete_many({"_id":{"$in":dup_ids}})
+    print(count," documents removed.")
     close_database(client)
