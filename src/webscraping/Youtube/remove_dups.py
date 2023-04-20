@@ -61,5 +61,5 @@ if __name__=="__main__":
         for data_id in data["unique_ids"]:
             dup_ids.append(data_id)
     count = db.YoutubeVideo.delete_many({"_id":{"$in":dup_ids}})
-    print(count.deleted_count," documents removed.")
+    print(count.deleted_count,"documents removed.")
     close_database(client)
