@@ -61,5 +61,22 @@ if __name__=="__main__":
         for data_id in data["unique_ids"]:
             dup_ids.append(data_id)
     count = db.YoutubeVideo.delete_many({"_id":{"$in":dup_ids}})
-    print(count.deleted_count,"documents removed.")
+    print(count.deleted_count,"documents removed from YoutubeVideo.")
+    
+    cur = db.YoutubeComment.aggregate(
+        [
+            {"$group":{"_id":"$cId","unique_ids":{"$addToSet":"$_id"},"count":{"$sum":1}}},
+            {"$match":{"count":{"$gte":2}}}
+        ]
+    )
+
+    # actual grabbing of the unique id's of where those duplicates are stored and 
+    # deletes them accordingly
+    dup_ids =[]
+    for data in cur:
+        del data["unique_ids"][0]
+        for data_id in data["unique_ids"]:
+            dup_ids.append(data_id)
+    count = db.YoutubeComment.delete_many({"_id":{"$in":dup_ids}})
+    print(count.deleted_count,"documents removed from YoutubeComment.")
     close_database(client)
