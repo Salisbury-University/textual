@@ -61,5 +61,5 @@ if __name__=="__main__":
         for data_id in data["unique_ids"]:
             dup_ids.append(data_id)
     count = db.TwitterTweets.delete_many({"_id":{"$in":dup_ids}})
-    print(count," documents deleted")
+    print(count,"documents deleted")
     close_database(client)
