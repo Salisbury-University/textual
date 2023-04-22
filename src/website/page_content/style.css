@@ -932,6 +932,7 @@ g.mpld3-xaxis, g.mpld3-yaxis
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
 	align-items: center;
+	color: #FFFFFF;
 }
 
 .info_section_words
@@ -942,6 +943,19 @@ g.mpld3-xaxis, g.mpld3-yaxis
 	width: 80%;
 	font-weight: bold;
 	font-family: 'Fjalla One', sans-serif;
+	color: #FFFFFF;
+}
+
+.info_section_words_2
+{
+	margin-bottom: 3rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	color: #FFFFFF;
+	display: flex;
 }
 
 .info_section_words p, li
@@ -958,6 +972,16 @@ g.mpld3-xaxis, g.mpld3-yaxis
 {
 	width: 25%;
 	height: 25%;
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#downloading_icon
+{
+	width: 25%;
+	height: 25%;
+	margin-left: 2rem;
+	margin-right: 2rem;
 	display:table-cell;
   	vertical-align: middle;	
 }
