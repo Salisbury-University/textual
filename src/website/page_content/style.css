@@ -986,6 +986,33 @@ g.mpld3-xaxis, g.mpld3-yaxis
   	vertical-align: middle;	
 }
 
+#download_page 
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2rem;
+	display: flex;
+	border: 0.3rem solid #FFFFFF;
+	border-radius: 2rem;
+	width: 75%;
+}
+
+#abc_downloaded
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2rem;
+	display: flex;
+	border: 0.3rem solid #FFFFFF;
+	border-radius: 2rem;
+	width: 75%;
+}
+
+#downloads_after_img
+{
+	margin-top: 2rem;
+}
+
 .info_paragraph
 {
 	margin-top: 1rem;
