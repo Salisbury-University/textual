@@ -1002,6 +1002,7 @@ g.mpld3-xaxis, g.mpld3-yaxis
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 2rem;
+	margin-bottom: 2rem;
 	display: flex;
 	border: 0.3rem solid #FFFFFF;
 	border-radius: 2rem;
