@@ -50,31 +50,34 @@ def close_database(client):
 def read_file(path): 
 
     with open(path, 'r') as file_: 
-        lines = file_.readlines() 
+        try: 
+            lines = file_.readlines() 
+            keyword_index = None
 
-    keyword_index = None
+            for i, line in enumerate(lines):
+                if key_word in line: 
+                    keyword_index = i
+                    break 
+            
+            if keyword_index is None: 
+                print(f'The keyword "{key_word}" was not found.') 
+                sys.exit() 
 
-    for i, line in enumerate(lines):
-        if key_word in line: 
-            keyword_index = i
-            break 
+            other_lines = lines[keyword_index+1:]
 
-    if keyword_index is None: 
-        print(f'The keyword "{key_word}" was not found.') 
-        sys.exit() 
+            # convert other_lines to a string 
 
-    other_lines = lines[keyword_index+1:]
+            new_data_string = ''.join(other_lines) 
+            new_entry = {'text':new_data_string} 
 
-    # convert other_lines to a string 
+            client = get_client()   
+            db = get_database(client)
+            collection = db.EnronEmails 
 
-    new_data_string = ''.join(other_lines) 
-    new_entry = {'text':new_data_string} 
+            collection.insert_one(new_entry)
 
-    client = get_client() 
-    db = get_database(client) 
-    collection = db.EnronEmails 
-
-    collection.insert_one(new_entry) 
+        except UnicodeDecodeError as e:
+            print(e) 
 
 def get_path(directory):
 
@@ -96,9 +99,15 @@ if __name__ == "__main__":
         try:
             
             for filename in os.listdir(d):
-                f = os.path.join(d, filename) 
+                f = os.path.join(d, filename)
                 read_file(f) 
 
         except FileNotFoundError as e: 
             print("Error", e) 
+
+    #entries_array = np.array_split(files, mp.cpu_count())
+
+    #pool = mp.Pool(mp.cpu_count())
+    #pool.map(read_file, [entry for entry in files])
+    #pool.close() 
 
