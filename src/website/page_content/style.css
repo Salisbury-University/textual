@@ -44,9 +44,9 @@
 /* PLACE FOOTER AT BOTTOM OF PAGE */
 #su_footer
 {
-        color: #828282;
-        line-height: 40px;
-        font-size: 0.7em;
+  color: #828282;
+  line-height: 40px;
+  font-size: 0.7em;
 	margin-left: 2rem;
 }
 
@@ -238,9 +238,83 @@
 	max-width: 100%;
 }
 
+#visualization_header_div
+{
+	text-align: center;
+	padding: 0;
+	position: absolute;
+	left: 0;
+	max-width: 100%;
+}
+
+#stock_visualization_img
+{
+	width: 100%;
+}
+
 #stock_img
 {
 	width: 100%;
+}
+
+#visualizations_subheader
+{
+	width: 100%;
+	color: #D9D9D9;
+	margin-left: auto;
+  	margin-right: auto;
+	font-size: 2rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 3rem;
+}
+
+#visualizations_subheader_text
+{
+	padding-top: 2rem;
+	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
+}
+
+#visualizations_subheader_1
+{
+	width: 100%;
+	color: #D9D9D9;
+	margin-left: auto;
+  	margin-right: auto;
+	font-size: 2rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 3rem;
+}
+
+#visualizations_subheader_1_text
+{
+	padding-top: 2rem;
+	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
+}
+
+#visualizations_subheader_2
+{
+	width: 100%;
+	color: #D9D9D9;
+	margin-left: auto;
+  	margin-right: auto;
+	font-size: 2rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 3rem;
+}
+
+#visualizations_subheader_2_text
+{
+	padding-top: 2rem;
+	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
 }
 
 #scroll_button
@@ -251,6 +325,22 @@
 	position: fixed;
 	bottom: 10px;
 	left: 10px;
+}
+
+#visualization_text
+{
+	width: 100%;
+	padding-top: 3rem;
+	padding-bottom: 1rem;
+	background-color: #000000;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #D9D9D9;
+	font-size: 7rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
 }
 
 #review_header_text
@@ -278,9 +368,68 @@
 	font-family: 'Fjalla One', sans-serif;
 }
 
+#visualizations_title
+{
+	padding-top: 1.5rem;
+       	text-align: center;	
+	color: #D9D9D9;
+	font-size: 4rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#visualizations_title_border
+{
+	margin-top: 45rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 2.5rem;
+	border-top: 0.5rem #D9D9D9 solid;
+	width: 85%;
+}
+
 #review_analysis_logo
 {
 	display: table;
+}
+
+#wordcloud_img_section
+{
+	display: table;
+}
+
+#wordcloud_visualizations_container
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 2.5rem;
+	margin-bottom: 2.5rem;
+	line-height: 2rem;
+	color: #D9D9D9;
+}
+
+#bargraph_visualizations_container
+{
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 2.5rem;
+	margin-bottom: 2.5rem;
+	line-height: 2rem;
+	color: #D9D9D9;
+}
+
+#frequency_visualizations_container
+{
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 2.5rem;
+	margin-bottom: 2.5rem;
+	line-height: 2rem;
+	color: #D9D9D9;
 }
 
 #review_analysis_img
@@ -425,6 +574,12 @@
   	vertical-align: middle;	
 }
 
+#wordcloud_img_div
+{
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
 #lstm_div
 {
 	display:table-cell;
@@ -476,9 +631,28 @@
 	border-radius: 1rem;
 }
 
-
 #yelp_logo
 {
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
+}
+
+#freq_img
+{
+	border-radius: 2rem;
+	margin-top: 2rem;
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
+}
+
+#bar_img
+{
+	border-radius: 2rem;
+	margin-top: 2rem;
 	display: block;
   	margin-left: auto;
   	margin-right: auto;
@@ -696,4 +870,33 @@
 	margin-right: auto;
 	font-size: 1.0rem;
 	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+g.mpld3-xaxis, g.mpld3-yaxis 
+{
+	 display: none;
+}
+
+.mpld3-text
+{
+	font-size: 0.8rem !important;
+	font-weight: bold;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	padding-bottom: 1rem !important;
+}
+
+.mpld3-figure
+{
+	display: flex !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+#fig_el301281402125324000808520220736
+{
+	border: 1px #FFFFFF solid;
+	border-radius: 0.75rem;
+	width: 65%;
+	margin: auto;
+	background-color: #FFFFFF;
 }

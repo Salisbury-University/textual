@@ -46,7 +46,7 @@ app.post("/downloads", (req, res, next) => {
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
-					db.collection('RedditPosts').find().toArray(function(err, data) {
+					db.collection('RedditPosts').find().limit(10000).toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
@@ -75,10 +75,8 @@ app.post("/downloads", (req, res, next) => {
 
 app.post("/search_downloads", (req, res, next) => {
 	// Get the user input value from the frontend
-	const { collection } = req.body; // Get the user's requested collection from the frontend
+	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
 
-	console.log('${collection}');
-	
 	try
 	{
 		//Connect to the database
@@ -92,7 +90,7 @@ app.post("/search_downloads", (req, res, next) => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
 					//Use the user's requested collection
-					db.collection('YelpReviews').find().limit(10000).toArray(function(err, data) {
+					db.collection(collection).find().toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
@@ -117,6 +115,46 @@ app.post("/search_downloads", (req, res, next) => {
 		next(e)
 	}
 });
+
+app.post("/collections", (req, res, next) => {
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					// Get the collection names from the database and return them as an array
+					db.listCollections().toArray(function(err, data) {
+						err ? reject(err) : resolve(data);
+					});
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
+
 /*
 Gets the form data from the search page
 let searchForm = document.getElementById("searchForm");

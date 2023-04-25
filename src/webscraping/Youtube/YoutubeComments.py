@@ -9,9 +9,9 @@
 # NUMBER_OF_COMMENTS
 # 
 # After running this program, up to <NUMBER_OF_VIDEOS> videos and up to
-# <NUMBER_OF_COMMENTS> comments will be added to the database. The videos
-# will be stored in youtube video collection and the comments will be stored
-# in youtube comment collection in the textual Database.
+# <NUMBER_OF_COMMENTS> comments will be added to the database for each video topic and category.
+# The videos will be stored in YoutubeVideo collection and the comments will be stored
+# in YoutubeComment collection in the textual Database.
 # <------------------------------------------------------------->
 
 import googleapiclient._auth
@@ -127,6 +127,43 @@ def getDocumentCount():
     return [videoCount, commentCount]
 
 # <--------------------------------------------------------------------->
+# Reads a file to determine whether or not to scrape from the most popular charts
+# returns True if it does and False if it doesn't.
+# 
+# the decision is based on the following variables:
+# 
+# YesOrNo: this variable is either "yes" or "no". this determines whether or not the scraper
+# scrapes from the most popular chart. 
+#
+# howManyLeft: this variable is a string that contains the number of days the scraper
+# should wait until scraping from the most popular chart.
+#
+# This allows the scraper to only scrape from the most popular chart once every 5 days.
+# This will save time and API quota.
+# <--------------------------------------------------------------------->
+def checkMostPopular():
+    with open("mostPopular.txt", "r+") as file:
+        check = file.read()
+
+        YesOrNo = check.split()[0]
+        howManyLeft = check.split()[1]
+
+        if YesOrNo == "yes":
+            file.seek(0)
+            file.write("no  5")
+            return True
+        
+        else:
+            if howManyLeft == '0':
+                file.seek(0)
+                file.write("yes 0")
+                return True
+            else:
+                file.seek(0)
+                file.write("no  " + (str((int(howManyLeft) - 1))))
+                return False
+
+# <--------------------------------------------------------------------->
 # Returns a list of Youtube Video Categories used in the US Region
 # <--------------------------------------------------------------------->
 def getCategories(youtube):
@@ -138,7 +175,7 @@ def getCategories(youtube):
         )
         response = request.execute()
     except HttpError as error:
-        print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+        # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
         
     # get all youtube categories used in the US (there's 32 categories)
@@ -184,7 +221,7 @@ def getVideos(youtube, category):
                 # print("'KeyERROR': This video has no comments available. Next video...")
                 pass
     except HttpError as error:
-            print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
+            # print("Thread " + str(mp.current_process().pid) + ":", "'HTTPError': most popular chart for category:", "'" + category["title"] + "'"," is not supported or not available")
             return []
 
     return videos
@@ -229,7 +266,8 @@ def getComments(youtube, video, sortBy):
         return commentThreads
 
     except HttpError as error: # Occurs when comments are disabled for this video or if the request limit has been reached for YouTube API.
-            print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+            pass
+            # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
             #print( "Thread " + str(mp.current_process().pid) + ":", "'HTTPError': This video has no comments available.",)
             
 
@@ -241,7 +279,6 @@ def getComments(youtube, video, sortBy):
 # <--------------------------------------------------------------------->
 
 def scrape_comments(youtube, category):
-
     with lock:
         print("Thread " + str(mp.current_process().pid) + ": Looking at Category: " + category["title"])
     # Get a connection to the server
@@ -305,10 +342,10 @@ def scrape_comments(youtube, category):
 # list of search topics to use as an argument for the API request. Since
 # there is a limit to the number of requests that can be made per day, the
 # full list of search topics are not all read in at once. Instead, the first
-# <NUMBER_OF_SEARCHES> topics to appear are read and stored into a list. 
-# The program then leaves a placeholder ("*") in the text file to remember
-# the last topic it searched for and will then begin searching from that 
-# point in the text file the next time the program is run.
+# <NUMBER_OF_SEARCHES> topics to appear after the placeholder are read and 
+# stored into a list. The program then leaves a placeholder ("*") in the 
+# text file to remember the last topic it searched for and will then begin 
+# searching from that point in the text file the next time the program is run.
 # <--------------------------------------------------------------------->
 
 def getSearchTopics():
@@ -360,7 +397,7 @@ def searchToVideo(youtube, searchResult, categories):
     try:
         response = request.execute()
     except HttpError as error:
-        print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+        # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
     items = response["items"]
     
@@ -382,7 +419,7 @@ def searchToVideo(youtube, searchResult, categories):
                         "category": thisCategory}
             
         except KeyError: # Occurs when comments are disabled for this video
-            print( "Thread " + str(mp.current_process().pid) + ":", "'KeyError': This video has no comments available. Next video...")
+            # print( "Thread " + str(mp.current_process().pid) + ":", "'KeyError': This video has no comments available. Next video...")
             thisVideo = "noComments"
 
     # print("This Video = ", thisVideo)
@@ -407,7 +444,7 @@ def searchVideos(youtube, categories, topic):
     try:
         response = request.execute() # Request 50 most relevant videos using this keyword
     except HttpError as error:
-        print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
+        # print ("An HTTP error", error.resp.status ," occurred:\n", error.content)
         exit()
     items = response["items"]
 
@@ -514,27 +551,34 @@ if __name__ == "__main__":
 
     # get the initial number of documents before inserting more into the database 
     DocumentCount = getDocumentCount() 
-    print("     Scraping Comments from Most Popular Video Charts>")
-    print("<-------------------------------------------------------->")
-    # Make a partial function since using multiple parameters
-    partial_scrape_comments = functools.partial(scrape_comments, youtube,)
-    pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
-
-    # Map each process to scrape comments from a different category in the list
-    results=pool.map(partial_scrape_comments, categories,)
-    pool.close()
+    
+    getMostPopular = checkMostPopular()
 
     # counts the total number of videos and comments inserted by each process.
     totalV = 0
     totalC = 0
-    for total in results:
-        totalV += total[0]
-        totalC += total[1]
+
+    if getMostPopular == True:
+        print("     Scraping Comments from Most Popular Video Charts>")
+        print("<-------------------------------------------------------->")
+        # Make a partial function since using multiple parameters
+        partial_scrape_comments = functools.partial(scrape_comments, youtube,)
+        pool=mp.Pool(mp.cpu_count(), initializer=initialize_lock, initargs=(lock,))
+
+        # Map each process to scrape comments from a different category in the list
+        results=pool.map(partial_scrape_comments, categories,)
+        pool.close()
+
+        
+        
+        for total in results:
+            totalV += total[0]
+            totalC += total[1]
 
     # get a list of Search topics from a txt file.
     topics = getSearchTopics()
 
-    print("     Scraping Comments from Most Popular Video Charts>")
+    print("     Scraping Comments from Search Queries>")
     print("<-------------------------------------------------------->")
     # Make a partial function since using multiple parameters
     partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories,)
@@ -552,8 +596,8 @@ if __name__ == "__main__":
     print("                     <RESULTS>                           ")
     print("<-------------------------------------------------------->")
 
-    print("Initial number of documents in YoutubeComment Collection: ", DocumentCount[0])
-    print("Initial number of documents in YoutubeVideo Collection: ", DocumentCount[1])
+    print("Initial number of documents in YoutubeVideo Collection: ", DocumentCount[0])
+    print("Initial number of documents in YoutubeComment Collection: ", DocumentCount[1])
     print()
 
     print("Total Videos inserted: ", totalV)
@@ -562,5 +606,5 @@ if __name__ == "__main__":
 
     DocumentCount = getDocumentCount()
 
-    print("Current number of documents in YoutubeComment Collection: ", DocumentCount[0])
-    print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[1])
+    print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[0])
+    print("Current number of documents in YoutubeComment Collection: ", DocumentCount[1])
