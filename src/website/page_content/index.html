@@ -31,6 +31,7 @@
 		
 		<!-- MONGODB CONNECTION -->
 		<script src="display_downloads.js"></script>
+
 	</head>
   	<body id="page_content">
 		<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
@@ -88,6 +89,13 @@
 				</div>
 			</div>
 
+			<p class="h2" id="status">Database Status</p>
+			
+			<div id="status_div">
+				<p id="db_status"><span id="db_status_h"></p>
+				<p id="document_count"></p>
+			</div>
+
 			<!-- SUBTEXT HEADER -->
 			<p class="h3" id="sub_header">Our Sample Work</p>
 
@@ -127,5 +135,11 @@
 			</footer>
 
 		</main>
+
+		<script type="text/javascript">
+			// Call the functions to display DB information on the homepage
+			fetch_status();
+			fetch_count();
+		</script>
 	</body>
 </html>
