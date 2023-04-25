@@ -67,8 +67,8 @@ def close_database(client):
 def openFile(filename):
     return input_file
 
-# Method to pull from file (Will be implemented later)
-def pullReviews(input_arr):
+# Method to push from file
+def pushReviews(input_arr):
     # Get a connection to the server
     client = get_client()
     
@@ -77,20 +77,24 @@ def pullReviews(input_arr):
 
     # Get a collection from the database (WikiSourceText, holds the wikisource pages, WikiSourceHTML holds html source)
     amazon_collection = database.MoreAmazon
-
-    # Iterate through each array within the numpy array
-    for i in range(0, len(input_arr)):
-        # Print current thread
-        print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
-        # Convert to dictionary and write to database
-        
-        # Rename the field for the database
-        try:
-            review_dict = dict(input_arr[i])
-            review_dict["text"] = review_dict.pop("reviewText")
-            amazon_collection.insert_one(review_dict)
-        except:
-            print("Key error, skipping document.")
+ 
+    # Check if the total amount of data is less than 128 GB (128481273344 bytes)
+    if (database.command("dbstats")["fsUsedSize"] < 128481273344):
+        # Iterate through each array within the numpy array
+        for i in range(0, len(input_arr)):
+            # Print current thread
+            print("Thread: " + str(mp.current_process()) + " | iteration: " + str(i))
+            
+            # Convert to dictionary and write to database
+            # Rename the field for the database
+            try:
+                review_dict = dict(input_arr[i])
+                review_dict["text"] = review_dict.pop("reviewText")
+                amazon_collection.insert_one(review_dict)
+            except:
+                print("Key error, skipping document.")
+    else:
+        print("Database is full, skipping data push.")
     
     # Close the connection to the database, IMPORTANT
     client.close()
@@ -131,7 +135,7 @@ if __name__ =="__main__":
     print("Number of available processors: ", mp.cpu_count())
 
     #Start threads
-    pool.map(pullReviews, [reviewSublist for reviewSublist in reviewArray])
+    pool.map(pushReviews, [reviewSublist for reviewSublist in reviewArray])
     
     #Stop threads and write output to console
     pool.close()
