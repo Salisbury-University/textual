@@ -186,7 +186,7 @@ function fetch_count()
 			// Get document count from the DOM
 			document_count.innerHTML = "Documents: " + stats_array["objects"];
 		});
-	}, 1000);
+	}, 500);
 }
 
 function fetch_status()
@@ -194,7 +194,7 @@ function fetch_status()
 	fetch("/database_status", {method: "POST"}).then(data => data.text()).then((db_status) => {
 		// Get status paragraph from the DOM
 		const status_p = document.getElementById("db_status");
-		
+
 		// Check if the database returned true
 		if (db_status) {
 			status_p.innerHTML = "Status: Online";
