@@ -29,6 +29,7 @@ from pymongo import MongoClient
 # Used for continuous scraping
 import schedule
 import time
+import datetime
 
 # Get authoriazation from file
 def get_db_credentials():
@@ -180,20 +181,30 @@ def push_posts(api_obj, posts):
 
 def start_push():
     lines = []
-    with open("reddit_list.txt", "r") as pass_file:
+    with open("reddit_list.txt", "r") as reddit_file:
         # Read each line from the file, splitting on newline
-        lines = pass_file.read().splitlines()
+        lines = reddit_file.read().splitlines()
     # Close the file and return the list of lines
     pass_file.close()
 
     # Get credentials for the Reddit API
-    credentials = get_credentials() 
+    credentials = get_credentials()
 
     api_obj = api_connection(credentials)
     praw_api = PushshiftAPI(praw=api_obj)
 
     for sub in lines:
         get_data(praw_api, sub, api_obj)
+
+    # Get the current date and time
+    now = datetime.datetime.now()
+
+    # Open the file in append mode and write the date and time to the end of the file
+    with open("reddit_log.txt", "a") as file:
+        file.write(f"The script finished running at {now}\n")
+
+    # Close the file
+    file.close()
 
 if __name__ == "__main__": 
     # Setup the job to run every Monday at 8:00 AM
