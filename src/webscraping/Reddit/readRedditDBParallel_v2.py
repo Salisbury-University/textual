@@ -120,7 +120,9 @@ def push_posts(api_obj, posts):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
     comment_content = pd.DataFrame()
-
+    
+    # If the total amount of data in the database is less than 148 GB, push Reddit posts
+    if (database.command("dbstats")["fsUsedSize"] < 148481273344):
     # |                                POST INFO                                 |
     # |--------------------------------------------------------------------------|
     # |Go through each post and add its data                                     |
@@ -134,42 +136,44 @@ def push_posts(api_obj, posts):
     # |Downvotes: How many downvotes the post has                                |
     # |--------------------------------------------------------------------------|
    
-    count = 0
-    comment_count = 0
-    for post in posts:        
-        if int(post['num_comments']) > 0:
-            # Get all comments and push to DB
-            id = post["id"]
-            curr_post = api_obj.submission(id=id)
+        count = 0
+        comment_count = 0
+        for post in posts:        
+            if int(post['num_comments']) > 0:
+                # Get all comments and push to DB
+                id = post["id"]
+                curr_post = api_obj.submission(id=id)
 
-            # Get comments in list form
+                # Get comments in list form
+                try:
+                    curr_post.comments.replace_more(limit=0)
+                    comments = curr_post.comments.list()
+
+                    # Iterate through the comments and add the to database
+                    iteration = 0
+                    for comment in comments:
+                        print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
+                        comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "text" : comment.body, "created_utc" : str(comment.created_utc)}
+
+                        try:
+                            comment_collection.insert_one(comment_content)
+                            comment_count += 1
+                        except:
+                            print("Comment insertion failed")
+                        iteration += 1
+                except:
+                    print("Failed to push comments")
+
+            subreddit_content = {"subreddit" : str(post["subreddit"]), "title" : str(post["title"]), "author" : str(post["author"]), "post_id" : str(post["id"]), "text" : str(post["selftext"]), "created_utc" : str(post["created_utc"]), "link" : str(post["url"]), "score" : str(post["score"])}
+            count += 1
+
+            # Add DataFrame file to collection
             try:
-                curr_post.comments.replace_more(limit=0)
-                comments = curr_post.comments.list()
-
-                # Iterate through the comments and add the to database
-                iteration = 0
-                for comment in comments:
-                    print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
-                    comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "text" : comment.body, "created_utc" : str(comment.created_utc)}
-                    
-                    try:
-                        comment_collection.insert_one(comment_content)
-                        comment_count += 1
-                    except:
-                        print("Comment insertion failed")
-                    iteration += 1
+                post_collection.insert_one(subreddit_content)
             except:
-                print("Failed to push comments")
-
-        subreddit_content = {"subreddit" : str(post["subreddit"]), "title" : str(post["title"]), "author" : str(post["author"]), "post_id" : str(post["id"]), "text" : str(post["selftext"]), "created_utc" : str(post["created_utc"]), "link" : str(post["url"]), "score" : str(post["score"])}
-        count += 1
-
-        # Add DataFrame file to collection
-        try:
-            post_collection.insert_one(subreddit_content)
-        except:
-            print("Post insertion failed.")
+                print("Post insertion failed.")
+     else:
+        print("Database full, posts will not be pushed.")
 
 if __name__ == "__main__": 
     # Check that the user input at least one subreddit
