@@ -143,7 +143,7 @@ def push_posts(api_obj, posts):
     # |Downvotes: How many downvotes the post has                                |
     # |--------------------------------------------------------------------------|
     # If the total amount of data in the database is less than 148 GB, push Reddit posts
-    if (database.command("dbstats")["fsUsedSize"] < 148481273344): 
+    if (db.command("dbstats")["fsUsedSize"] < 148481273344): 
         count = 0
         comment_count = 0
         for post in posts:        
