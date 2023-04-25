@@ -1,5 +1,9 @@
-# LDAAnalysis_v2.py --> a redone version of the LDA Analysis model. Uses a different
-# method of preprocessing in order to get more accurate models. 
+# Project: Textual Baseline 
+# Subset: Page Categorization/Analysis
+# Goal of script: to assign "topic words" to all items in every collection in the database. 
+# Creator: Caroline Smith
+
+# Necessary imports: 
 
 import sys
 import os
@@ -19,7 +23,7 @@ import multiprocessing as mp
 nltk.download('wordnet')
 np.random.seed(2018) 
 
-# getting authorization from the password file 
+# Gets authorization credentials to access the database
 def get_credentials():
 
 	with open("mongopassword.txt", "r") as pass_file:
@@ -27,7 +31,7 @@ def get_credentials():
 
 	return lines
 
-# returns a reference to the client, used to connect to the database
+# Returns a reference to the client, used to connect to the database
 def get_client():
 
 	lines = get_credentials()
@@ -38,28 +42,32 @@ def get_client():
 
 	return client
 
-# returns a reference to our specific database
+# Returns a reference to our specific database
 def get_database(client):
 	
 	return client.textual
 
-# closes the database
+# Closes the database
 def close_database(client):
 
 	client.close()
 
-# lemmatizes the words that are input
-# lemmatize essentially means to remove any endings to find the root of the word input
+# Parameters: a string to be lemmatized and stemmed
+# Returns: the resultant string
 def lemmatize_stemming(text_input):
 	 
+        # creates a stemmer from the SnowballStemmer class 
 	stemmer = SnowballStemmer(language="english")     
+
+        # passes in the text input to the stemmer object 
 	return stemmer.stem(WordNetLemmatizer().lemmatize(text_input, pos='v'))
 
-# preprocesses the text (removes stop words and words shorter than 3 letters) 
+
+# Parameters: a list of strings to be preprocessed, a parameter to indicate whether the output should be printed
+# Return: a list of tokens 
 def preprocess(text_input, print_=False): 
 	
-	# adding more stopwords that tend to appear in the documents
-
+	# adding more stopwords that tend to appear in the documents --> can be updated with more commonly used tokens
         stopwords = gensim.parsing.preprocessing.STOPWORDS.union(set(['https', 'http', 'reddit', 'thread', 'post', 'wiki', 'search', 'like', 'removed', 'deleted']))
 
 	# creates a list of preprocessed tokens if they are not in the stop words and are longer than 2 letters
@@ -70,17 +78,19 @@ def preprocess(text_input, print_=False):
 
             results.append(result)
 
+        # removes empty lists
         new_results = [res for res in results if res != []] 
 
         return new_results 
 
-# creates the dictionary and BOW, prints words if specified
+# Parameters: a list of processed documents, a parameter to indicate whether the output should be printed
+# Results: a list containing the dictionary in the first position and the bag of words corpus in the second position
 def get_dictionary_BOW(processed_documents, print_words=False):
 	
 	# creates the dictionary
 	dictionary = gensim.corpora.Dictionary(processed_documents)
 
-  # bow corpus
+        # bow corpus
 	bow_corpus = [dictionary.doc2bow(doc) for doc in processed_documents] 
 
 	# prints out the amount of times each word appears
@@ -91,7 +101,8 @@ def get_dictionary_BOW(processed_documents, print_words=False):
 
 	return dictionary, bow_corpus 
 
-# creates the TFIDF model 
+# Parameters: the bag of words corpus
+# Returns: the Term Frequency Inverse Document Frequency model and the corpus for it
 def make_TFIDF(bow_corpus, print_values=False):
 
 	tfidf = models.TfidfModel(bow_corpus)
@@ -104,7 +115,8 @@ def make_TFIDF(bow_corpus, print_values=False):
 
 	return tfidf, corpus_tfidf
 
-# running an LDA using a BOW
+# Parameters: bag of words corpus, dictionary (returned from get_dictionary_bow()) 
+# Returns: LDA model
 def lda_bow_model(bow_corpus, dictionary, print_topics=False):
 
 	# creates the model 
@@ -116,7 +128,8 @@ def lda_bow_model(bow_corpus, dictionary, print_topics=False):
 
 	return lda_model 
 
-# running an LDA using TF-IDF
+# Parameters: corpus for the TFIDF, dictionary 
+# Returns: LDA Model with TFIDF 
 def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 	
 	# creates the model
@@ -124,8 +137,11 @@ def lda_tfidf_model(corpus_tfidf, dictionary, print_topics=False):
 	if print_topics: 
 		for idx, topic in lda_model_tfidf.print_topics(-1):
 			print(f'Topic: {idx} Word: {topic}')
+        
+        return lda_model_tfidf
 
-# classifies a previously seen document -- used for testing 
+# Parameters: bow_corpus, LDA model object, list of seen_documents, list of corresponding IDs
+# Returns: nothing
 def classify_seen(bow_corpus, model, seen_documents, ids):
 
 	for i in range(len(seen_documents)):
