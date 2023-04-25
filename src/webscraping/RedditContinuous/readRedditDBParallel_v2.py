@@ -212,7 +212,7 @@ def start_push():
 
 if __name__ == "__main__": 
     # Check if the job is scheduled to run every 100 seconds
-    # Continuous loop, job will be scheduled to run every Tuesday at 4:00 PM
+    # Continuous loop, job will be scheduled to run every Tuesday at 5:00 PM
     while True:
         print("waiting to run...")
         if (datetime.now(tz).weekday() == 1) and (datetime.now(tz).hour == 17) and (datetime.now(tz).minute < 5): 
