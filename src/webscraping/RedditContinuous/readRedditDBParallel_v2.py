@@ -93,7 +93,7 @@ def api_connection(credentials):
 def get_data(praw_api, subreddit, api_obj): 
     print("Starting {}".format(subreddit))
     
-    posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
+    posts = praw_api.search_submissions(subreddit=subreddit, limit=500)
 
     pool=mp.Pool(mp.cpu_count())
     
@@ -212,10 +212,10 @@ def start_push():
 
 if __name__ == "__main__": 
     # Check if the job is scheduled to run every 100 seconds
-    # Continuous loop, job will be scheduled to run every Tuesday at 5:00 PM
+    # Continuous loop, job will be scheduled to run every Tuesday at 6:00 PM
     while True:
         print("waiting to run...")
-        if (datetime.now(tz).weekday() == 1) and (datetime.now(tz).hour == 17) and (datetime.now(tz).minute < 5): 
+        if (datetime.now(tz).weekday() == 1) and (datetime.now(tz).hour == 18) and (datetime.now(tz).minute < 5): 
             start_push()
         time.sleep(100)
 
