@@ -27,9 +27,13 @@ from pmaw import PushshiftAPI
 from pymongo import MongoClient
 
 # Used for continuous scraping
+import pytz
 import schedule
 import time
-import datetime
+from datetime import datetime
+
+# Global timezone
+tz = pytz.timezone('America/New_York') # Set your desired timezone here
 
 # Get authoriazation from file
 def get_db_credentials():
@@ -185,7 +189,7 @@ def start_push():
         # Read each line from the file, splitting on newline
         lines = reddit_file.read().splitlines()
     # Close the file and return the list of lines
-    pass_file.close()
+    reddit_file.close()
 
     # Get credentials for the Reddit API
     credentials = get_credentials()
@@ -197,7 +201,7 @@ def start_push():
         get_data(praw_api, sub, api_obj)
 
     # Get the current date and time
-    now = datetime.datetime.now()
+    now = datetime.now(tz)
 
     # Open the file in append mode and write the date and time to the end of the file
     with open("reddit_log.txt", "a") as file:
@@ -207,13 +211,12 @@ def start_push():
     file.close()
 
 if __name__ == "__main__": 
-    # Setup the job to run every Monday at 8:00 AM
-    schedule.every().monday().at("08:00").do(start_push)
-
-    # Check if the job is scheduled to run every 1000 seconds
-    # Continuous loop, job will be scheduled to run every Monday at 8:00 AM
+    # Check if the job is scheduled to run every 100 seconds
+    # Continuous loop, job will be scheduled to run every Tuesday at 4:00 PM
     while True:
-        schedule.run_pending()
-        time.sleep(1000)
+        print("waiting to run...")
+        if (datetime.now(tz).weekday() == 1) and (datetime.now(tz).hour == 17) and (datetime.now(tz).minute < 5): 
+            start_push()
+        time.sleep(100)
 
     print("Script end...")
