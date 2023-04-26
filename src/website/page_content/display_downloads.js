@@ -6,8 +6,8 @@ function initialize_downloads()
 
 function load_downloads()
 {
-        fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
-                //Fetch the table from the HTML page
+        fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {	 
+		//Fetch the table from the HTML page
 		var table_whole = document.getElementById("database_table");
 
 		var header = table_whole.createTHead();
@@ -46,33 +46,31 @@ function load_downloads()
 				}
 
 				cell.innerHTML = "<td>" + value + "</td>";
+				
+				// Set the width of the column based on its content
+				cell.style.width = "auto";
+				cell.style.maxWidth = "200px";
+				cell.style.whiteSpace = "normal";
+				cell.style.overflowWrap = "break-word";
 			}
 
-			/*
-                        //Get the values for each document. This includes the document title, text, category (subreddit), and the date.
-                        var title = document_array[index]["title"];
-                        var text = document_array[index]["text"];
-                        var subreddit = document_array[index]["subreddit"];
-                        var date = document_array[index]["created_utc"];
-
-                        //If the text from the query is empty, write a message
-                        if (text == "")
-                                text = "No Text Found.";        
-
-                        //Create a new row with the current content
-                        var row = $("<tr><td>" + title + "</td><td>" + subreddit + "</td><td>" + date + "</td><td>" + text + "</td></tr>");
-			*/
-                        //Append the new row to the table
+                       //Append the new row to the table
                         table_body.append(row);
 
                         //Increment the number of pages
                         index++;
                 }
 
-                //Create the bootstrap table dynamically
+		//Create the bootstrap table dynamically
                 $("#database_table").DataTable();
                 $('.dataTables_length').addClass('bs-select');
-        }).catch(function (error) {
+
+        	// Set the width and max-width properties of the table and its parent element
+		var table = $("#database_table");
+		var tableCon = table.parent();
+		table.css("width", "65%");
+		tableCon.css("max-width", "65%");
+	}).catch(function (error) {
                 alert(error);
         });
 }

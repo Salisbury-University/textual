@@ -822,45 +822,6 @@
 	text-align: center;
 }
 
-#database_table_wrapper
-{
-	margin-top: 1rem;
-	color: #D9D9D9;
-	font-size: 1.5rem;
-	font-family: 'Yanone Kaffeesatz', sans-serif;
-	width: 85%;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-}
-
-#database_table
-{
-	table-layout: fixed;
-	margin-top: 3rem;
-	color: #D9D9D9;
-	font-size: 1.5rem;
-	font-family: 'Yanone Kaffeesatz', sans-serif;
-	width: 85%;
-	margin-left: auto;
-	margin-right: auto;
-	border: 1px solid #D9D9D9;
-	text-align: center;
-}
-
-#database_table tbody td
-{
-	width: 100%;
-	padding: 1rem;
-	border: 2px solid #D9D9D9; 
-}
-
-#database_table th 
-{
-	padding: 1rem;
-	border: 2px solid #D9D9D9;
-}
-
 #user_collection_header
 {
 	margin-top: 2rem;
