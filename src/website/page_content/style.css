@@ -50,6 +50,14 @@
 	margin-left: 2rem;
 }
 
+#database_table, th, td, tr
+{
+	font-family: 'Fjalla One', sans-serif; 
+	color: #D9D9D9;
+	border: 1px solid #D9D9D9;
+	border-collapse: collapse;
+}
+
 #page_tiles
 {
 	padding-top: 3rem;

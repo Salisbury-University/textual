@@ -43,13 +43,15 @@ function load_downloads()
 
 				if (value == "") {
 					value = "No value found";
+				} else if (value.length > 100) {
+					value = value.slice(0, 75) + "...";
 				}
 
 				cell.innerHTML = "<td>" + value + "</td>";
 				
 				// Set the width of the column based on its content
-				cell.style.width = "auto";
-				cell.style.maxWidth = "200px";
+				cell.style.minWidth = "10rem";
+				cell.style.maxWidth = "10rem";
 				cell.style.whiteSpace = "normal";
 				cell.style.overflowWrap = "break-word";
 			}
