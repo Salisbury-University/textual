@@ -21,13 +21,13 @@ function load_downloads()
 
 		for (i = 0; i < keys.length; i++) {
 			var cell = row.insertCell(i);
-			cell.innerHTML = "<b>" + keys[i] + "</b>";
+			cell.innerHTML = "<td><b>" + keys[i] + "</b></td>";
 		}
 		
-		var table = $("#database_table tbody");
-                
+		var table_body = table_whole.createTBody();
+
                 //Keep track of the current document
-                var index = 0;  
+        	var index = 0;  
         	
                 //Count how many documents are in the query
                 const count = document_array.length;
@@ -35,6 +35,20 @@ function load_downloads()
                 //Loop through all the documents
                 while(index < count)
                 {
+			var row = table_body.insertRow(index);
+
+			for (i = 0; i < keys.length; i++) {
+				var cell = row.insertCell(i);
+				var value = document_array[index][keys[i]];
+
+				if (value == "") {
+					value = "No value found";
+				}
+
+				cell.innerHTML = "<td>" + value + "</td>";
+			}
+
+			/*
                         //Get the values for each document. This includes the document title, text, category (subreddit), and the date.
                         var title = document_array[index]["title"];
                         var text = document_array[index]["text"];
@@ -47,9 +61,9 @@ function load_downloads()
 
                         //Create a new row with the current content
                         var row = $("<tr><td>" + title + "</td><td>" + subreddit + "</td><td>" + date + "</td><td>" + text + "</td></tr>");
-
+			*/
                         //Append the new row to the table
-                        table.append(row);
+                        table_body.append(row);
 
                         //Increment the number of pages
                         index++;
