@@ -8,14 +8,27 @@ function load_downloads()
 {
         fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {
                 //Fetch the table from the HTML page
-                var table = $("#database_table tbody");
+		var table_whole = document.getElementById("database_table");
+
+		var header = table_whole.createTHead();
+		var row = header.insertRow(0);
+
+		//Array to hold all the documents fetched from the database (This way is 100x easier and super fast, I'm just stupid and didn't think of this before).
+                var document_array = JSON.parse(documents);
+
+		// Get the object keys
+		var keys = Object.keys(document_array[0]);
+
+		for (i = 0; i < keys.length; i++) {
+			var cell = row.insertCell(i);
+			cell.innerHTML = "<b>" + keys[i] + "</b>";
+		}
+		
+		var table = $("#database_table tbody");
                 
                 //Keep track of the current document
                 var index = 0;  
-
-                //Array to hold all the documents fetched from the database (This way is 100x easier and super fast, I'm just stupid and didn't think of this before).
-                var document_array = JSON.parse(documents);
-                
+        	
                 //Count how many documents are in the query
                 const count = document_array.length;
 
