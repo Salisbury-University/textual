@@ -64,15 +64,20 @@ function load_downloads()
                 }
 
 		//Create the bootstrap table dynamically
-                $("#database_table").DataTable();
+                var table = $("#database_table").DataTable();
                 $('.dataTables_length').addClass('bs-select');
+		$('#database_table').css('width', '80%');
 
-        	// Set the width and max-width properties of the table and its parent element
-		var table = $("#database_table");
-		var tableCon = table.parent();
-		table.css("width", "65%");
-		tableCon.css("max-width", "65%");
-	}).catch(function (error) {
+		// Style the table
+		$('.dataTables_length', table.table().container()).addClass('text-center');
+		$('.dataTables_filter', table.table().container()).addClass('text-center');
+		$('.pageinate_button', table.table().container()).addClass('text-center');
+		$('.dataTables_info', table.table().container()).addClass('text-center');
+		$('.dataTables_length', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.dataTables_info', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.pageinate_button', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.dataTables_filter', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		}).catch(function (error) {
                 alert(error);
         });
 }
