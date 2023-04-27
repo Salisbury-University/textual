@@ -88,191 +88,226 @@ def get_dictionary(processed_docs):
 
 def iterate_in_collection(collection_name, database, entries): 
 
-    processed_entries = [pre_process(entry) for entry in entries]
-    empty_removed = [element for element in processed_entries if element != []]
-    results = get_dictionary(empty_removed) 
-    lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 20, workers = 4)
-
-    temp_file = datapath(collection_name+"_model")
-    lda_model.save(temp_file)
+	processed_entries = [pre_process(entry) for entry in entries]
+	empty_removed = [element for element in processed_entries if element != []]
+	results = get_dictionary(empty_removed) 
+	lda_model = gensim.models.LdaMulticore(results[0], num_topics = 50, id2word = results[1], passes = 20, workers = 4)
+	temp_file = datapath(collection_name+"_model")
+	lda_model.save(temp_file)
     
-    '''
-    for i in range(0, lda_model.num_topics-1):
-        print(lda_model.print_topic(i))
-    '''
+	'''
+	for i in range(0, lda_model.num_topics-1):
+        	print(lda_model.print_topic(i))
+	'''
         
     # dictionary containing all of the words in each topic
 
-    topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10)] for i in range(0, lda_model.num_topics)}
+	topic_words =  {"Topic_" + str(i): [token for token, score in lda_model.show_topic(i, topn=10)] for i in range(0, lda_model.num_topics)}
 
     # get documents
 
-    documents = [] 
-    key = ''
+	documents = [] 
+	key = ''
 
-    if(collection_name == "RedditPosts"):
+	if collection_name == "RedditPosts_v3":
     
-        documents = database[collection_name].find({}, {'selftext':1, '_id':1})
-        key = 'selftext'
+		documents = database[collection_name].find({}, {'selftext':1, '_id':1})
+		key = 'selftext'
+
+	elif collection_name == "RedditComments_v3": 
+
+		documents = database[collection_name].find({}, {'body':1, '_id':1})
+		key = 'body' 
     
-    elif(collection_name == "WikiSourceText"):
+	elif collection_name == "WikiSourceText":
         
-        documents = database[collection_name].find({}, {'Text':1, '_id':1})
-        key = 'Text'
+		documents = database[collection_name].find({}, {'Text':1, '_id':1})
+		key = 'Text'
 
-    elif(collection_name == "AmazonReviews"):
+	elif collection_name == "AmazonReviews":
 
-        documents = database[collection_name].find({}, {'review_body':1, '_id':1})
-        key = 'review_body'
+		documents = database[collection_name].find({}, {'review_body':1, '_id':1})
+		key = 'review_body'
 
-    elif(collection_name == "RedditComments"):
-    
-        documents = database[collection_name].find({}, {'body':1, '_id':1})
-        key = 'body'
+	elif collection_name == "YelpReviews":
 
-    elif(collection_name == "YelpReviews"):
+		documents = database[collection_name].find({}, {'text':1, '_id':1})
+		key = 'text'
 
-        documents = database[collection_name].find({}, {'text':1, '_id':1})
-        key = 'text'
-
-    elif(collection_name == "YoutubeComment"):
+	elif collection_name == "YoutubeComment":
         
-        documents = database[collection_name].find({}, {'text':1, '_id':1})
-        key = 'text'
+		documents = database[collection_name].find({}, {'text':1, '_id':1})
+		key = 'text'
 
-    elif(collection_name == "YoutubeVideo"):
+	elif collection_name == "YoutubeVideo":
       
-        documents = database[collection_name].find({}, {'vidTitle':1, '_id':1})
-        key = 'vidTitle'
-    
-    else:
+		documents = database[collection_name].find({}, {'vidTitle':1, '_id':1})
+		key = 'vidTitle'
 
-        pass
+	elif collection_name == "TwitterTweets":
+	
+		documents = database[collection_name].find({}, {'tweet':1, '_id':1}) 
+		key = 'tweet'  	
+
+	else:
+
+		pass
         
 
-    f = open("results.txt", 'w')
-    counter = 0
+	f = open("results.txt", 'w')
+	counter = 0
 
-    collection = database[collection_name]
+	collection = database[collection_name]
 
-    for doc in documents: 
+	for doc in documents: 
 
-        # document ID 
-        id = doc['_id']
+        	# document ID 
+		id = doc['_id']
 
-        # preprocess the documents to get the LDA model
-        processed = pre_process(doc[key])
+        	# preprocess the documents to get the LDA model
+		processed = pre_process(doc[key])
         
-        if processed != []: 
+		if processed != []: 
         
-            bow = get_single_bow(processed)
-            topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
+			bow = get_single_bow(processed)
+			topics = lda_model.get_document_topics(bow, minimum_probability=0.01)
 
-            #topics contains a list of tuples where the first entry correspons to the index
-            #of the topic word in the model 
+            		#topics contains a list of tuples where the first entry correspons to the index
+            		#of the topic word in the model 
             
-            temp = (0,0)
-            for item in topics:
-                if item[1] > temp[1]:
-                    temp = item
-                else:
-                    continue
+			temp = (0,0)
+			for item in topics:
+				if item[1] > temp[1]:
+					temp = item
+				else:
+					continue
             
-            # gets the unique document topics for each individual document
-            unique_document_topics = topic_words["Topic_" + str(temp[0])]
+          		 # gets the unique document topics for each individual document
+			unique_document_topics = topic_words["Topic_" + str(temp[0])]
 
-            # write to ouput file 
-            f.write(f"Document number {counter}: ")
-            f.write(f'{id}: ')
+            		# write to ouput file 
+			f.write(f"Document number {counter}: ")
+			f.write(f'{id}: ')
             
-            for item in unique_document_topics:
-                f.write(item + " ")
-            f.write("\n")
+			for item in unique_document_topics:
+				f.write(item + " ")
+			f.write("\n")
 
-            # putting the information into the database
-            new_val = {"$set" : {"topic_words": unique_document_topics}}
-            query = {'_id':id}
-            collection.update_one(query, new_val)
+        		# putting the information into the database
+			new_val = {"$set" : {"topic_words": unique_document_topics}}
+			query = {'_id':id}	
+			collection.update_one(query, new_val)
         
-        else: 
+		else: 
             
-            new_val = {"$set" : {"topic_words": "Not enough information."}}
-            query = {'_id':id}
-            collection.update_one(query, new_val)
+			new_val = {"$set" : {"topic_words": "Not enough information."}}
+			query = {'_id':id}
+			collection.update_one(query, new_val)
             
-        counter+=1
+		counter+=1
 
-    f.close()
+	f.close()
     
 if __name__ == '__main__': 
 
-    if(len(sys.argv) < 2):
-        print("Please provide a collection name.")
-        sys.exit
+	if(len(sys.argv) < 2):
+		print("Please provide a collection name.")
+		sys.exit
+	
+	client = get_client()
+	database = get_database(client)
+	collections = database.list_collection_names()
 
-    client = get_client()
-    database = get_database(client)
-    collections = database.list_collection_names()
-
-    # RedditPosts -> 'selftext'
+    # RedditPosts_v3 -> 'selftext'
     # WikiSourceText -> 'title' or 'text'
     # AmazonReviews -> 'review_body'
-    # RedditComments -> 'body' 
+    # RedditComments_v3 -> 'body' 
     # YelpReviews -> 'text' 
     # YoutubeComment -> 'text'
     # YoutubeVideo -> 'vidTitle' 
+		# TwitterTweets -> 'tweet' 
 
-    found = 0 
-    entries = []
+	found = 0 
+	entries = []
 
     # checking if the input is in the collection names
-    if sys.argv[1] in collections:
-        found = 1
+	if sys.argv[1] in collections:
+		found = 1
 
-    if found: 
+	if found: 
 
-        if sys.argv[1] == "RedditPosts":
+		if sys.argv[1] == "RedditPosts_v3":
 
-            old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
-            entries = [old_entry['selftext'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'selftext':1, '_id':0})
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['selftext'] for old_entry in old_entries if 'selftext' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
-        elif sys.argv[1] == "WikiSourceText":
+		elif sys.argv[1] == "WikiSourceText":
 
-            old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
-            entries = [old_entry['Text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'Text':1, '_id':0})
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['Text'] for old_entry in old_entries if 'Text' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
-        elif sys.argv[1] == "AmazonReviews":
+		elif sys.argv[1] == "AmazonReviews":
 
-            old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
-            entries = [old_entry['review_body'] for old_entry in old_entries if 'review_body' in old_entry]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'review_body':1, '_id':0})
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['review_body'] for old_entry in old_entries if 'review_body' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
-        elif sys.argv[1] == "RedditComments":
+		elif sys.argv[1] == "RedditComments_v3":
 
-            old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
-            entries = [old_entry['body'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'body':1, '_id':0})
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['body'] for old_entry in old_entries if 'body' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
-        elif sys.argv[1] == "YelpReviews":
+		elif sys.argv[1] == "YelpReviews":
 
-            old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
-            entries = [old_entry['text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})	
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['text'] for old_entry in old_entries if 'text' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
         
-        elif sys.argv[1] == "YoutubeComment":
+		elif sys.argv[1] == "YoutubeComment":
 
-            old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
-            entries = [old_entry['text'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'text':1, '_id':0})
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['text'] for old_entry in old_entries if 'text' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
-        elif sys.argv[1] == "YoutubeVideo":
+		elif sys.argv[1] == "YoutubeVideo":
 
-            old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
-            entries = [old_entry['vidTitle'] for old_entry in old_entries]
-            iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+			old_entries = database[sys.argv[1]].find({}, {'vidTitle':1, '_id':0})
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['vidTitle'] for old_entry in old_entries if 'vidTitle' in old_entry]
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
+		
+		elif sys.argv[1] == "TwitterTweets":
 
-        else:
+			old_entries = database[sys.argv[1].find({}, {'tweet':1, '_id':0})]
+			if len(list(old_entries.clone())) == 0: 
+				print("No entries in collection.")
+				sys.exit
+			entries = [old_entry['tweet'] for old_entry in old_entries if 'tweet' in old_entry] 
+			iterate_in_collection(sys.argv[1], database, entries[:len(entries)//2])
 
-            pass
+		else:
+
+			pass
