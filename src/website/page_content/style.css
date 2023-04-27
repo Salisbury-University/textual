@@ -867,6 +867,19 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
+#display_button
+{
+	background-color: #A62139;
+	border-color: #A62139;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1rem;
+	color: #D9D9D9;
+	font-size: 1.0rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
 #user_collection
 {
 	margin-left: auto;

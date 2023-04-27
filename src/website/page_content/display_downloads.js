@@ -1,12 +1,21 @@
 function initialize_downloads()
 {
 	fetch_collections();
-	load_downloads();
 }
 
 function load_downloads()
 {
-        fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {	 
+	var table = document.getElementById("database_table");
+	while(table.firstChild) {
+		table.removeChild(table.firstChild);
+	}
+        //user_str, will be the string passed in from the frontend
+	const user_opt = document.getElementById("user_download");
+	const user_text = user_opt.options[user_opt.selectedIndex].text;
+	const data = {collection: user_text};
+
+	// Call the backend function to grab the specified content from the database.
+	fetch("/downloads", {method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
 		var table_whole = document.getElementById("database_table");
 

@@ -34,6 +34,9 @@ app.listen(8080);
 //The function will be called when the user clicks on the downloads page
 //Data will be posted, and can be fetched by the client to be displayed on the downloads page
 app.post("/downloads", (req, res, next) => {
+	// Get the user input value from the frontend
+	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
+
 	try
 	{
 		//Connect to the database
@@ -46,7 +49,7 @@ app.post("/downloads", (req, res, next) => {
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
-					db.collection('RedditPosts').find().limit(10000).toArray(function(err, data) {
+					db.collection(collection).find().limit(1000).toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
