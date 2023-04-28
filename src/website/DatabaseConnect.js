@@ -13,17 +13,19 @@ var lineReader = require('line-reader');
 let bodyParser = require('body-parser');
 //Database url, file is read in to avoid pushing login info to the GitHub
 var url;
-
 //Read the credentials from the mongodb file
 lineReader.eachLine("mongo_credentials.txt", function(line, last) {
 	url = line;
 });
 //Start the NodeJS express app, the contents of the page_content directory will be loaded
 var app = express();
+const PORT = 3000;
 app.use(express.static(__dirname + "/page_content"));
 app.use(bodyParser.urlencoded({extended: true}));
 //Start the app on port 8080
 app.listen(8080);
+//stores sources for search results
+let sources=[];
 //The function will be called when the user clicks on the downloads page
 //Data will be posted, and can be fetched by the client to be displayed on the downloads page
 app.post("/downloads", (req, res, next) => {
@@ -88,7 +90,8 @@ app.post('/search2', function(req, res) {
                         //Create new promise
                         var myPromise = () => {
                                 return new Promise((resolve, reject) => {
-					collections=[]
+					collections=[];
+					sources=[];
 					if(typeof req.body.yelpCB!=='undefined'){
 						collections.push('YelpReviews');
 					}
@@ -142,41 +145,159 @@ app.post('/search2', function(req, res) {
 														console.log("uh oh");
 													}
 													else{
+														for (let i = 0; i < sRes1.length; i++) {
+                                        	                                                                        sources.push(collections[0]);
+                                	                                                                        }
+                        	                                                                                for (let i = 0; i < sRes2.length; i++) {
+	                                                                                                                sources.push(collections[1]);
+        	                                                                                                }
+        		       	                                                                                for (let i = 0; i < sRes3.length; i++) {
+                                                                                                        	        sources.push(collections[2]);
+                                                                                                	        }
+                                                                                        	                for (let i = 0; i < sRes4.length; i++) {
+                                                                                	                                sources.push(collections[3]);
+                                                                        	                                }
+                                                                	                                        for (let i=0; i<sRes5.length; i++){
+                                                        	                                                        sources.push(collections[4]);
+                                                	                                                        }
+                                        	                                                                for (let i=0; i<sRes6.length; i++){
+                                	                                                                                sources.push(collections[5]);
+                        	                                                                                }
+                	                                                                                        for (let i=0; i<sRes7.length; i++){
+        	                                                                                                        sources.push(collections[6]);
+	                                                                                                        }
+														for (let i=0; i<sRes8.length; i++){
+															sources.push(collections[7]);
+														}
 														err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4.concat(sRes5.concat(sRes6.concat(sRes7.concat(sRes8))))))));
 													}
 												});
 												}
 												else{
+													for (let i = 0; i < sRes1.length; i++) {
+                                                                                                        	sources.push(collections[0]);
+                                                                                                	}
+                                                                                               		for (let i = 0; i < sRes2.length; i++) {
+                                                                                                        	sources.push(collections[1]);
+                                                                                                	}
+                                                                                        	        for (let i = 0; i < sRes3.length; i++) {
+                                                                                	                        sources.push(collections[2]);
+                                                                        	                        }
+                                                                	                                for (let i = 0; i < sRes4.length; i++) {
+                                                        	                                                sources.push(collections[3]);
+                                                	                                                }
+                                        	                                                        for (let i=0; i<sRes5.length; i++){
+                                	                                                                        sources.push(collections[4]);
+                        	                                                                        }
+                	                                                                                for (let i=0; i<sRes6.length; i++){
+        	                                                                                                sources.push(collections[5]);
+	                                                                                                }
+													for (let i=0; i<sRes7.length; i++){
+														sources.push(collections[6]);
+													}
 														err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4.concat(sRes5.concat(sRes6.concat(sRes7)))))));
 												}
 											});
 											}
 											else{
-													err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4.concat(sRes5.concat(sRes6))))));
+												for (let i = 0; i < sRes1.length; i++) {
+                                                                                        	        sources.push(collections[0]);
+                                                                                	        }
+                                                                        	                for (let i = 0; i < sRes2.length; i++) {
+                                                                	                                sources.push(collections[1]);
+                                                        	                                }
+                                                	                                        for (let i = 0; i < sRes3.length; i++) {
+                                        	                                                        sources.push(collections[2]);
+                                	                                                        }
+                        	                                                                for (let i = 0; i < sRes4.length; i++) {
+                	                                                                                sources.push(collections[3]);
+        	                                                                                }
+     	                                                                                   	for (let i=0; i<sRes5.length; i++){
+                                                                                                	sources.push(collections[4]);
+                                                                                        	}
+												for (let i=0; i<sRes6.length; i++){
+													sources.push(collections[5]);
+												}
+												err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4.concat(sRes5.concat(sRes6))))));
 											}
 										});					
 									}
 										else{
-												err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4.concat(sRes5)))));
+											for (let i = 0; i < sRes1.length; i++) {
+                                                                                                sources.push(collections[0]);
+                                                                                        }
+                                                                                        for (let i = 0; i < sRes2.length; i++) {
+                                                                                                sources.push(collections[1]);
+                                                                                        }
+                                                                                        for (let i = 0; i < sRes3.length; i++) {
+                                                                                                sources.push(collections[2]);
+                                                                                        }
+                                                                                        for (let i = 0; i < sRes4.length; i++) {
+                                                                                                sources.push(collections[3]);
+                                                                                        }
+											for (let i=0; i<sRes5.length; i++){
+												sources.push(collections[4]);
+											}
+											err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4.concat(sRes5)))));
 										}
 									});
 									}
 									else{
+											for (let i = 0; i < sRes1.length; i++) {
+                                                                        			sources.push(collections[0]);
+                                                                			}
+                                                                			for (let i = 0; i < sRes2.length; i++) {
+                                                                        			sources.push(collections[1]);
+                                                        			        }
+											for (let i = 0; i < sRes3.length; i++) {
+                                                                        			sources.push(collections[2]);
+                                                                			}
+                                        		        	                for (let i = 0; i < sRes4.length; i++) {
+                                	                	        	                sources.push(collections[3]);
+        			                                                        }
+	
 											err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3.concat(sRes4))));
 									}
 								});
 								}
 								else{
+									for (let i = 0; i < sRes1.length; i++) {
+                                                                		sources.push(collections[0]);
+                                                        		}
+									for (let i = 0; i < sRes2.length; i++) {
+                                                                		sources.push(collections[1]);
+                                                        		}
+									for (let i = 0; i < sRes3.length; i++) {
+                                                                		sources.push(collections[2]);
+                                                        		}
 									err ? reject(err) : resolve(sRes1.concat(sRes2.concat(sRes3)));
 								}
 							});
 							}
 							else{
+								for (let i = 0; i < sRes1.length; i++) {
+                                                                	sources.push(collections[0]);
+                                                        	}
+								for (let i = 0; i < sRes2.length; i++) {
+                                                                	sources.push(collections[1]);
+                                                        	}
 								err ? reject(err) : resolve(sRes1.concat(sRes2));
 							}
 						});
 						}
 						else{
+	         				       /*fs.writeFile("search_results.json", JSON.stringify(sRes1),(err,resonse)=>{
+         	                                       		if (err){
+                                                       			console.error(err);
+                                                        		return;
+                                                		}
+                                                		console.log("File has been created");
+                                        	        	res.download("search_results.json");
+							        console.log("TEST");
+	                                        	});*/
+							for (let i = 0; i < sRes1.length; i++) {
+								sources.push(collections[0]);
+							}
 							err ? reject(err) : resolve(sRes1);
 						}
 					});
@@ -197,19 +318,39 @@ app.post('/search2', function(req, res) {
 
                         callMyPromise().then(function(result) {
                                 //Close the connection to the database client
+				if(typeof req.body.downloadCB!=='undefined'){
+                                        fs.writeFile("search_results.json", JSON.stringify(result),(err,resonse)=>{
+                                                if (err){
+                                                        console.error(err);
+                                                        return;
+                                                }
+                                                console.log("File has been created");
+						/*const filePath =`${__dirname}/files`;
+                                		download("/mnt/linuxlab/home/jfernandez3/textual/src/website/search_results.json", filePath).then(()=>{
+							console.log('File downloaded successfully!');
+						})*/
+						//res.pipe("search_results.json");
+                                        });
+                                }
 				const firstHalf = fs.readFileSync(__dirname + "/search_results.html", "utf-8");
 				firstHalf.split(/\r?\n/).forEach(line=> {
 					res.write(line);
 				});
+				let ind=0;
 				for (const textElement of result) {
-					res.write("<tr><td>"+textElement.text.substring(0,1000)+"</td></tr>");
+					res.write("<tr><td>"+sources[ind]+"</td><td>"+textElement.author+"</td><td>"+textElement.date+"</td><td>"+textElement.text.substring(0,1000)+"</td></tr>");
+					ind=ind+1;
 				}
 				const secondHalf = fs.readFileSync(__dirname + "/search_results2.html","utf8");
 				secondHalf.split(/\r?\n/).forEach(line=> {
                                         res.write(line);
                                 });
 				client.close();
-                        	});
+                        	if(typeof req.body.downloadCB!=='undefined'){
+					res.download("search_results.json");
+				}
+			});
+				
                 	}); //End of MongoClient call
 
         } catch (e) {
