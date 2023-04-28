@@ -28,9 +28,11 @@ function load_downloads()
 		// Get the object keys
 		var keys = Object.keys(document_array[0]);
 
-		for (i = 0; i < keys.length; i++) {
+		var i = 0;
+		while (i < keys.length && i < 10) {
 			var cell = row.insertCell(i);
 			cell.innerHTML = "<td><b>" + keys[i] + "</b></td>";
+			i += 1;
 		}
 		
 		var table_body = table_whole.createTBody();
@@ -45,8 +47,8 @@ function load_downloads()
                 while(index < count)
                 {
 			var row = table_body.insertRow(index);
-
-			for (i = 0; i < keys.length; i++) {
+			var i = 0;
+			while (i < keys.length && i < 10) {
 				var cell = row.insertCell(i);
 				var value = document_array[index][keys[i]];
 
@@ -63,6 +65,7 @@ function load_downloads()
 				cell.style.maxWidth = "10rem";
 				cell.style.whiteSpace = "normal";
 				cell.style.overflowWrap = "break-word";
+				i += 1;
 			}
 
                        //Append the new row to the table
@@ -185,7 +188,7 @@ function fetch_count()
 			// Get document count from the DOM
 			document_count.innerHTML = "Documents: " + stats_array["objects"];
 		});
-	}, 500);
+	}, 60000);
 }
 
 function fetch_status()
