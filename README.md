@@ -13,7 +13,29 @@
 
 ## Current Status 
 
-### **Sprint Four**: 10 April 2023 - XX May 2023
+### **End of the Semester** 
+
+    As we approach the end of the fourth sprint, it's important to reflect on the progress we've made so 
+    far and prepare for the final stage of the project. Over the past few weeks, we've been working hard 
+    on developing new features, fixing bugs, and improving the overall functionality of the project.
+    
+    As we move towards the end of the development cycle, it's important to remember that we have a finite 
+    amount of time to work on the project. With the end of the sprint approaching, it's time to shift our 
+    focus towards merging all the branches into a fully finished, working product. This process will 
+    involve consolidating all the code and ensuring that all the features are fully functional and working 
+    as intended.
+
+    It's important to note that during this phase, we will not be adding any new features to the project. 
+    Instead, our focus will be on perfecting the existing features and ensuring that the final product 
+    meets all the requirements laid out in the project specification. This will require a high level 
+    of collaboration and attention to detail from all team members.
+
+    As we approach the end of this project, it's important to take pride in the work we've accomplished so far. 
+    We've overcome numerous challenges and have made significant progress towards our end goal. With just a 
+    little more effort, we can deliver a final product that meets or even exceeds our initial expectations. 
+    Let's stay focused, work collaboratively, and finish this project with the highest level of quality possible.
+
+### **Sprint Four**: 10 April 2023 - 30 April 2023
 
     This sprint will be primarily focused on wrapping up any loose ends for the current state of the project.
     We will contnue to add more data to the database all of the way to the end of the semester, work on 
