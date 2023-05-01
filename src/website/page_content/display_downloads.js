@@ -1,12 +1,21 @@
 function initialize_downloads()
 {
 	fetch_collections();
-	load_downloads();
 }
 
 function load_downloads()
 {
-        fetch("/downloads", {method: "POST"}).then(data => data.text()).then((documents) => {	 
+	var table = document.getElementById("database_table");
+	while(table.firstChild) {
+		table.removeChild(table.firstChild);
+	}
+        //user_str, will be the string passed in from the frontend
+	const user_opt = document.getElementById("user_download");
+	const user_text = user_opt.options[user_opt.selectedIndex].text;
+	const data = {collection: user_text};
+
+	// Call the backend function to grab the specified content from the database.
+	fetch("/downloads", {method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(data => data.text()).then((documents) => {
 		//Fetch the table from the HTML page
 		var table_whole = document.getElementById("database_table");
 
@@ -19,9 +28,11 @@ function load_downloads()
 		// Get the object keys
 		var keys = Object.keys(document_array[0]);
 
-		for (i = 0; i < keys.length; i++) {
+		var i = 0;
+		while (i < keys.length && i < 10) {
 			var cell = row.insertCell(i);
 			cell.innerHTML = "<td><b>" + keys[i] + "</b></td>";
+			i += 1;
 		}
 		
 		var table_body = table_whole.createTBody();
@@ -36,8 +47,8 @@ function load_downloads()
                 while(index < count)
                 {
 			var row = table_body.insertRow(index);
-
-			for (i = 0; i < keys.length; i++) {
+			var i = 0;
+			while (i < keys.length && i < 10) {
 				var cell = row.insertCell(i);
 				var value = document_array[index][keys[i]];
 
@@ -54,6 +65,7 @@ function load_downloads()
 				cell.style.maxWidth = "10rem";
 				cell.style.whiteSpace = "normal";
 				cell.style.overflowWrap = "break-word";
+				i += 1;
 			}
 
                        //Append the new row to the table
@@ -64,15 +76,20 @@ function load_downloads()
                 }
 
 		//Create the bootstrap table dynamically
-                $("#database_table").DataTable();
+                var table = $("#database_table").DataTable();
                 $('.dataTables_length').addClass('bs-select');
+		$('#database_table').css('width', '80%');
 
-        	// Set the width and max-width properties of the table and its parent element
-		var table = $("#database_table");
-		var tableCon = table.parent();
-		table.css("width", "65%");
-		tableCon.css("max-width", "65%");
-	}).catch(function (error) {
+		// Style the table
+		$('.dataTables_length', table.table().container()).addClass('text-center');
+		$('.dataTables_filter', table.table().container()).addClass('text-center');
+		$('.pageinate_button', table.table().container()).addClass('text-center');
+		$('.dataTables_info', table.table().container()).addClass('text-center');
+		$('.dataTables_length', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.dataTables_info', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.pageinate_button', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.dataTables_filter', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		}).catch(function (error) {
                 alert(error);
         });
 }
@@ -171,7 +188,7 @@ function fetch_count()
 			// Get document count from the DOM
 			document_count.innerHTML = "Documents: " + stats_array["objects"];
 		});
-	}, 500);
+	}, 60000);
 }
 
 function fetch_status()
