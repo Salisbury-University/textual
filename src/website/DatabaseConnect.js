@@ -55,7 +55,7 @@ app.post("/downloads", (req, res, next) => {
 			};
 
 			callMyPromise().then(function(result) {
-				//Close the connection to the database client
+	newegg 			//Close the connection to the database client
 				client.close();
 				
 				//Send the query result to the client
@@ -337,8 +337,36 @@ app.post('/search2', function(req, res) {
 					res.write(line);
 				});
 				let ind=0;
-				for (const textElement of result) {
-					res.write("<tr><td>"+sources[ind]+"</td><td>"+textElement.author+"</td><td>"+textElement.date+"</td><td>"+textElement.text.substring(0,1000)+"</td></tr>");
+				let author="Could not be found";
+				let date="Could not be found";
+				for (const textElement of result){
+					author="Could not be found";
+                                	date="Could not be found";
+					console.log(textElement);
+					if(typeof textElement.author!=='undefined'){
+						console.log(textElement.author);
+						author=textElement.author;
+					}
+					else if(typeof textElement.user_id!=='undefined'){
+						author=textElement.user_id;
+					}
+					else if(typeof textElement.user!=='undefined'){
+                                                author=textElement.user;
+                                        }
+					if(typeof textElement.date!=='undefined'){
+						date=textElement.date;
+					}
+					else if(typeof textElement.Posted!=='undefined'){
+                                                author=textElement.Posted;
+                                        }
+					else if(typeof textElement.publishDate!=='undefined'){
+                                                author=textElement.publishDate;
+                                        }
+					else if(typeof textElement.'Document Date'!=='undefined'){
+                                                author=textElement.'Document Date';
+                                        }
+					console.log(author);
+					res.write("<tr><td>"+sources[ind]+"</td><td>"+author+"</td><td>"+date+"</td><td>"+textElement.text.substring(0,1000)+"</td></tr>");
 					ind=ind+1;
 				}
 				const secondHalf = fs.readFileSync(__dirname + "/search_results2.html","utf8");
