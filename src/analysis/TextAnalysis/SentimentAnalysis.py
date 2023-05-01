@@ -1,6 +1,6 @@
 # SentimentAnalysisVADER.py
-# The program is sample tool that demonstrates how you can use the data in the textual
-# baseline database. The goal of this tool is to read 3 comments from a database and 
+# The program is sample tool that demonstrates how you can use VADER Sentiment Intensity Analyzer.
+# The goal of this program is to read 3 comments from a database and 
 # to determine whether these comments are positive, negative, or neutral.
 
 import pandas as pd
