@@ -1,5 +1,4 @@
 # SentimentAnalysisML(NotebookVersion).py
-# This is the code used for the detailed Jupyter Notebook version of the tutorial.
 
 import pandas as pd
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -107,7 +106,7 @@ def preprocess(df):
 if __name__ == '__main__':
 
     pd.options.mode.chained_assignment = None
-    
+
     # Create SentimentIntensityAnalyzer object
     sia = SentimentIntensityAnalyzer()
 
