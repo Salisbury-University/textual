@@ -105,6 +105,9 @@ def preprocess(df):
     return df
 
 if __name__ == '__main__':
+
+    pd.options.mode.chained_assignment = None
+    
     # Create SentimentIntensityAnalyzer object
     sia = SentimentIntensityAnalyzer()
 
