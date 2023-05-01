@@ -357,13 +357,13 @@ app.post('/search2', function(req, res) {
 						date=textElement.date;
 					}
 					else if(typeof textElement.Posted!=='undefined'){
-                                                author=textElement.Posted;
+                                                date=textElement.Posted;
                                         }
 					else if(typeof textElement.publishDate!=='undefined'){
-                                                author=textElement.publishDate;
+                                                date=textElement.publishDate;
                                         }
 					else if(typeof textElement.'Document Date'!=='undefined'){
-                                                author=textElement.'Document Date';
+                                                date=textElement.'Document Date';
                                         }
 					console.log(author);
 					res.write("<tr><td>"+sources[ind]+"</td><td>"+author+"</td><td>"+date+"</td><td>"+textElement.text.substring(0,1000)+"</td></tr>");
