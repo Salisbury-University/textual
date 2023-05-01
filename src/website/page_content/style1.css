@@ -1,0 +1,611 @@
+/* STYLESHEET FOR THE COSC425/426 TEXTUAL BASELINE DATABASE WEBSITE */
+
+/* ADD PADDING TO TOP OF THE HEADER, SEPARATING IT FROM THE NAVBAR */
+/* USING REM UNITS (Relative to the font size of the root element) to unsure better consistency accross devices */
+
+/* MAIN CONTENT BACKGROUND COLOR */
+#page_content
+{
+	background: #0D0D0D; !important
+	padding-bottom: 80px;
+}
+
+#jumbo_header
+{
+	background-color: #000000;
+	padding-top: 4rem;
+	padding-bottom: 4rem;
+}
+
+#jumbo_title
+{
+	color: #D9D9D9;
+}
+
+#jumbo_text
+{
+	color: #D9D9D9;
+}
+
+#jumbo_btn
+{
+	background-color: #A62139;
+	border-color: #A62139;
+}
+
+/* ADD PADDING TO LEFT SIDE OF NAVBAR */
+#nav_title
+{
+	font-family: 'Fjalla One', sans-serif;
+	padding-left: 1rem;
+}
+
+/* PLACE FOOTER AT BOTTOM OF PAGE */
+#su_footer
+{
+        color: #828282;
+        line-height: 40px;
+        font-size: 0.7em;
+	margin-left: 2rem;
+}
+
+#page_tiles
+{
+	padding-top: 3rem;
+}
+
+.page_tile
+{
+	color: #D9D9D9;
+	padding-bottom: 5rem;
+	border-radius: 0.5rem;	
+	padding-left: 2rem;
+	padding-right: 2rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	background-color: #252525;
+}
+
+#sub_header
+{
+	color: #D9D9D9;
+	font-family: 'Fjalla One', sans-serif;
+	font-size: 3.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 30%;
+	text-align: center;
+	margin-top: 4rem;
+	margin-bottom: 1rem;
+}
+
+#page_tile_1_text
+{
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	font-size: 1rem;
+	padding-bottom: 0.5rem;
+}
+
+#page_tile_2_text
+{
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	font-size: 1rem;
+	padding-bottom: 0.5rem;
+}
+
+#page_tile_1_btn
+{
+	background-color: #A62139;
+	border-color: #A62139;
+}
+
+#page_tile_2_btn
+{
+	position: absolute;
+	bottom: 10px;
+	padding: 0.5rem, 0.5rem, 0.5rem, 0.5rem;
+	background-color: #A62139;
+	border-color: #A62139;
+	margin-top: 2rem;
+}
+
+#about_header
+{
+	color: #D9D9D9;
+	font-size: 5rem;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 4rem;
+	text-align: center;
+}
+
+#team_header
+{
+	color: #D9D9D9;
+	font-size: 5rem;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 4rem;
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+#about_subheader
+{ 
+	color: #D9D9D9;
+	font-size: 1rem;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 2rem;
+	text-align: center;
+	
+} 
+
+.about_intro
+{
+	color: #D9D9D9;
+	line-height: 2.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 85rem;
+	font-size: 1.5rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+#second_paragraph
+{
+	margin-bottom: 2rem;
+}
+
+#project_diagram
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+#project_diagram_img
+{
+	border-radius: 2rem;
+}
+
+#about_divider
+{
+	width: 75%;
+	height: 0.3rem;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	background-color: #D9D9D9;
+}
+
+#sources_container
+{
+	margin-top: 2rem;
+}
+
+#team_container
+{
+	margin-top: 4rem;
+}
+
+#sources_header
+{
+	color: #D9D9D9;
+	font-size: 3.5rem;
+	font-family: 'Fjalla One', sans-serif;
+	text-align: center;
+	margin-bottom: 2rem;
+
+}
+
+.source_box
+{
+	color: #D9D9D9;
+	background-color: #252525;
+	border-radius: 0.5rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	padding-bottom: 2rem;
+	margin: 2rem;
+}
+
+.team_box
+{
+	color: #D9D9D9;
+	background-color: #252525;
+	border-radius: 0.5rem;
+	padding-left: 4rem;
+	padding-right: 4rem;
+	padding-bottom: 2rem;
+	margin: 2rem;
+}
+
+.source_icons
+{
+	margin-top: 1rem;
+	margin-left: 0.5rem;
+	margin-bottom: 0.5rem;
+	width: 5rem;
+	height: 5rem;
+}
+
+.team_icons
+{
+	margin-top: 1rem;
+	margin-left: 0.5rem;
+	margin-bottom: 0.5rem;
+	width: 5rem;
+	height: 5rem;
+}
+
+#review_header_div
+{
+	text-align: center;
+	padding: 0;
+	position: absolute;
+	left: 0;
+	max-width: 100%;
+}
+
+#stock_img
+{
+	overflow: hidden;
+	width: 100%;
+}
+
+#review_header_text
+{
+	width: 100%;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	background-color: #000000;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #D9D9D9;
+	font-size: 3rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_title
+{
+	margin-top: 42rem;
+       	text-align: center;	
+	color: #D9D9D9;
+	font-size: 4rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#link_to_page_1
+{
+	margin-top: 42rem	
+	color: #D9D9D9;
+
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_title_no_margin
+{
+	margin-top: 10rem;
+       	text-align: center;	
+	color: #D9D9D9;
+	font-size: 4rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_logo
+{
+	display: table;
+}
+
+#review_analysis_img
+{
+	display: table;
+}
+
+#review_analysis_container
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_container_2
+{
+	display: flex;
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+#review_analysis_container_3
+{
+	margin-top: 1rem;
+	width: 100%;
+	font-family: 'Fjalla One', sans-serif;
+}
+.review_analysis_paragraph
+{
+	margin-top: 2.5rem;
+	margin-bottom: 2.5rem;
+	line-height: 2rem;
+	color: #D9D9D9;
+	width: 40rem;
+	text-align: left;
+	margin-left: 1.5rem;
+}
+
+.procon
+{
+	margin-bottom: 2rem;
+	line-height: 1.75rem;
+	color: #D9D9D9;
+	text-align: left;
+	margin-left: 1.5rem;
+}
+
+#yelp_logo_div
+{
+	
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#lstm_div
+{
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#lstm_img
+{
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 90%;
+	border-radius: 2rem;
+}
+
+#yelp_logo
+{
+
+	border-radius: 15%;
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 80%;
+}
+
+#review_subheader
+{
+	width: 100%;
+	color: #D9D9D9;
+	text-align: center;
+	margin-left: auto;
+  	margin-right: auto;
+	font-size: 4rem;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 3rem;
+}
+
+#review_subheader_text
+{
+	padding-top: 2rem;
+	margin-left: auto;
+  	margin-right: auto;
+	width: 75%;
+	border-top: 0.5rem #D9D9D9 solid;
+}
+
+#downloads_header
+{
+	color: #D9D9D9;
+	font-size: 5rem;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 4rem;
+	text-align: center;
+}
+
+#downloads_content
+{
+	color: #D9D9D9;
+	font-size: 1.5rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	margin-top: 6rem;
+	text-align: center;
+}
+
+#database_table_wrapper
+{
+	margin-top: 1rem;
+	color: #D9D9D9;
+	font-size: 1.5rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+#database_table
+{
+	table-layout: fixed;
+	margin-top: 3rem;
+	color: #D9D9D9;
+	font-size: 1.5rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #D9D9D9;
+	text-align: center;
+}
+
+#database_table tbody td
+{
+	width: 100%;
+	padding: 1rem;
+	border: 2px solid #D9D9D9; 
+}
+
+#database_table th 
+{
+	padding: 1rem;
+	border: 2px solid #D9D9D9;
+}
+
+#download_links
+{
+	width: 100%;
+	text-align: center;
+}
+
+
+#download_links p 
+{
+	margin-top: 1rem;
+	color: #D9D9D9;
+	font-size: 1.5rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+#download_button
+{
+	background-color: #A62139;
+	border-color: #A62139;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	color: #D9D9D9;
+	font-size: 1.0rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+/*This section below includes the Jupyter Notebook CSS*/
+
+#codeblock1
+{
+	
+	color: #D9D9D9;
+	font-family: 'Fjalla One', sans-serif;	
+}
+
+#codeblock2
+{
+	font-weight: bold;
+	color: #D9D9D9;
+	font-family: 'Fjalla One', sans-serif;	
+}
+
+
+#notebook-cell1
+{
+	border-width: 1px;
+	border-style:solid;
+	border-color:rgba(255, 255, 255, 0.096);
+}
+
+#notebook-cell2
+{
+	margin-top:.75rem;
+	border-width: 1px;
+	border-style:solid;
+	border-color:rgba(255, 255, 255, 0.096);
+}
+
+
+.variable-font 
+{
+  color:rgb(179, 18, 45)
+}
+
+.sentiment-font 
+{
+  color:var(--md-green-800)
+}
+
+pre { line-height: 150%; padding-top:.75rem; padding-bottom:.75rem;}
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+
+.c { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment */
+.err { color: var(--jp-mirror-editor-error-color) } /* Error */
+.k { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword */
+.o { color: var(--jp-mirror-editor-operator-color); font-weight: bold } /* Operator */
+.p { color: var(--jp-mirror-editor-punctuation-color) } /* Punctuation */
+.ch { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Hashbang */
+.cm { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Multiline */
+.cp { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Preproc */
+.cpf { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.PreprocFile */
+.c1 { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Single */
+.cs { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment.Special */
+.kc { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Constant */
+.kd { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Declaration */
+.kn { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Namespace */
+.kp { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Pseudo */
+.kr { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Reserved */
+.kt { color: var(--jp-mirror-editor-keyword-color); font-weight: bold } /* Keyword.Type */
+.m { color: var(--jp-mirror-editor-number-color) } /* Literal.Number */
+.s { color: var(--jp-mirror-editor-string-color) } /* Literal.String */
+.ow { color: var(--jp-mirror-editor-operator-color); font-weight: bold } /* Operator.Word */
+.w { color: var(--jp-mirror-editor-variable-color) } /* Text.Whitespace */
+.mb { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Bin */
+.mf { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Float */
+.mh { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Hex */
+.mi { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Integer */
+.mo { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Oct */
+.sa { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Affix */
+.sb { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Backtick */
+.sc { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Char */
+.dl { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Delimiter */
+.sd { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Doc */
+.s2 { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Double */
+.se { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Escape */
+.sh { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Heredoc */
+.si { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Interpol */
+.sx { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Other */
+.sr { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Regex */
+.s1 { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Single */
+.ss { color: var(--jp-mirror-editor-string-color) } /* Literal.String.Symbol */
+.il { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Integer.Long */
+
+
+:root
+{
+	 /* Code mirror specific styles for jp-codeblocks*/
+
+	 --jp-mirror-editor-keyword-color: #008000;
+	 --jp-mirror-editor-atom-color: #88f;
+	 --jp-mirror-editor-number-color: #080;
+	 --jp-mirror-editor-def-color: #00f;
+	 --jp-mirror-editor-variable-color: var(--md-grey-900);
+	 --jp-mirror-editor-variable-2-color: #05a;
+	 --jp-mirror-editor-variable-3-color: #085;
+	 --jp-mirror-editor-punctuation-color: #05a;
+	 --jp-mirror-editor-property-color: #05a;
+	 --jp-mirror-editor-operator-color: #aa22ff;
+	 --jp-mirror-editor-comment-color: #408080;
+	 --jp-mirror-editor-string-color: #ba2121;
+	 --jp-mirror-editor-string-2-color: #708;
+	 --jp-mirror-editor-meta-color: #aa22ff;
+	 --jp-mirror-editor-qualifier-color: #555;
+	 --jp-mirror-editor-builtin-color: #008000;
+	 --jp-mirror-editor-bracket-color: #997;
+	 --jp-mirror-editor-tag-color: #170;
+	 --jp-mirror-editor-attribute-color: #00c;
+	 --jp-mirror-editor-header-color: blue;
+	 --jp-mirror-editor-quote-color: #090;
+	 --jp-mirror-editor-link-color: #00c;
+	 --jp-mirror-editor-error-color: #f00;
+	 --jp-mirror-editor-hr-color: #999;
+}
