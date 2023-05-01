@@ -52,6 +52,8 @@
 
 #database_table, th, td, tr
 {
+	margin-left: auto;
+	margin-right: auto;
 	font-family: 'Fjalla One', sans-serif; 
 	color: #D9D9D9;
 	border: 1px solid #D9D9D9;
@@ -145,6 +147,16 @@
 #about_header
 {
 	color: #D9D9D9;
+	font-size: 5rem;
+	font-family: 'Fjalla One', sans-serif;
+	margin-top: 4rem;
+	text-align: center;
+}
+
+#help_header
+{
+	color: #D9D9D9;
+	font-weight: bold;
 	font-size: 5rem;
 	font-family: 'Fjalla One', sans-serif;
 	margin-top: 4rem;
@@ -484,6 +496,7 @@
 
 #review_navbar
 {
+	margin-top: 5%;
 	margin-left: auto;
 	margin-right: auto;
 	display: flex;
@@ -997,6 +1010,19 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
+#display_button
+{
+	background-color: #A62139;
+	border-color: #A62139;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1rem;
+	color: #D9D9D9;
+	font-size: 1.0rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
 #user_collection
 {
 	margin-left: auto;
@@ -1092,4 +1118,136 @@ g.mpld3-xaxis, g.mpld3-yaxis
     display: inline-block;
     margin-left: 40px;
 
+}
+.info_subheader
+{
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	font-size: 4rem;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.info_section
+{
+	margin-bottom: 2rem;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	width: 80%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	align-items: center;
+	color: #FFFFFF;
+}
+
+.info_section_words
+{
+	margin-bottom: 3rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	color: #FFFFFF;
+}
+
+.info_section_words_2
+{
+	margin-bottom: 3rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	font-weight: bold;
+	font-family: 'Fjalla One', sans-serif;
+	color: #FFFFFF;
+	display: flex;
+}
+
+.info_section_words p, li
+{
+	color: #FFFFFF;
+}
+
+.info_section p
+{
+	color: #FFFFFF;
+}
+
+#info_icon
+{
+	width: 25%;
+	height: 25%;
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#downloading_icon
+{
+	width: 25%;
+	height: 25%;
+	margin-left: 2rem;
+	margin-right: 2rem;
+	display:table-cell;
+  	vertical-align: middle;	
+}
+
+#download_page 
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2rem;
+	display: flex;
+	border: 0.3rem solid #FFFFFF;
+	border-radius: 2rem;
+	width: 75%;
+}
+
+#abc_downloaded
+{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	display: flex;
+	border: 0.3rem solid #FFFFFF;
+	border-radius: 2rem;
+	width: 75%;
+}
+
+#downloads_after_img
+{
+	margin-top: 2rem;
+}
+
+.info_paragraph
+{
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	margin-left: auto;
+	width: 60%;
+	line-height: 2rem;
+	color: #D9D9D9;
+}
+
+.code_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 2rem;
+}
+
+.code_center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.code_center img {
+	max-width: 100%;
+	max-height: 100%;
+	border: 0.3rem solid #FFFFFF;
+	border-radius: 1rem;
 }
