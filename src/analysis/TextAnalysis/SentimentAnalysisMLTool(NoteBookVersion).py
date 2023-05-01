@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
     print("\nvect vocabulary: ", vect.vocabulary_)
 
-    lr = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+    lr = LogisticRegression(multi_class='multinomial', solver='lbfgs', max_iter=300)
     lr.fit(tf_train,y_train)
     
     # Check accuracy score on both datasets
