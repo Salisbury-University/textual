@@ -16,12 +16,17 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Fjalla+amily=Yanone+Kaffeesatz:wght@300&display=swap" rel="stylesheet">
 
+		<!-- CODE FONT -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300&display=swap" rel="stylesheet">
+
 		<!-- CSS STYLING -->
 		<link href="style.css" rel="stylesheet">
 
 		<!-- BOOTSTRAP -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" >
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>	
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>	
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>	
 	
 	</head>
@@ -29,79 +34,172 @@
 		<!-- MAIN PAGE CONTENT -->
 		<main role="main">
 
-		<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
-		<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-		  <a class="navbar-brand" href="#" id="nav_title">Textual Baseline Database</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-		    <ul class="navbar-nav">
-		      <li class="nav-item active">
-			<a class="nav-link" href="index.html">Home</a>
-		      </li>
-		      <li class="nav-item dropdown">
-			<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+			<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
+			<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark" id="navigation_bar">
+			  <a class="navbar-brand" href="#" id="nav_title">Textual Baseline Database</a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+			    <ul class="navbar-nav">
+			      <li class="nav-item active">
+				<a class="nav-link" href="index.html">Home</a>
+			      </li>
+			      <li class="nav-item dropdown">
+				<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
 			<div class="dropdown-menu" aria-labelledby="navDropdownMenuLink">
 				<a class="dropdown-item" href="about.html">About the Project</a> 
 				<a class="dropdown-item" href="meet_team.html">Meet the Team</a>
 			</div>
 		      </li>
-		      <li class="nav-item">
-			<a class="nav-link" href="downloads.html">Download</a>
-		      </li>
-		      <li class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  Tutorials
-			</a>
-			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-			  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
-			  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
-			  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
+			      <li class="nav-item">
+				<a class="nav-link" href="downloads.html">Download</a>
+			      </li>
+			      <li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				  Tutorials
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <a class="dropdown-item" href="visualizations.html">Visualizations</a>
+				  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
+				  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
+				  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
+				</div>
+			      </li>
+			      <!-- LINK TO THE GITHUB REPOSITORY -->
+			      <li class="nav-item">
+				<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
+			      </li>
+			    </ul>
+			  </div>
+			</nav>	
+
+			<!-- REVIEW IMAGE COURTESY OF UNSPLASH.COM -->
+			<div class="container" id="review_header_div">
+				<img src="analysis.jpg" alt="Stock image of a person typing on a macbook" id="stock_img">
+				<div id="review_header_text">Latent Dirichlet Allocation</div>
 			</div>
-		      </li>
-		      <!-- LINK TO THE GITHUB REPOSITORY -->
-		      <li class="nav-item">
-			<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
-		      </li>
-		    </ul>
-		  </div>
-		</nav>		
-		
-		<!-- REVIEW IMAGE COURTESY OF UNSPLASH.COM -->
-		<div class="container" id="review_header_div">
-			<img src="analysis.jpg" alt="Stock image of a person typing on a Macbook" id="stock_img">
-			<div id="review_header_text"> Latent Dirichlet Allocation </div>
-		</div>
 
-		<!-- PAGE SUBTITLE -->
-		<p id="review_analysis_title">What is Latent Dirichlet Allocation?</p>		
-		
-		<div class="container" id="review_analysis_container">
+			<div id="review_navbar_border"></div>
+						
+			<!-- SUB NAVBAR -->
+			<div id="review_navbar">
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader').scrollIntoView();">How does an LDA work?</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_2').scrollIntoView();">Why use an LDA?</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_3').scrollIntoView();">Structure of this LDA Model</a>
 
-			<div id="review_analysis_text">
-				<!-- temporary fix lmao please help -->
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
-				<p id="review_analysis_paragraph_1" class="review_analysis_paragraph"> A crucial portion of understanding what a document is truly about stems from looking at its most relevant words. Latent Dirichlet Allocation is a way to identify topic words. This type of topic modeling is a method of unsupervised classification of documents, which allows for easier organization, searching, and summarizing archives such as the one we have here.  </p>
-
-				<p id="review_analysis_paragraph_2" class="review_analysis_paragraph"> Ideally, each document in each collection in our database will soon receive their top words, which will allow easy querying of the database in order to find documents related to a certain topic. This will facilitate the creation of visualizations based off of the web of related topic words that will span from multiple documents. </p>
-
-				<p id="review_analysis_paragraph_3" class="review_analysis_paragraph"> This program uses the gensim library in Python, which contains the tools for creating an LDA model. It has the LDAMulticore (a parallelized version of an LDA) object that was trained on each of the collections of data. There will be an LDA for each of the collections in order to better the accuracy of the models, as the breadth of information present in each collection varies widely.</p>
-
-				<p id="review_analysis_paragraph_4" class="review_analysis_paragraph"> An explaination on how to use the tool is present below. </p>
 			</div>
-		</div>
+            <br>
+            <br>
+            <br>
+			<div id="review_navbar_border_2"></div>
 
-		<div id="review_subheader"><p id="review_subheader_text">How it Works</p></div>
+			<a class="btn btn-primary" role="button" id="scroll_button" onClick="document.getElementById('navigation_bar').scrollIntoView();">&#9650;</a>
+
+			<!-- PAGE SUBTITLE -->
+			<p id="review_analysis_title">How does an LDA work?</p>		
+			
+			<div class="container" id="page_analysis_container_LDA">
+					<div class="col-md-4" id="review_analysis_text_LDA"> 
+						<p id="review_analysis_paragraph_1" class="review_analysis_paragraph">An LDA works by iteratively updating the probability distributions of topics and words to maximize the likelihood of the observed data. The LDA assumes that each word in a document is generated from one of the topics, and the topic is chosen based on the topic distribution of the document.</p>
+
+						<p id="review_analysis_paragraph_2" class="review_analysis_paragraph">Once the training process is complete, the model will output a list of topics, each with a set of words that are most likely to occur in documents belonging to that topic. The model can then be used to assign new documents one or more topics based on their word distributions.</p>
+
+						<p id="review_analysis_paragraph_3" class="review_analysis_paragraph">To understand how LDA works, let's take an example of a corpus containing several documents related to different topics such as politics, sports, and technology. LDA starts by assuming a fixed number of topics in the corpus and randomly assigns words in each document to one of these topics. Then, the algorithm computes the probabilities of each topic given each word in the corpus and adjusts the topic assignments accordingly.</p>
+
+						<p id="review_analysis_paragraph_4" class="review_analysis_paragraph">In each iteration, the LDA algorithm updates the topic-word and document-topic distributions based on the new topic assignments. This process continues until the model converges to a stable solution. Once the model is trained, it can be used to analyze new documents by inferring their topic distributions. This process involves computing the probability of each topic given the words in the new document and assigning the document to the topic with the highest probability.</p>
+					</div>
+
+					<div id="LDA_img_div">
+						<img id="LDA_img" src="LDA_Flowchart.png" alt="A flow chart depicting the steps of an LDA">
+					</div>	
+			</div>
+
+			<div id="review_subheader"><p id="review_subheader_text">Why use an LDA?</p></div>
+	
+			<div class="container" id="page_analysis_container_4">
+
+				<div id="page_analysis_text_2">
+					<p id="review_analysis_paragraph_5" class="page_categorization_paragraph">There are many reasons why an LDA is useful for the analysis of textual data.</p>
+
+					<p id="review_analysis_paragraph_5" class="page_categorization_paragraph">1. Topic modeling: allowing for visual modeling of topics within a document. Researchers can gain insight on topics that are in a large collection of documents, which can give insights into the content and structure of documents.</p>
+			
+					<p id="review_analysis_paragraph_6" class="page_categorization_paragraph">2. Information retrieval: in the future, the topic words that are assigned to individual documents can allow it to be searched more easily as documents can be grouped by topic.</p>
+					<p id="review_analysis_paragraph_6" class="page_categorization_paragraph">3. Content recommendation: can be used for recommending related content to a user.</p>
+				</div>
+			</div>
+
+			</div>
+
+			<!-- Code implementation sub-section -->
+			<div id="review_subheader_2"><p id="review_subheader_2_text">Structure of this LDA Model</p></div>	
+				
+				<div class="container" id="page_analysis_container_3">
+					<div class="row">
+						<div class="col-md-4" style="margin-right:1rem" id="review_analysis_text_5">
+								<p id="page_analysis_text_header">Structual Description</p>
+								<p id="review_analysis_paragraph_7" class="page_categorization_paragraph">This LDA analysis script uses several popular libraries in Python, including Gensim for the topic modeling and building the model. It also uses NLTK for text preprocessing, which is a crucial step in order to get accurate and uniform data.</p>
+								<p id="review_analysis_paragraph_8" class="page_categorization_paragraph">The text preprocessing step includes lemmatization and stemming, which is the act of removing the endings from words, including ‘ing’, ‘s’, and others in order to get the word’s “stem”. It also removes stop words, such as and, or, but, etc., and removes words that are shorter than 3 letters.</p>
+								<p id="review_analysis_paragraph_9" class="page_categorization_paragraph">An LDA model requires a dictionary and a BOW (bag-of-words), which is generated from the corpus of stemmed documents. This BOW and dictionary are crucial for the steps of classifying seen and unseen data and then updating their entries in the database. In the functions responsible for classifying the data, only the top topic will be chosen. This is done in order to provide the most accurate classification of the data and to not be too broad.</p>
+								<p id="review_analysis_paragraph_9" class="page_categorization_paragraph">All entries in every collection in the database will be classified in this manner. For each collection, its own model will be generated in order to avoid the problem of having a small number of topics over a wide array of information; additionally, the information present in each individual collection does not often overlap, thus it is best to have individual models.</p>
+							</div>
+						</div>
+			
+						<div class="col-md-4" style="margin-left:1rem" id="review_analysis_text_5">
+							<div id="page_analysis_text_header">Implementation in Python:</div>	
+							<p id="code_header_page_categorization" class="page_categorization_paragraph">The following Python source code shows how the Latent Dirichlet Allocation structure was created:</p>
+							<p id="page_categorization_code" class="page_categorization_paragraph">
+								# preprocessing the data <br/>
+
+								results = [] <br/>
+								for doc in text_input:<br/>
+						
+									<span id="tab"> </span>result = [lemmatize_stemming(token) for token in \ <br/>
+									<span id="tab"> </span>gensim.utils.simple_preprocess(doc) if token not \ <br/>
+									<span id="tab"> </span>in stopwords and len(token) >= 3]<br/>
+									<span id="tab"> </span>results.append(result)<br/>
+						
+								new_results = [res for res in results if res != []] <br/><br/>
+								
+								# creates the dictionary and BOW <br/>
+								
+								# creates the dictionary<br/>
+								dictionary = gensim.corpora.Dictionary(processed_documents)<br/>
+
+								# bow corpus<br/>
+								bow_corpus = [dictionary.doc2bow(doc) for doc in processed_documents] <br/><br/>
+									
+								# creates the model <br/>
+								lda_model = gensim.models.LdaMulticore(bow_corpus, num_topics=25, id2word=dictionary, passes=2, workers=10)<br/><br/>
+								</p>
+						</div>
+					</div>
+				</div>
+			</div>	
+			
+			<!-- Model inference sub-section -->
+			<div id="review_subheader_3"><p id="review_subheader_3_text">Using the Script</p></div>	
+				
+			<div class="container" id="review_analysis_container_6">	
+				<div id="review_analysis_text_6">
+					<p id="review_analysis_paragraph_16" class="page_categorization_paragraph">The below section describes how the LDA script was run and tested and how the output is generated. </p>
+					<p id="review_analysis_paragraph_17" class="page_categorization_paragraph">The LDAAnalysis_v2.py script, which is found on our GitHub page, is run using a collection name from our MongoDB collection as a parameter. This allows the script to be run dynamically with any collection in the database. The script then pulls all entries the specified collection, splits into training data, then passes it to preprocessing. The entries are stemmed and lemmatized, then passed to be created into a dictionary and a bag of words. The dictionary and bag of words are used to train and create the LDA model. From there, both the training and remaining data can be classified using the model.</p>
+					<p id="review_analysis_paragraph_18" class="page_categorization_paragraph">This code was tested using Python 3.8 on Ubuntu 20.04-LTS running on the Windows Subsystem for Linux (WSL). If problems are encountered attempting to run this code an issue may be submitted to the GitHub and an attempt to resolve it will be made.</p>
+					<p id="review_analysis_paragraph_19" class="page_categorization_paragraph">If specified, the ouput can look like the below image. This was primarily done for testing purposes, as it demonstrates that the script is working and provides the associated document ID. In reality, the below information is being pushed to the database as it is being created, generating a list of the topic words, querying the database to find the correct object, and then updating the object. </p>
+
+					<div id="network_run_img_div">
+						<div id="network_div"><img src="example.png" alt="An image depicting a sample output of the LDA" id="network_run_img"></div>
+					</div>
+
+
+					<p id="review_analysis_paragraph_20" class="page_categorization_paragraph">Futher documentation, source code, and sample weights may be found in the project GitHub under the analysis sub-directory.</p>
+
+				</div>
+			</div>
 
 			<footer class="container" id="su_footer">
 				<p>Salisbury University 2022-2023</p>
 			</footer>
-
 		</main>
 	</body>
 </html>

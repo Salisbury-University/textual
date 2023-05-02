@@ -26,6 +26,15 @@ from pmaw import PushshiftAPI
 # Used to connect to the mongo DB
 from pymongo import MongoClient
 
+# Used for continuous scraping
+import pytz
+import schedule
+import time
+from datetime import datetime
+
+# Global timezone
+tz = pytz.timezone('America/New_York') # Set your desired timezone here
+
 # Get authoriazation from file
 def get_db_credentials():
     with open("mongopassword.txt", "r") as pass_file:
@@ -84,7 +93,7 @@ def api_connection(credentials):
 def get_data(praw_api, subreddit, api_obj): 
     print("Starting {}".format(subreddit))
     
-    posts = praw_api.search_submissions(subreddit=subreddit, limit=None)
+    posts = praw_api.search_submissions(subreddit=subreddit, limit=500)
 
     pool=mp.Pool(mp.cpu_count())
     
@@ -120,9 +129,7 @@ def push_posts(api_obj, posts):
     #Pandas dataframe to hold data
     subreddit_content = pd.DataFrame()
     comment_content = pd.DataFrame()
-    
-    # If the total amount of data in the database is less than 148 GB, push Reddit posts
-    if (database.command("dbstats")["fsUsedSize"] < 148481273344):
+
     # |                                POST INFO                                 |
     # |--------------------------------------------------------------------------|
     # |Go through each post and add its data                                     |
@@ -135,7 +142,8 @@ def push_posts(api_obj, posts):
     # |Upvotes: How many upvotes the post has                                    |
     # |Downvotes: How many downvotes the post has                                |
     # |--------------------------------------------------------------------------|
-   
+    # If the total amount of data in the database is less than 148 GB, push Reddit posts
+    if (db.command("dbstats")["fsUsedSize"] < 148481273344): 
         count = 0
         comment_count = 0
         for post in posts:        
@@ -146,7 +154,7 @@ def push_posts(api_obj, posts):
 
                 # Get comments in list form
                 try:
-                    curr_post.comments.replace_more(limit=0)
+                    curr_post.comments.replace_more(limit=500)
                     comments = curr_post.comments.list()
 
                     # Iterate through the comments and add the to database
@@ -154,7 +162,7 @@ def push_posts(api_obj, posts):
                     for comment in comments:
                         print("Thread: " + str(mp.current_process()) +  " | Pushing comment {}".format(iteration))
                         comment_content = {"comment_id: " : str(comment.id), "parent_id" : str(comment.parent_id), "subreddit" : str(comment.subreddit), "text" : comment.body, "created_utc" : str(comment.created_utc)}
-
+                        
                         try:
                             comment_collection.insert_one(comment_content)
                             comment_count += 1
@@ -172,30 +180,43 @@ def push_posts(api_obj, posts):
                 post_collection.insert_one(subreddit_content)
             except:
                 print("Post insertion failed.")
-     else:
+    else:
         print("Database full, posts will not be pushed.")
 
-if __name__ == "__main__": 
-    # Check that the user input at least one subreddit
-    if (len(sys.argv) < 2):
-        print("Please enter the name of a subreddit as a command line argument")
-        sys.exit()
-
-    subreddit_list = [] # Create a list to hold all the user's subreddits
-   
-    # Append each command line argument start with the second (First is the script name)
-    index = 1
-    while index < len(sys.argv):
-        subreddit_list.append(sys.argv[index])
-        index += 1 
+def start_push():
+    lines = []
+    with open("reddit_list.txt", "r") as reddit_file:
+        # Read each line from the file, splitting on newline
+        lines = reddit_file.read().splitlines()
+    # Close the file and return the list of lines
+    reddit_file.close()
 
     # Get credentials for the Reddit API
-    credentials = get_credentials() 
+    credentials = get_credentials()
 
     api_obj = api_connection(credentials)
     praw_api = PushshiftAPI(praw=api_obj)
 
-    for sub in subreddit_list:
+    for sub in lines:
         get_data(praw_api, sub, api_obj)
+
+    # Get the current date and time
+    now = datetime.now(tz)
+
+    # Open the file in append mode and write the date and time to the end of the file
+    with open("reddit_log.txt", "a") as file:
+        file.write(f"The script finished running at {now}\n")
+
+    # Close the file
+    file.close()
+
+if __name__ == "__main__": 
+    # Check if the job is scheduled to run every 100 seconds
+    # Continuous loop, job will be scheduled to run every Tuesday at 6:00 PM
+    while True:
+        print("waiting to run...")
+        if (datetime.now(tz).weekday() == 1) and (datetime.now(tz).hour == 18) and (datetime.now(tz).minute < 5): 
+            start_push()
+        time.sleep(100)
 
     print("Script end...")

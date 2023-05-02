@@ -13,6 +13,49 @@
 
 ## Current Status 
 
+### **End of the Semester** 
+
+    As we approach the end of the fourth sprint, it's important to reflect on the progress we've made so 
+    far and prepare for the final stage of the project. Over the past few weeks, we've been working hard 
+    on developing new features, fixing bugs, and improving the overall functionality of the project.
+    
+    As we move towards the end of the development cycle, it's important to remember that we have a finite 
+    amount of time to work on the project. With the end of the sprint approaching, it's time to shift our 
+    focus towards merging all the branches into a fully finished, working product. This process will 
+    involve consolidating all the code and ensuring that all the features are fully functional and working 
+    as intended.
+
+    It's important to note that during this phase, we will not be adding any new features to the project. 
+    Instead, our focus will be on perfecting the existing features and ensuring that the final product 
+    meets all the requirements laid out in the project specification. This will require a high level 
+    of collaboration and attention to detail from all team members.
+
+    As we approach the end of this project, it's important to take pride in the work we've accomplished so far. 
+    We've overcome numerous challenges and have made significant progress towards our end goal. With just a 
+    little more effort, we can deliver a final product that meets or even exceeds our initial expectations. 
+    Let's stay focused, work collaboratively, and finish this project with the highest level of quality possible.
+
+### **Sprint Four**: 10 April 2023 - 30 April 2023
+
+    This sprint will be primarily focused on wrapping up any loose ends for the current state of the project.
+    We will contnue to add more data to the database all of the way to the end of the semester, work on 
+    visualizations for the data, and work on the user interface for the website. It is important to tie 
+    up the loose ends in order to have a finished project that our client is happy with.
+       
+    We will also strive to update the database with clear documentation on the chance that the project gets passed
+    down to another COSC425 group in the future. 
+
+### **Sprint Three**: 13 March 2023 - 09 April 2023
+
+    As we move into the final two sprints of the semester, we are going to be focusing on data collection 
+    in order to beef up the amount of data in the database, finalize tutorials present on the website
+    for anyone who wishes to understand the different vectors of analysis, and begin looking into ways
+    to visual the data based off of the analysis that has been done. 
+    
+    These are all important tasks as they seek to reach the end goal set out at the beginning of the project: 
+    create a collection of English textual data that can be used by the public for analysis and various other
+    activities. 
+
 ### **Sprint Two**: 20 February 2023 - 12 March 2023
 
     This sprint is continuing the work we began in the last sprint with touching up on parts of the project
