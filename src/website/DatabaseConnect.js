@@ -11,6 +11,7 @@ var express = require('express');
 var assert = require('assert');
 var lineReader = require('line-reader');
 let bodyParser = require('body-parser');
+router=express.Router();
 //Database url, file is read in to avoid pushing login info to the GitHub
 var url;
 //Read the credentials from the mongodb file
@@ -55,7 +56,7 @@ app.post("/downloads", (req, res, next) => {
 			};
 
 			callMyPromise().then(function(result) {
-	newegg 			//Close the connection to the database client
+	 			//Close the connection to the database client
 				client.close();
 				
 				//Send the query result to the client
@@ -67,11 +68,11 @@ app.post("/downloads", (req, res, next) => {
 		next(e)
 	}
 });
-app.get('/search2', function(req, res) {
-	res.render('search2.html');
+app.get('/search', function(req, res) {
+	res.render('search.html');
 })
 
-app.post('/search2', function(req, res) {
+app.post('/search', function(req, res) {
 	//res.writeHead(301, { Location: "http://localhost:8080/search_results.html" });
     	try
         {
@@ -342,7 +343,6 @@ app.post('/search2', function(req, res) {
 				for (const textElement of result){
 					author="Could not be found";
                                 	date="Could not be found";
-					console.log(textElement);
 					if(typeof textElement.author!=='undefined'){
 						console.log(textElement.author);
 						author=textElement.author;
@@ -357,15 +357,11 @@ app.post('/search2', function(req, res) {
 						date=textElement.date;
 					}
 					else if(typeof textElement.Posted!=='undefined'){
-                                                date=textElement.Posted;
+                                                author=textElement.Posted;
                                         }
 					else if(typeof textElement.publishDate!=='undefined'){
-                                                date=textElement.publishDate;
+                                                author=textElement.publishDate;
                                         }
-					else if(typeof textElement.'Document Date'!=='undefined'){
-                                                date=textElement.'Document Date';
-                                        }
-					console.log(author);
 					res.write("<tr><td>"+sources[ind]+"</td><td>"+author+"</td><td>"+date+"</td><td>"+textElement.text.substring(0,1000)+"</td></tr>");
 					ind=ind+1;
 				}
