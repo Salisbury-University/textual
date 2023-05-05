@@ -197,7 +197,14 @@ app.get('/search', function(req, res) {
 })
 
 app.post('/search', function(req, res) {
-/*db.listCollections().toArray(function(err, data) {
+	try
+        {
+                //Connect to the database
+                MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+                        assert.equal(null, err);
+                        //Get the textual database
+                        const db = client.db("textual");
+			/*db.listCollections().toArray(function(err, data) {
 				let i =0;
 				while (i<data.length){
 					console.log(data[i]);
@@ -322,7 +329,7 @@ app.post('/search', function(req, res) {
                                                                                 	        }
                                                                         	                for (let i = 0; i < sRes2.length; i++) {
                                                                 	                                sources.push(collections[1]);
-                                                        	                                }
+                                                       	                                	}
                                                 	                                        for (let i = 0; i < sRes3.length; i++) {
                                         	                                                        sources.push(collections[2]);
                                 	                                                        }
@@ -486,11 +493,11 @@ app.post('/search', function(req, res) {
                         	if(typeof req.body.downloadCB!=='undefined'){
 					res.download("search_results.json");
 				}
-			});
-				
-                	}); //End of MongoClient call
-                  } catch (e) {
-                next(e)
+			});		
+                }); //End of MongoClient call
+
+        } catch (e) {
+        	next(e)
 	}
 });
 
@@ -548,4 +555,4 @@ searchForm.addEventListener("submit", (e)=>{
 		console.log('You searched for ${searchTerm.value}');
 	}
 });
-
+*/

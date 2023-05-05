@@ -9,6 +9,7 @@ function load_downloads()
 	while(table.firstChild) {
 		table.removeChild(table.firstChild);
 	}
+	
         //user_str, will be the string passed in from the frontend
 	const user_opt = document.getElementById("user_download");
 	const user_text = user_opt.options[user_opt.selectedIndex].text;
@@ -207,37 +208,3 @@ function fetch_status()
 		}
 	});
 }
-
-/*
-// Download function for the neural network code
-function downloadNetworkCode(file, text) {	 
-	//creating an invisible element
-	var element = document.createElement('a');
-	element.setAttribute('href',
-	'data:text/plain;charset=utf-8, '
-	+ encodeURIComponent(text));
-	element.setAttribute('download', file);
-     
-	// Above code is equivalent to
-	// <a href="path of file" download="file name">
-     
-	document.body.appendChild(element);
-     
-	//onClick property
-	element.click();
-     
-	document.body.removeChild(element);
-    }
-     
-    // Start file download.
-    document.getElementById("btn")
-    .addEventListener("click", function() {
-	// Generate download of hello.txt
-	// file with some content
-	var text = document.getElementById("text").value;
-	var filename = "GFG.txt";
-     
-	download(filename, text);
-    }, false);	
-}
-*/
