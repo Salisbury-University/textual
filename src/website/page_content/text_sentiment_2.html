@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<!-- BOILERPLATE AND TITLE -->
+		<meta charset="UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    		<title>Textual Baseline Database</title>
+
+		<!-- GOOGLE FONTS -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=One&display=swap" rel="stylesheet">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fjalla+amily=Yanone+Kaffeesatz:wght@300&display=swap" rel="stylesheet">
+
+		<!-- CODE FONT -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300&display=swap" rel="stylesheet">
+
+		<!-- CSS STYLING -->
+		<link href="style1.css" rel="stylesheet">
+
+		<!-- BOOTSTRAP -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>	
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>	
+	
+	</head>
+  	<body id="page_content">
+		<!-- MAIN PAGE CONTENT -->
+		<main role="main">
+
+			<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
+			<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark" id="navigation_bar">
+			  <a class="navbar-brand" href="#" id="nav_title">Textual Baseline Database</a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+			    <ul class="navbar-nav">
+			      <li class="nav-item active">
+				<a class="nav-link" href="index.html">Home</a>
+			      </li>
+			      <li class="nav-item dropdown">
+				<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+			<div class="dropdown-menu" aria-labelledby="navDropdownMenuLink">
+				<a class="dropdown-item" href="about.html">About the Project</a> 
+				<a class="dropdown-item" href="meet_team.html">Meet the Team</a>
+			</div>
+		      </li>
+			      <li class="nav-item">
+				<a class="nav-link" href="downloads.html">Download</a>
+			      </li>
+			      <li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				  Tutorials
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <a class="dropdown-item" href="visualizations.html">Visualizations</a>
+				  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
+				  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
+				  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
+				</div>
+			      </li>
+			      <!-- LINK TO THE GITHUB REPOSITORY -->
+			      <li class="nav-item">
+				<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
+			      </li>
+			    </ul>
+			  </div>
+			</nav>	
+
+			<!-- REVIEW IMAGE COURTESY OF UNSPLASH.COM -->
+			<div class="container" id="review_header_div">
+				<img src="logistic-regression1.jpg" alt="Stock image of a person holding a phone" id="stock_img">
+				<div id="review_header_text">Sentiment Classification with VADER and Multinomial Regression</div>
+			</div>
+
+			<div id="review_navbar_border"></div>
+						
+			<!-- SUB NAVBAR -->
+			<div id="review_navbar">
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader').scrollIntoView();">Network Function</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_2').scrollIntoView();">Network Implementation</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_3').scrollIntoView();">Using the Model</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_4').scrollIntoView();">Download Source Code</a>
+			</div>
+
+			<div id="review_navbar_border_2"></div>
+
+			<a class="btn btn-primary" role="button" id="scroll_button" onClick="document.getElementById('navigation_bar').scrollIntoView();">&#9650;</a>
+				
+
+
+
+			<!-- Introduction Paragraph to Machine Learning -->
+			<p id="review_analysis_title">What is Machine Learning?</p>		
+			
+			<div class="container review_analysis_paragraph" id="review_analysis_container">
+
+				<div id="review_analysis_logo">
+					<div id="yelp_logo_div"><img src="ML1.jpg" alt="Yelp Logo" id="yelp_logo"></div>
+				</div>
+
+				<div id="review_analysis_text">
+
+					<p>If you are unfamiliar with Sentiment Analysis or VADER, it may be useful to check out the <a href="#">first part</a> of this guide before continuing with this guide. In this guide we will explain how to use VADER in conjunction with a machine learning model for sentiment classification.</p>
+
+					<p>Machine learning is a subset of AI that involves training a computer model to make predictions or decisions based on data. The basic idea is to give the computer a set of inputs and desired outputs and then to teach it how to make predictions or decisions based on that data. Machine learning algorithms have a great variety of uses, including speech recognition, fraud detection and recommender systems.</p>
+				
+					<p>There are many machine learning algorithms, however, they fall into 3 main categories: supervised, unsupervised, and reinforcement.</p>
+
+					<p>Supervised learning involves training a model on a labeled dataset, where the desired outputs are already known. The model uses this labeled data to learn how to predict the correct output for new, unseen inputs.</p>
+
+					<p>Unsupervised learning involves training a model on an unlabeled dataset, where the desired outputs are unknown. The model tries to find patterns or structure in the data on its own, without any external guidance.</p>
+
+					<p>Reinforcement learning involves training a model through a trial-and-error process, where the model receives feedback in the form of rewards or punishments based on its actions. The model learns to make better decisions by maximizing its rewards over time.</p>
+
+					<p>In this guide, we will be using a Multinomial Logistic Regression model which is a supervised machine learning method.</p>
+				</div>
+
+				
+			</div>
+
+			<!-- Introduction to Multinomial Logistic Regression Paragraph -->
+			<p id="review_analysis_title_no_margin">What is Multinomial Logistic Regression?</p>		
+			
+			<div class="container" id="review_analysis_container">
+
+				<div id="review_analysis_text">
+					<p id="review_analysis_paragraph_1" class="review_analysis_paragraph">Multinomial logistic regression is a supervised machine learning algorithm used for multi-class classification problems. It is an extension of logistic regression, where instead of modeling the probability of one class, it models the probabilities of multiple classes.
+						The goal of multinomial logistic regression is to find the best decision boundaries that can separate the data into three or more classes. The algorithm works by modeling the probability of each class as a function of the input features using the softmax function.
+						Once the model is trained, it can be used to make predictions on new, unlabeled data by computing the probabilities of all classes using the learned parameters and the input features. The model then predicts the class with the highest probability as the output.
+						</p>
+					<p class="review_analysis_paragraph">To train an efficient model, it requires a preferably large set of labeled data. But what if you are in a situation where you cannot easily label the data? Some datasets contain thousands of samples, and it will be difficult and time consuming to manually label the entire dataset. To solve this, we can use VADER to quickly evaluate and score the sentiment in a piece of text and then use it to label our dataset according to the sentiment score. Then we can use the newly labeled dataset to train the sentiment classifier. Below we will discuss how to do this and the pros and cons of this method.</p>
+				</div>
+
+				<div id="review_analysis_logo">
+					<div id="yelp_logo_div"><img src="logistic-regression.png" alt="Yelp Logo" id="yelp_logo"></div>
+				</div>
+			</div>
+
+			<!-- How to install the necesary packages section-->
+			
+			<div id="review_subheader"><p id="review_subheader_text">Getting Started</p></div>
+			<div class="container-fluid w-75" id="codeblock1">	
+				<div class="container-fluid">
+
+					<p>If you are unfamiliar with Sentiment Analysis or VADER, it may be useful to check out the <a href="#">first part</a> of this guide before continuing with this guide. In this guide we will explain how to use VADER in conjunction with a machine learning model for sentiment classification.</p>
+
+					<p>To use the libraries in this guide you need to make sure you have the appropriate packages
+					installed on your machine. The libraries used in this guide are pandas, vaderSentiment, mlxtend, langdetect, sklearn, and nltk.
+					Run the following commands on the command line to install these libraries:</p>
+				</div>
+				<div class="container-fluid" id="">
+						<ul>
+						<li>pip install pandas<br></li>
+						<li>pip install numpy<br></li>
+						<li>pip install vaderSentiment</li>
+						<li>pip install mlxtend</li>
+						<li>pip install langdetect</li>
+						<li>pip install sklearn</li>
+						<li>pip install nltk</li>
+						</ul>
+				</div>
+
+				<div class="review_analysis_paragraph" style="width:85%">
+					<p>You may also need to run the following lines to download the nltk's tokenizer and set of stopwords:</p>
+				</div>
+
+				<div class="container-fluid" id="notebook-cell1">
+<pre>
+	<span></span><span class="kn">import</span> <span class="nn">nltk</span>
+
+	<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;punkt&quot;</span><span class="p">)</span>
+	<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;stopwords&quot;</span><span class="p">)</span>
+</pre>
+				</div>
+					
+					<div class="review_analysis_paragraph" style="width:85%">
+						<p>Now you should be able to import the modules using the following lines:</p>
+					</div>
+				
+			<div class="container-fluid" id="notebook-cell1">
+<pre>
+	<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+	<span class="kn">from</span> <span class="nn">vaderSentiment.vaderSentiment</span> <span class="kn">import</span> <span class="n">SentimentIntensityAnalyzer</span>
+	<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span> 
+	<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">wordnet</span>
+	<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">word_tokenize</span>
+	<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">WordNetLemmatizer</span>
+	<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">pos_tag</span>
+	<span class="kn">import</span> <span class="nn">string</span>
+	<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+	<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+	<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span> <span class="c1">#, TfidfVectorizer </span>
+	<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+	<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+	<span class="kn">from</span> <span class="nn">langdetect</span> <span class="kn">import</span> <span class="n">detect</span> 
+	<span class="kn">from</span> <span class="nn">mlxtend.plotting</span> <span class="kn">import</span> <span class="n">plot_confusion_matrix</span>
+</pre>
+				</div>
+			</div>
+			</div>
+			
+			<!-- Language Filtering explanation section-->
+			<div id="review_subheader"><p id="review_subheader_text">Language Filtering</p></div>
+			
+			<div class="How-To container-fluid w-75" id="codeblock1">
+				<div class="container-fluid" style="padding:0;">
+					<div class="review_analysis_text" style="width:100%;">
+						<p>Since we are only interested in classifying the sentiment of English comments, we must first clean our dataset of non-English comments. By cleaning the dataset of non-english comments will remove comments that we do not expect our classifier to encounter. This will allow the model to disregard the outliers to gain better insight and make better predictions. We can do so using this function that utilizes the langdetect library.</p>
+					</div>
+
+					
+					<div class="container-fluid" id="notebook-cell1">
+	
+<pre>
+	<span class="c1"># Take a string as input and return "en" if english was detected. Otherwise return "not_en".</span>
+	<span class="k">def</span> <span class="nf">detect_english</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+	    <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">detect</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;en&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;en&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;not_en&quot;</span>
+	    <span class="k">except</span><span class="p">:</span>
+	        <span class="k">return</span> <span class="s2">&quot;not_en&quot;</span>
+</pre>
+
+
+					</div>
+				</div>
+
+				<div class="container-fluid" style="padding:0;">
+					<div class="review_analysis_paragraph" style="width:85%;">
+						<p>Then we read the data from the file and can filter out non-English comments from the dataframe with these lines:</p>
+					</div>
+					
+					<div class="container-fluid" id="notebook-cell1">
+	
+<pre>
+	<span class="c1"># read data into df.</span>
+	<span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;youtube_dataset.csv&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">])</span>
+
+	<span class="c1"># Apply the detect english function to each element of a column.</span>
+	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;detected_english&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">detect_english</span><span class="p">)</span>
+
+	<span class="c1"># Filter out non english comments</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;detected_english&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;en&quot;</span><span class="p">]</span>
+</pre>
+
+
+					</div>
+				</div>
+			</div>
+			
+			<!-- VADER explanation section-->
+			<div id="review_subheader"><p id="review_subheader_text">Labeling Dataset using VADER</p></div>
+			
+			<div class="How-To container-fluid w-75" id="codeblock1">
+				<div class="container-fluid" style="padding:0;">
+					<div style="width:100%;">
+						<p>The next step is to label our dataset. To do this, we apply the <span class="variable-font">polarity_scores()</span> function from VADER to each comment in the dataset. This function returns a dictionary containing four values: positive, negative, neutral, and compound. The compound value ranges from -1 to 1 and represents an overall score of the sentiment of the comment. The compound score is what we will use to label the comments.</p>
+						<p>We create a new column in the dataframe called "Polarity" to store the compound value of each comment. We do this using a lambda function to apply the <span class="variable-font">polarity_scores()</span> function to each comment and extract the compound value.</p>
+						<p>Then, we shuffle the rows of the dataset randomly using <span class="variable-font">sample()</span> to ensure that the training and testing data are representative of the entire dataset.</p>
+						<p>Next, we define categories for the compound polarity score. Typically we consider comments with a polarity score greater than 0.05 to be positive, those with a score less than -0.05 to be negative, and those in between to be neutral. We create a new column in the dataframe called "Categorization" to store the category of each comment, which is either -1, 0, or 1.</p>
+					</div>
+					<div class="container-fluid" id="notebook-cell1">
+<pre>
+	<span></span><span class="c1"># Create SentimentIntensityAnalyzer object</span>
+	<span class="n">sia</span> <span class="o">=</span> <span class="n">SentimentIntensityAnalyzer</span><span class="p">()</span>
+
+	<span class="c1"># Evaluate sentiment of each comment.</span>
+	<span class="c1"># Apply VADER's <span class="variable-font">polarity_scores()</span> function to each comment</span>
+
+	<span class="c1"># Create a new column with the output</span>
+	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Polarity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sia</span><span class="o">.</span><span class="n">polarity_scores</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="s2">&quot;compound&quot;</span><span class="p">])</span>
+
+	<span class="c1"># Shuffle the rows randomly</span>
+	<span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="c1"># Define Categories based on compound polarity score</span>
+	<span class="c1"># -1: Negative</span>
+	<span class="c1"># 0: Neutral</span>
+	<span class="c1"># 1: Positive</span>
+
+	<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Categorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Polarity&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;Categorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Polarity&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;Categorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</pre>	
+					</div>
+			</div>
+			</div>
+
+			<!-- VADER explanation section-->
+			<div id="review_subheader"><p id="review_subheader_text">Preprocessing</p></div>
+			
+			<div class="How-To container-fluid w-75" id="codeblock1">
+				<div class="container-fluid" style="padding:0;">
+					<div style="width:100%;">
+						<p> Before we train the model, we must take preprocess the comments to minimize noise. Noise is any irrelevant information that inhibits the models ability to learn. To do this, we use <span class="variable-font">map()</span> to apply <span class="variable-font">lower()</span> to every comment in the dataset. This will turn all uppercase characters into lowercase characters in each comment. Then we do the same with <span class="variable-font">strip()</span> to remove all whitespace from each comment.</p>
+						<p>Then we can use the following function to preprocess our data. Using this function, we can remove stopwords to keep only the words that add the most meaning to the sentence and then lemmatize these words.</p>
+					</div>
+
+					<div class="container-fluid" id="notebook-cell1">
+<pre>
+	<span class="c1"># Since treebank pos_tags do not share the same format as wordnet pos_tags, we need to convert the treebank tag to wordnet tags</span>
+	<span class="k">def</span> <span class="nf">get_wordnet_pos</span><span class="p">(</span><span class="n">treebank_tag</span><span class="p">):</span>
+	    <span class="k">if</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;J&#39;</span><span class="p">):</span>
+		    <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">ADJ</span>
+	    <span class="k">elif</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;V&#39;</span><span class="p">):</span>
+		    <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">VERB</span>
+	    <span class="k">elif</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">):</span>
+		    <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">NOUN</span>
+	    <span class="k">elif</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">):</span>
+		    <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">ADV</span>
+	    <span class="k">else</span><span class="p">:</span>
+		    <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">NOUN</span>
+
+	<span class="c1"># Tokenize the text and remove stop words to keep only the words that add meaning to the sentence</span>
+	<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+	    <span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">))</span>
+	    <span class="n">word_tokens</span> <span class="o">=</span> <span class="n">word_tokenize</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+	    <span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+
+	    <span class="c1"># Lemmetize each meaningful word to make more useful observations</span>
+	    <span class="n">filtered_sentence</span> <span class="o">=</span> <span class="p">[</span><span class="n">lemmatizer</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">get_wordnet_pos</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">pos_tag</span><span class="p">(</span><span class="n">word_tokens</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+
+	    <span class="c1"># get rid of articles and left over contraction tokens</span>
+	    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">filtered_sentence</span><span class="p">:</span>
+		    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+		    	<span class="n">filtered_sentence</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+	    <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_sentence</span><span class="p">)</span>
+
+	<span class="c1"># Build a string contianing punctuations except for "!", ".", and "?".</span>
+	    <span class="n">puncts</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span>
+	    <span class="n">my_punct</span> <span class="o">=</span> <span class="n">puncts</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+	
+	<span class="c1"># Get rid of all punctuation except for "!", ".", and "?".</span>
+	    <span class="k">for</span> <span class="n">punct</span> <span class="ow">in</span> <span class="n">my_punct</span><span class="p">:</span>
+		    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">punct</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+	    <span class="k">return</span> <span class="nb">str</span>
+</pre>
+					</div>					
+
+					<div style="width:100%;"></div>
+						<p><br>Lemmatization is a process used to transform different variations of a word into a single, consistent form so that they can be analyzed as a group. For example, the words "runs", "running", and "ran" would all be converted to their base form "run". This allows the model to reduce variations and gain better insight about the text.</p>
+						<p>Finally, we can get rid of any leftover word tokens to remove leftover noise in the comments. </p>
+					</div>
+
+					
+					<div class="container-fluid" id="notebook-cell1">
+	
+<pre>
+	<span></span><span class="c1"># Preprocessing Steps:</span>
+
+	<span class="c1"># convert all letters to lowercase:</span>
+	<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+	<span class="c1"># get rid of trailing whitespace</span>
+	<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+	<span class="c1"># Remove stopwords and lemmatize each comment.</span>
+	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;stopwords_removed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">preprocess</span><span class="p">)</span>
+</pre>
+					</div>
+				</div>
+		
+	
+
+
+			</div>
+
+			<!-- Split_Train_Test explanation section-->
+			<div id="review_subheader"><p id="review_subheader_text">Splitting the Dataset and Training the Model</p></div>
+			
+			<div class="How-To container-fluid w-75" id="codeblock1">
+				<div class="container-fluid" style="padding:0;">
+					<div style="width:100%;">
+						<p>Before we train the model, we first want to split the dataset into a training set and a test set. The training set is used to train the model, while the test set is used to evaluate its performance. During training, the algorithm adjusts the weights of the input features to minimize the difference between the predicted probabilities and the actual outcomes. Once the model is trained, you can use it to predict the sentiment of new comments. Here's an example:</p>
+					</div>
+
+					
+					<div class="container-fluid" id="notebook-cell1">
+	
+<pre>
+	<span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;stopwords_removed&quot;</span><span class="p">]</span>
+	<span class="n">Y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Categorization&quot;</span><span class="p">]</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Splitting Dataset into testing and training set...&quot;</span><span class="p">)</span>
+	<span class="c1"># Split the dataset into a testing set and a training set</span>
+	<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">324</span><span class="p">)</span>
+
+	<span class="c1"># This is to test on the testing dataset</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vectorizing Data...&quot;</span><span class="p">)</span>
+
+	<span class="c1"># Create Count Vectorizer Object</span>
+
+	<span class="n">vect</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+	<span class="n">tf_train</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+	<span class="n">tf_test</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">vect vocabulary: &quot;</span><span class="p">,</span> <span class="n">vect</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">)</span>
+
+	<span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">multi_class</span><span class="o">=</span><span class="s1">&#39;multinomial&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+	<span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tf_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+</pre>
+					</div>
+				</div>
+	
+	
+			</div>
+
+			<!-- Check metrics section section-->
+			<div id="review_subheader"><p id="review_subheader_text">Evaluating the Model</p></div>
+			
+			<div class="How-To container-fluid w-75" id="codeblock1">
+				<div class="container-fluid" style="padding:0;">
+					<div style="width:100%;">
+						<p class="review_analysis_text" style="margin-top:1rem">Let's check how accurate our model is. Checking the accuracy of a model is an important step because it allows us to understand how well our model is at performing the desired task. In this case, classifying sentiment of new YouTube Comments. The accuracy of a model is typically expressed as a percentage.</p>
+					
+						<div class="container-fluid" id="notebook-cell1">
+	
+<pre>
+	<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checking Accuracy of score on both datasets&quot;</span><span class="p">)</span>
+	<span class="c1"># Check accuracy score on both datasets</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score on training dataset:&quot;</span><span class="p">,</span><span class="n">lr</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">tf_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">))</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score on test dataset:&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">tf_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">))</span>
+	<span class="nb">print</span><span class="p">()</span>
+</pre>
+					</div>
+				
+				<div style="width:100%;">
+					<p class="review_analysis_text" style="margin-top:1rem">While accuracy is an important metric for evaluating the performance of a sentiment analysis model, it may not always be sufficient to determine whether a model is good or not. This is especially true for the self-test which measures the accuracy of predictions on the training dataset. It is important to also consider other metrics when evaluating the model. To do this, we can display a classification report to evaluate other commonly used metrics such as precision, recall, F1 score. In addition we can also display a confusion matrix to see exactly where the misclassification occurs the most.</p>
+				</div>		
+<div class="container-fluid" id="notebook-cell1">
+	
+<pre>
+	<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making predictions on the test dataset...&quot;</span><span class="p">)</span>
+	<span class="c1"># Make predictions on the test dataset</span>
+	<span class="n">expected</span> <span class="o">=</span> <span class="n">y_test</span>
+	<span class="n">predicted</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tf_test</span><span class="p">)</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Plotting confusion matrix for the test dataset...&quot;</span><span class="p">)</span>
+	<span class="c1">#Plot Confusion matrix for the test dataset</span>
+	<span class="n">cf</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span><span class="n">predicted</span><span class="p">,</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
+
+	<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">conf_mat</span> <span class="o">=</span> <span class="n">cf</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Showing Classification report...&quot;</span><span class="p">)</span>
+	<span class="c1"># Print classification report</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">predicted</span><span class="p">))</span>
+
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Showing F1 Score.&quot;</span><span class="p">)</span>
+	<span class="c1"># Find F1 Score</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">predicted</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">))</span>
+</pre>
+					</div>
+				</div>
+				</div>
+
+					</div>
+
+
+					</div>	
+			</div>
+			
+			<div id="review_subheader"><p id="review_subheader_text">Strengths and Limitations (UNFINISHED)</p></div>
+	
+			<div class="container" id="review_analysis_container_2">
+
+				<div id="review_analysis_text_2">
+
+				<p></p>
+				
+				</div>
+				
+				
+
+			</div>
+
+			<!-- Strength and Weaknesses section -->
+			<div class="How-To container-fluid w-75" id="codeblock2">
+					
+				<div class="container-fluid" style="padding:0;">
+					<div class="container review_analysis_paragraph" id="review_analysis_text_3" style="margin-bottom: 0;">
+						<p>There is no easy or one-fits-all approach with machine learning. It's important to experiment on your models until you find the best approach to solve your specific problem. </p>
+
+					</div>
+						
+			</div>
+			
+			<footer class="container" id="su_footer">
+				<p>Salisbury University 2022-2023</p>
+			</footer>
+		</main>
+	</body>
+</html>

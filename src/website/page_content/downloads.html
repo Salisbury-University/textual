@@ -33,7 +33,7 @@
 		<script src="display_downloads.js"></script>
 	
 	</head>
-  	<body onload="load_downloads();" id="page_content">
+  	<body onload="initialize_downloads();" id="page_content">
 		<!-- MAIN PAGE CONTENT -->
 		<main role="main">
 
@@ -63,11 +63,17 @@
 			  Tutorials
 			</a>
 			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			  <a class="dropdown-item" href="visualizations.html">Visualizations</a>
 			  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
 			  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
 			  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
 			</div>
 		      </li>
+
+		      <li class="nav-item">
+			<a class="nav-link" href="help.html">Help</a>
+		      </li>
+
 		      <!-- LINK TO THE GITHUB REPOSITORY -->
 		      <li class="nav-item">
 			<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
@@ -80,23 +86,19 @@
 			<p class="h1" id="downloads_header">Downloads</p>
 
 			<div id="download_links">
-				<p>Download Reddit Data</p>
-				<a class="btn btn-primary" onclick="downloadData()" role="button" id="download_button">Download</a>
+				<p id="download_link_heading">Download Textual Data</p>
+				<!-- DROPDOWN MENU POPULATED FROM THE DATABASE -->
+				<p id="user_collection_header">Collection Choice: </p>
+				<select id="user_download">
+				</select>
+
+				<br/>
+
+				<a class="btn btn-primary" onclick="downloadData();" role="button" id="download_button">Download</a>
+				<a class="btn btn-primary" onclick="load_downloads();" role="button" id="display_button">Display</a>
 			</div>
 
 			<table id="database_table" class="table table-hover">
-				<thead>
-					<tr>
-						<th>Post Title</th>
-						<th>Subreddit</th>
-						<th>Post Date</th>
-						<th>Post Content</th>
-					</tr>
-				</thead>
-
-				<tbody>
-
-				</tbody>
 			</table>
 			
 			<div class="navbar" id="su_footer">Salisbury University 2022-2023</div>

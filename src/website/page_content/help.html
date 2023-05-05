@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- BOILERPLATE AND TITLE -->
+		<meta charset="UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    		<title>Textual Baseline Database</title>
+	
+		<!-- GOOGLE FONTS -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=One&display=swap" rel="stylesheet">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fjalla+amily=Yanone+Kaffeesatz:wght@300&display=swap" rel="stylesheet">
+
+		<!-- ICONS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+		<!-- CSS STYLING -->
+		<link href="style.css" rel="stylesheet">
+
+		<!-- BOOTSTRAP -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" >
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>	
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>	
+	
+	</head>
+  	<body id="page_content">	
+		<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
+		<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+		  <a class="navbar-brand" href="#" id="nav_title">Textual Baseline Database</a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		    <ul class="navbar-nav">
+		      <li class="nav-item active">
+			<a class="nav-link" href="index.html">Home</a>
+		      </li>
+		      <li class="nav-item dropdown">
+			<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> About</a>
+				<div class="dropdown-menu" aria-labelledby="navDropdownMenuLink">
+					<a class="dropdown-item" href="about.html">About the Project</a> 
+					<a class="dropdown-item" href="meet_team.html">Meet the Team</a>
+				</div>
+		      </li>		      <li class="nav-item">
+			<a class="nav-link" href="downloads.html">Download</a>
+		      </li>
+		      <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Tutorials
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+			  <a class="dropdown-item" href="visualizations.html">Visualizations</a>
+			  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
+			  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
+			  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
+			</div>
+		      </li>
+
+		      <li class="nav-item">
+			<a class="nav-link" href="help.html">Help</a>
+		      </li>
+
+		      <!-- LINK TO THE GITHUB REPOSITORY -->
+		      <li class="nav-item">
+			<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
+		      </li>
+		    </ul>
+		  </div>
+		</nav>					
+
+		<!-- MAIN PAGE CONTENT -->
+		<main role="main">
+
+			<!-- HEADER -->
+			<p class="h1" id="help_header">Website Help</p>
+			<hr>
+			
+			<div class="info_section">
+				<img id="info_icon" src="information.png">
+				<p class="info_paragraph">
+				This page serves as place to hold comprehensive documentation related to this project. Users seeking information about specific parts of this website, dataset, or source code should consult this page for more information. In addition to the tutorial located under the "tutorial" tab, this page seeks to provide a baseline to get users started with this dataset. Categories for different help sections can be found below.
+				<br/>
+				<br/>
+				The topics covered will include the outline of this website, basic website functions, an example of downloading a subset of the dataset, and a breif overview of how to load this data into Python for further processing. More in depth examples of analysis showing what can be done using this dataset can be found under the tutorials page. Examples of the content contained in this database are located under the visualizations page. 
+				</p>
+			</div>
+
+			<div class="info_subheader">Website Structure</div>
+			<hr>
+			
+			<div class="info_section">
+				<p>
+				Home: This page serves as the source for all the pages on this site. From here users are able to navigate to the various different website functions and documentation sections.
+				<br/><br/>
+				About Project: The about page hosts information about the structure of this project and how the various web scraping tools operate to collect the data. Additionally, brief explainations of the major sources pulled from are provided alongside links to the original pages.
+				<br/><br/>
+				Meet the Team: A brief explaination of each of the members of our team. Each member has a paragraph with a small information block about them. Additionally, a portrait and a link to each member's GitHub is displayed.
+				<br/><br/>
+				Downloads: Provides users with access to the database. The page displays the contents of a specified collection. Additionally, users are able to select which collection they would like to download data from with the depth of the sample able to be entered based on the user's needs. The data sample will be downloaded to the user's local system in .json format.
+				<br/><br/>
+				</p>
+				<img id="structure_icon" src="hierarchical-structure.png">
+			</div>
+
+			<div class="info_section_words">
+				<p>
+				Tutorials: There are four types of tutorials on the website: </p> 
+				<ul>
+					<li>Visualizaitions: This page gives example visualizations using the data from the database.</li>
+					<li>Page Categorization: This page discusses the use Latent Dirichlet Allocation. It gives examples of how this can be used with the database's data.</li>
+					<li>Text Sentiment: This page is a tutorial of how sentiment analysis can be used with the Youtube data and gives a line by line python tutorial on how to use sentiment analysis.</li>
+					<li>Review Analysis: This page is a tutorial of how to analyze reviews with the Yelp review data from the database. It also discusses how the neural network works and how to train it.</li>
+				</ul>
+				<p>
+					Help: This page provides users with an overview of the project. Providing addtional information for each of the website's subsections. Additionally, sample inference and download tutorials are provided.
+					<br/><br/>
+					GitHub: Provides a link to the GitHub hosting the source code for this project. Additional documentation can be found here as well as the various scripts written for this project.
+				</p>
+			</div>
+
+			<div class="info_subheader">Downloading Data</div>
+			<hr>
+				<!-- HELP INTRODUCTION PARAGRAPH -->
+				<div class="info_section_words_2">
+					<p>For users wishing to perform their own expirimentation using our dataset the following tutorial will explain the basic process of downloading a sample subset of our data. This example will show the process for the ABC News collection of data, however, the same steps can be followed for any other set of data. This dataset provides a good representation of the type of data we have collected, showing the change in the English language overtime.
+					<br/><br/>
+					The ABC (Australian Broadcasting Corporation) News contains over 1,000,000 news article headlines published over the course of 19 years. The dataset summarises a historical record of the most significant events that took place globally from the early 2000s to the early 2020s. While this dataset contains global events, however, the primary focus is on events that took place in Australia. The data was obtained by taking a sample of two hundred articles per day. These articles contain a good amount of international events, looking at the headlines, the most significant events can be singled out, showing how history has been shaped over the past two decades. Some examples of these events include elections, financial crises, or ecological disasters.  
+					</p>	
+					<img id="downloading_icon" src="downloading.png">
+				</div>
+
+				<div class="info_section_words_2">
+				To download a collection of data, first navigate to the downloads page using the navbar. Once on the downloads page, the dropdown menu will be dynamically populated using the collection names from the database. To choose a collection, a user simply chooses the collection they would like to retrieve and clicks the download button.  	
+				</div>
+				<img id="download_page" src="downloads_page.png">
+				<div class="info_section_words_2" id="downloads_after_img">
+				After the user hits the download button the selected collection will be converted to a .JSON file and downloaded to a user's local system. This file can be parsed the same way as one would any other JSON file. The file will have the following format, the file will contain all the news headlines contained in the collection. 
+				</div>
+
+				<img id="abc_downloaded" src="abc_downloaded.png">
+				<div class="info_subheader">Data Processing</div>
+				<div class="info_section_words_2">
+				Users wish to do some basic data processing after downloading our dataset should refer to the following code. This code will load in the JSON file obtained from the downloads page and simply print out the information contained inside. This same process can be used to process any of the data from our Textual dataset. 
+				</div>
+
+				<div class="code_container">
+					<div class="code_center">
+						<img src="sample_code.png" alt="Your Image">
+					</div>
+				</div>
+	
+				<div class="info_section_words_2">
+				A sample output of the above code is displayed below. The first 25 entries in the ABC_Australia collection are displayed. Anyone interesting in running this code can make their own changes to this code or increase the number of values displayed. Any inference can be done on this dataset after the data is loaded as shown.
+				</div>
+
+				<div class="code_container">
+					<div class="code_center">
+						<img src="sample_output.png" alt="Your Image">
+					</div>
+				</div>
+
+				<div class="info_section_words_2">
+				Thus, to conclude this page gives users a basic overview of the struture of our website. Additionally, users may follow the above two sections to download a subset of our data and load the data using Python code.
+				</div>
+			<footer class="container" id="su_footer">
+				<p>Salisbury University 2022-2023</p>
+			</footer>
+		</main>
+	</body>
+</html>

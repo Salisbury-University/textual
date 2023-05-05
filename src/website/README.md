@@ -24,6 +24,7 @@ This website will be used to display content about our Textual Baseline Database
 	- npm install express
 	- npm install mongodb@3.7
 	- npm install line-reader
+	- npm install body-parser
 
 <br/>
 

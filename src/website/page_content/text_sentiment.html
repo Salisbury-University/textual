@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+
+
 <html lang="en">
 	<head>
 		<!-- BOILERPLATE AND TITLE -->
@@ -6,22 +9,27 @@
     		<meta name="viewport" content="width=device-width, initial-scale=1.0">
     		<meta http-equiv="X-UA-Compatible" content="ie=edge">
     		<title>Textual Baseline Database</title>
-	
+
 		<!-- GOOGLE FONTS -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=One&display=swap" rel="stylesheet">	
+		<link href="https://fonts.googleapis.com/css2?family=One&display=swap" rel="stylesheet">
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Fjalla+amily=Yanone+Kaffeesatz:wght@300&display=swap" rel="stylesheet">
 
+		<!-- CODE FONT -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300&display=swap" rel="stylesheet">
+
 		<!-- CSS STYLING -->
-		<link href="style.css" rel="stylesheet">
+		<link href="style1.css" rel="stylesheet">
 
 		<!-- BOOTSTRAP -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" >
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>	
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>	
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>	
 	
 	</head>
@@ -29,49 +37,227 @@
 		<!-- MAIN PAGE CONTENT -->
 		<main role="main">
 
-		<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
-		<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-		  <a class="navbar-brand" href="#" id="nav_title">Textual Baseline Database</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-		    <ul class="navbar-nav">
-		      <li class="nav-item active">
-			<a class="nav-link" href="index.html">Home</a>
-		      </li>
-		      <li class="nav-item dropdown">
-			<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+			<!-- BOOTSTRAP NAVBAR, ALLOW FOR SIMPLE NAVIGATION AROUND THE PAGE -->
+			<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark" id="navigation_bar">
+			  <a class="navbar-brand" href="#" id="nav_title">Textual Baseline Database</a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+			    <ul class="navbar-nav">
+			      <li class="nav-item active">
+				<a class="nav-link" href="index.html">Home</a>
+			      </li>
+			      <li class="nav-item dropdown">
+				<a class = "nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
 			<div class="dropdown-menu" aria-labelledby="navDropdownMenuLink">
 				<a class="dropdown-item" href="about.html">About the Project</a> 
 				<a class="dropdown-item" href="meet_team.html">Meet the Team</a>
 			</div>
 		      </li>
-		      <li class="nav-item">
-			<a class="nav-link" href="downloads.html">Download</a>
-		      </li>
-		      <li class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  Tutorials
-			</a>
-			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-			  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
-			  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
-			  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
-			</div>
-		      </li>
-		      <!-- LINK TO THE GITHUB REPOSITORY -->
-		      <li class="nav-item">
-			<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
-		      </li>
-		    </ul>
-		  </div>
-		</nav>					
+			      <li class="nav-item">
+				<a class="nav-link" href="downloads.html">Download</a>
+			      </li>
+			      <li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				  Tutorials
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <a class="dropdown-item" href="visualizations.html">Visualizations</a>
+				  <a class="dropdown-item" href="page_categorization.html">Page Categorization</a>
+				  <a class="dropdown-item" href="text_sentiment.html">Text Sentiment</a>
+				  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
+				</div>
+			      </li>
+			      <!-- LINK TO THE GITHUB REPOSITORY -->
+			      <li class="nav-item">
+				<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
+			      </li>
+			    </ul>
+			  </div>
+			</nav>	
 
+			<!-- REVIEW IMAGE COURTESY OF UNSPLASH.COM -->
+			<div class="container" id="review_header_div">
+				<img src="VADER1.jpg" alt="Stock image of a person holding a phone" id="stock_img">
+				<div id="su_footer">Photo by TOMMY VAN KESSEL</div>
+				<div id="review_header_text">Introduction to VADER Sentiment Analyzer</div>
+			</div>
+
+			<div id="review_navbar_border"></div>
+						
+			<!-- SUB NAVBAR -->
+			<div id="review_navbar">
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader').scrollIntoView();">Network Function</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_2').scrollIntoView();">Network Implementation</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_3').scrollIntoView();">Using the Model</a>
+				<a class="btn btn-primary" role="button" id="nav_button_links" onClick="document.getElementById('review_subheader_4').scrollIntoView();">Download Source Code</a>
+			</div>
+
+			<div id="review_navbar_border_2"></div>
+
+			<a class="btn btn-primary" role="button" id="scroll_button" onClick="document.getElementById('navigation_bar').scrollIntoView();">&#9650;</a>
+
+			<!-- Introduction Paragraph -->
+			<p id="review_analysis_title">What is Sentiment Analysis?</p>		
+			
+			<div class="container" id="review_analysis_container">
+
+				<div id="review_analysis_text">
+					<p id="review_analysis_paragraph_1" class="review_analysis_paragraph">Sentiment analysis is the process of using natural language processing and text analysis to determine whether a piece of writing is positive, negative, or neutral. It is also commonly referred to as opinion mining. Sentiment analysis is often performed on textual data to understand how customers and consumers feel about a product and brand to gauge and improve customers satisfaction. Usually this involves analyzing social media posts and customer reviews. There are two main approaches to sentiment analysis. One is a machine learning approach and the other is a rule-based approach.</p>
+
+				<p id="review_analysis_paragraph_2" class="review_analysis_paragraph">This is where NLTK's VADER Sentiment Analyzer can help us. VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based tool used for sentiment analysis. It uses a predefined set rules to calculate the positivity or negativity in a piece of text. For example, text containing words like “bad” and “horrible” are given lower sentiment scores, while words like “good” and “great” are assigned higher sentiment scores. Finally, these scores are used to calculate an overall sentiment score. This method is often much faster than using a machine learning approach and requires no training or labeled data. However, there are some downsides to using this approach. 
+					
+				
+				<p id="review_analysis_paragraph_3" class="review_analysis_paragraph"></p>
+
+				<p id="review_analysis_paragraph_3" class="review_analysis_paragraph">In this guide, we demonstrate how to use VADER and discuss the strengths and limitations of this tool below.</p>
+
+
+				</div>
+
+				<div id="review_analysis_logo">
+					<div id="yelp_logo_div"><img src="Sentiment2.jpg" alt="Yelp Logo" id="yelp_logo"></div>
+				</div>
+			</div>
+
+			<!-- How to install the necesary packages section-->
+			
+			<div id="review_subheader"><p id="review_subheader_text">Getting Started</p></div>
+			<div class="container-fluid w-75" id="codeblock1">	
+				<div class="container-fluid">
+					<p>To use these libraries you need to make sure you have the appropriate packages
+					installed on your machine. The libraries used in this guide are pandas, NumPy, and vaderSentiment.
+					Run the following commands on the command line to install these libraries:</p>
+				</div>
+				<div class="container-fluid" id="">
+						<ul>
+						<li>pip install pandas<br></li>
+						<li>pip install numpy<br></li>
+						<li>pip install vaderSentiment</li>
+						</ul>
+					<div style="width:85%">
+						<p>Now you should be able to import the modules using the following lines:</p>
+					</div>
+				</div>
+			<div class="container-fluid" id="notebook-cell1">
+<pre>
+	<span class="kn" style="text-align:left;">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+	<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+	<span class="kn">from</span> <span class="nn">vaderSentiment.vaderSentiment</span> <span class="kn">import</span> <span class="n">SentimentIntensityAnalyzer</span>
+</pre>
+				</div>
+			</div>
+
+			<!-- VADER explanation section-->
+			<div id="review_subheader"><p id="review_subheader_text">How VADER Works</p></div>
+			
+			<div class="How-To container-fluid w-75" id="codeblock1">
+				<div class="container-fluid" style="padding:0;">
+					<div style="width:85%;">
+						<p>To use VADER, you must first create a <span class="variable-font">SentimentIntensityAnalyzer</span> object and then use the <span class="variable-font">polarity_scores()</span> function to evaluate the sentiment of the text. Here's an example:</p>
+					</div>
+
+					
+					<div class="container-fluid" id="notebook-cell1">
+	
+<pre class="">
+	<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+	<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+	<span class="kn">from</span> <span class="nn">vaderSentiment.vaderSentiment</span> <span class="kn">import</span> <span class="n">SentimentIntensityAnalyzer</span>
+				
+	<span class="c1"># Create Sentiment Intensity Analyzer Object</span>
+	<span class="n">sia</span> <span class="o">=</span> <span class="n">SentimentIntensityAnalyzer</span><span class="p">()</span>
+				
+	<span class="c1"># get polarity scores for a given string</span>
+	<span class="n">sentiment_dict</span> <span class="o">=</span> <span class="n">sia</span><span class="o">.</span><span class="n">polarity_scores</span><span class="p">(</span><span class="s2">&quot;Wow the food at this restaurant looks delicious!&quot;</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">polarity</span><span class="p">)</span>
+</pre>
+					</div>
+				</div>
+		
+				
+				<div class="container-fluid" id="notebook-cell2">
+<pre>
+		Output:
+	
+		{&#39;neg&#39;: 0.0, &#39;neu&#39;: 0.426, &#39;pos&#39;: 0.574, &#39;compound&#39;: 0.8436}
+</pre>
+				</div>
+
+				<div class="container-fluid" , id="review_analysis_container_3">
+					<div style="width:85%;">
+					<p><span class="variable-font">polarity_scores()</span> is a member function of <span class="variable-font">SentimentIntensityAnalyzer</span> that takes a given string as input and returns
+					a dictionary containing 4 scores:
+					</p>
+					</div>
+					<div>
+					<ul>
+					<li><span class="variable-font">pos</span> - the % of positive words detected in the text.</li>
+					<li><span class="variable-font">neg</span> - the % of negative words detected in the text.</li>
+					<li><span class="variable-font">neu</span> - the % of words that were neither considered positive nor negative in the text.</li>
+					<li><span class="variable-font">compound</span> - A score calculated using each previous score that indicates detected sentiment of the text.</li>
+					</ul>
+					</div>
+					<div style="width:85%;" >
+					<p>
+					The compound score will always be between -1 and 1. Compound scores closer to +1 indicate a more positive sentiment, and compound scores closer to -1 indicate a more negative sentiment. These scores can be used to classify the sentiment of the sentence. In the example above, we can see the compound score is 0.8436 which is a very positive score.
+					
+					</div>
+					</div>	
+			</div>
+			
+
+			
+			<div id="review_subheader"><p id="review_subheader_text">Strengths and Limitations</p></div>
+	
+			<div class="container" id="review_analysis_container_2">
+
+				<div id="review_analysis_text_2">
+
+				<p></p>
+				
+				</div>
+				
+				
+
+			</div>
+
+			<!-- Strength and Weaknesses section -->
+			<div class="How-To container-fluid w-75" id="codeblock2">
+					
+				<div class="container-fluid" style="padding:0;">
+					<div class="container review_analysis_paragraph" id="review_analysis_text_3" style="margin-bottom: 0;">
+						<p>Overall, VADER is a useful tool for general sentiment analysis tasks, particularly for quick and simple analyses of social media and other informal texts. However, it has some limitations that should be considered when selecting a sentiment analysis tool for real world applications.</p>
+						<p style="font-weight:bold">Advantages:</p>
+					</div>
+						<ul  class="procon" id ="procon_1">
+							<li>Since it does not require training, VADER is fast and easy to use, making it a popular choice for beginners and researchers who need to perform quick sentiment analysis on large datasets.</li>
+							<li>It does well to analyze sentiment in social media texts and other informal language sources.</li>
+							<li>VADER performs well on texts that contain both positive and negative sentiments, as it is specifically trained to identify the valence and polarity of individual words and phrases.</li>
+							<li>VADER can also handle simple language nuances, such as the use of negation, capitalization, and emoticons.</li>
+						</ul>
+						<p style="font-weight:bold">Disadvantages:</p>
+						<ul class="procon" id ="procon_2">
+							<li>VADER is a rule-based model, which means that its accuracy is dependent on whether it can recognize key words in the text. If a word is not in the lexicon, it will ignore the word entirely which may lower accuracy.</li>
+							<li>VADER is less effective at detecting irony, sarcasm, and other forms of figurative language that require a deeper understanding of the text and its context.</li>
+							<li>VADER may not perform as well on texts with complex syntax or nuanced sentiments that are difficult to capture with a simple rule-based approach.</li>
+							<li>It may also have difficulty distinguishing between different meanings of the same word, particularly in contexts where multiple interpretations are possible.</li>
+							<li>While VADER is a popular choice for small-scale sentiment analysis tasks, it may not be suitable for large-scale applications where high accuracy is a must.</li>
+						</ul>
+					
+						
+			</div>
+
+			<div class="container review_analysis_paragraph" id="VADERlink">
+				<p>You can learn more about the vaderSentiment module by reading the <a href="https://pypi.org/project/vaderSentiment/#:~:text=VADER%20(Valence%20Aware%20Dictionary%20and,on%20texts%20from%20other%20domains.">documentation</a>.</p>
+				
+				<p>While you may not want to use on its own, VADER has other uses. It works well for general sentiment analysis, meaning it can determine whether a text is generally positive, negative, or neutral. One way VADER can be used is to help train machine learning models on new data sets by initially labeling the text with sentiment scores. This can be especially helpful in developing customized models for specific areas, such as political rhetoric, financial investment reports, company annual reports, or other contexts where specific language is used. Additionally, VADER can be used as one feature among other sentiment analysis tools in a larger machine learning model, known as an ensemble model. This can improve the accuracy of the overall model by combining different approaches to sentiment analysis. <p>We have another guide explaining how to get started building such a model <a href="#UsingVADERToBuildMLModel">here</a>.</p>
+			</div>
+			
 			<footer class="container" id="su_footer">
 				<p>Salisbury University 2022-2023</p>
 			</footer>
-
 		</main>
 	</body>
 </html>

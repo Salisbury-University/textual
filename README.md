@@ -6,11 +6,81 @@
 
 ## Project Purpose 
 
-    This project seeks to create a database for textual analysis of the English Language through the scraping of a large amount of public domain data. 
+    This project seeks to create a database for textual analysis of the English Language through the 
+    scraping of a large amount of public domain data. 
 
     This project is broken up into three phrases.
 
 ## Current Status 
+
+### **End of the Semester** 
+
+    As we approach the end of the fourth sprint, it's important to reflect on the progress we've made so 
+    far and prepare for the final stage of the project. Over the past few weeks, we've been working hard 
+    on developing new features, fixing bugs, and improving the overall functionality of the project.
+    
+    As we move towards the end of the development cycle, it's important to remember that we have a finite 
+    amount of time to work on the project. With the end of the sprint approaching, it's time to shift our 
+    focus towards merging all the branches into a fully finished, working product. This process will 
+    involve consolidating all the code and ensuring that all the features are fully functional and working 
+    as intended.
+
+    It's important to note that during this phase, we will not be adding any new features to the project. 
+    Instead, our focus will be on perfecting the existing features and ensuring that the final product 
+    meets all the requirements laid out in the project specification. This will require a high level 
+    of collaboration and attention to detail from all team members.
+
+    As we approach the end of this project, it's important to take pride in the work we've accomplished so far. 
+    We've overcome numerous challenges and have made significant progress towards our end goal. With just a 
+    little more effort, we can deliver a final product that meets or even exceeds our initial expectations. 
+    Let's stay focused, work collaboratively, and finish this project with the highest level of quality possible.
+
+### **Sprint Four**: 10 April 2023 - 30 April 2023
+
+    This sprint will be primarily focused on wrapping up any loose ends for the current state of the project.
+    We will contnue to add more data to the database all of the way to the end of the semester, work on 
+    visualizations for the data, and work on the user interface for the website. It is important to tie 
+    up the loose ends in order to have a finished project that our client is happy with.
+       
+    We will also strive to update the database with clear documentation on the chance that the project gets passed
+    down to another COSC425 group in the future. 
+
+### **Sprint Three**: 13 March 2023 - 09 April 2023
+
+    As we move into the final two sprints of the semester, we are going to be focusing on data collection 
+    in order to beef up the amount of data in the database, finalize tutorials present on the website
+    for anyone who wishes to understand the different vectors of analysis, and begin looking into ways
+    to visual the data based off of the analysis that has been done. 
+    
+    These are all important tasks as they seek to reach the end goal set out at the beginning of the project: 
+    create a collection of English textual data that can be used by the public for analysis and various other
+    activities. 
+
+### **Sprint Two**: 20 February 2023 - 12 March 2023
+
+    This sprint is continuing the work we began in the last sprint with touching up on parts of the project
+    that we looked at last sprint. This includes a focus on demos for the website, restructuring scrapers
+    and polishing up analyzers. It is planned for the search page to be finished during this sprint as well,
+    which seeks to solve the usability issue for those not directly familiar with the project.
+        
+    We will also look to create more fleshed out documentation for use by others. This is accomplished
+    primarily by the tutorials page on the website, but also by written documentation that will go
+    on the repository and potentially on the site itself. Each of the tools should be fully documented.
+    Code itself should be as well for the chance that only group picks up the project once the current
+    team graduates in the coming spring. 
+
+### **Sprint One**: 30 January 2023 - 19 February 2023
+
+    As we move into COSC426, we are looking more at polishing the code written and parts of the
+    project that we worked on last semester. We will also be using GitHub more effectively
+    to track our progress on the projects tab and issues. To see the status of any portion of the
+    project, view the project board. 
+    
+    This sprint in particular we will be focused on cleaning up and getting refamiliarized with the 
+    code base, since it has been several weeks since we have worked on the project. Members of the
+    team will continue where they left off in December in order to polish the website - specifically
+    the backend - for a more streamlined experience for the user. This includes a fleshed out search page 
+    in addition to more tutorials. There will be additional work on the various analysis tools. 
 
 ### **COSC425 Final Presentation/Post Sprint Three**
 
@@ -69,8 +139,8 @@
 
     /src/ -> stores all of our source files 
     /src/webscraping -> maintains all of our webscraping files 
-    /src/backend -> maintains the backend files
-    /src/frontend -> maintains the front end files
+    /src/website -> maintains the website files
+    /src/analysis -> maintains the analysis script files
 
 ## The Project Breakdown 
 

@@ -10,8 +10,8 @@ var fs = require('fs');
 var express = require('express');
 var assert = require('assert');
 var lineReader = require('line-reader');
-let bodyParser = require('body-parser');
-router=express.Router();
+var bodyParser = require('body-parser'); // Used to get data from the frontend
+
 //Database url, file is read in to avoid pushing login info to the GitHub
 var url;
 //Read the credentials from the mongodb file
@@ -20,7 +20,6 @@ lineReader.eachLine("mongo_credentials.txt", function(line, last) {
 });
 //Start the NodeJS express app, the contents of the page_content directory will be loaded
 var app = express();
-const PORT = 3000;
 app.use(express.static(__dirname + "/page_content"));
 app.use(bodyParser.urlencoded({extended: true}));
 //Start the app on port 8080
@@ -30,6 +29,9 @@ let sources=[];
 //The function will be called when the user clicks on the downloads page
 //Data will be posted, and can be fetched by the client to be displayed on the downloads page
 app.post("/downloads", (req, res, next) => {
+	// Get the user input value from the frontend
+	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
+
 	try
 	{
 		//Connect to the database
@@ -42,8 +44,130 @@ app.post("/downloads", (req, res, next) => {
 			var myPromise = () => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
-					db.collection('RedditPosts').find().toArray(function(err, data) {
+					db.collection(collection).find().limit(1000).toArray(function(err, data) {
+						err ? reject(err) : resolve(data);
+					});
+				});
+			};
 
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
+
+
+app.post("/search_downloads", (req, res, next) => {
+	// Get the user input value from the frontend
+	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
+
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					//Query the database and convert the result to an array
+					//Use the user's requested collection
+					db.collection(collection).find().toArray(function(err, data) {
+						err ? reject(err) : resolve(data);
+					});
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
+
+app.post("/collections", (req, res, next) => {
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					// Get the collection names from the database and return them as an array
+					db.listCollections().toArray(function(err, data) {
+						err ? reject(err) : resolve(data);
+					});
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
+
+// Get the number of documents from the database
+app.post("/count", (req, res, next) => {
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					// Get the collection names from the database and return them as an array
+					db.stats(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
@@ -73,15 +197,7 @@ app.get('/search', function(req, res) {
 })
 
 app.post('/search', function(req, res) {
-	//res.writeHead(301, { Location: "http://localhost:8080/search_results.html" });
-    	try
-        {
-                //Connect to the database
-                MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
-                        assert.equal(null, err);
-                        //Get the textual database
-                        const db = client.db("textual");
-			/*db.listCollections().toArray(function(err, data) {
+/*db.listCollections().toArray(function(err, data) {
 				let i =0;
 				while (i<data.length){
 					console.log(data[i]);
@@ -306,12 +422,9 @@ app.post('/search', function(req, res) {
 					else{
 						err ? reject(err) : resolve([]);
 					}
-
-					//err ? reject(err) : resolve(searchResults);
-                                });
-                        };
-
-                        //Setup async call
+          });
+          };
+           //Setup async call
                         var callMyPromise = async () => {
                                 var result = await (myPromise());
                                 return result;
@@ -319,7 +432,7 @@ app.post('/search', function(req, res) {
 
                         callMyPromise().then(function(result) {
                                 //Close the connection to the database client
-				if(typeof req.body.downloadCB!=='undefined'){
+          if(typeof req.body.downloadCB!=='undefined'){
                                         fs.writeFile("search_results.json", JSON.stringify(result),(err,resonse)=>{
                                                 if (err){
                                                         console.error(err);
@@ -376,8 +489,63 @@ app.post('/search', function(req, res) {
 			});
 				
                 	}); //End of MongoClient call
-
-        } catch (e) {
+                  } catch (e) {
                 next(e)
 	}
-})
+});
+
+// Get the status from the database
+app.post("/database_status", (req, res, next) => {
+	try
+	{
+		//Connect to the database
+		MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+			assert.equal(null, err);
+			//Get the textual database
+			const db = client.db("textual");
+
+			//Create new promise
+			var myPromise = () => {
+				return new Promise((resolve, reject) => {
+					// Get the collection names from the database and return them as an array
+					if (db.serverConfig.isConnected() == true) {
+						resolve(true);
+					} else {
+						reject(true);
+					}
+				});
+			};
+
+			//Setup async call
+			var callMyPromise = async () => {
+				var result = await (myPromise());
+				return result;
+			};
+
+			callMyPromise().then(function(result) {
+				//Close the connection to the database client
+				client.close();
+				
+				//Send the query result to the client
+				res.send(result);
+			});
+		}); //End of MongoClient call
+
+	} catch (e) {
+		next(e)
+	}
+});
+
+/*
+Gets the form data from the search page
+let searchForm = document.getElementById("searchForm");
+searchForm.addEventListener("submit", (e)=>{
+	e.preventDefault();
+	let searchTerm = document.getElementById("searchTerm");
+	if (searchTerm.value == ""){
+		alert("The term you searched for was empty. Please try again.");
+	} else {
+		console.log('You searched for ${searchTerm.value}');
+	}
+});
+
