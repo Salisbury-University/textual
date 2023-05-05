@@ -20,6 +20,7 @@ lineReader.eachLine("mongo_credentials.txt", function(line, last) {
 });
 //Start the NodeJS express app, the contents of the page_content directory will be loaded
 var app = express();
+app.use(express.json());
 app.use(express.static(__dirname + "/page_content"));
 app.use(bodyParser.urlencoded({extended: true}));
 //Start the app on port 8080
@@ -31,7 +32,6 @@ let sources=[];
 app.post("/downloads", (req, res, next) => {
 	// Get the user input value from the frontend
 	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
-
 	try
 	{
 		//Connect to the database
@@ -70,10 +70,9 @@ app.post("/downloads", (req, res, next) => {
 	}
 });
 
-
 app.post("/search_downloads", (req, res, next) => {
 	// Get the user input value from the frontend
-	const collection = req.body["collection"]; // Get the user's requested collection from the frontend
+	const collection = String(req.body["collection"]); // Get the user's requested collection from the frontend
 
 	try
 	{
@@ -88,7 +87,7 @@ app.post("/search_downloads", (req, res, next) => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
 					//Use the user's requested collection
-					db.collection(collection).find().toArray(function(err, data) {
+					db.collection(collection).find(1000).toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});

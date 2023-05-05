@@ -12,7 +12,7 @@ function load_downloads()
 	
         //user_str, will be the string passed in from the frontend
 	const user_opt = document.getElementById("user_download");
-	const user_text = user_opt.options[user_opt.selectedIndex].text;
+	const user_text = String(user_opt.options[user_opt.selectedIndex].text);
 	const data = {collection: user_text};
 
 	// Call the backend function to grab the specified content from the database.
