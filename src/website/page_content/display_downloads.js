@@ -5,12 +5,18 @@ function initialize_downloads()
 
 function load_downloads()
 {
+	// Check if the table has been initialized before, if so we need to destroy its instance and reinitialize
+	if ( $.fn.DataTable.isDataTable('#database_table') ) {
+  		// If it is initialized, destroy it before reinitializing
+  		$('#database_table').DataTable().destroy();
+	}
+
 	var table = document.getElementById("database_table");
 	while(table.firstChild) {
 		table.removeChild(table.firstChild);
 	}
-	
-        //user_str, will be the string passed in from the frontend
+
+	//user_str, will be the string passed in from the frontend
 	const user_opt = document.getElementById("user_download");
 	const user_text = String(user_opt.options[user_opt.selectedIndex].text);
 	const data = {collection: user_text};
@@ -78,7 +84,8 @@ function load_downloads()
 
 		//Create the bootstrap table dynamically
                 var table = $("#database_table").DataTable();
-                $('.dataTables_length').addClass('bs-select');
+		// Clear the table and reset the search box and page selector
+		$('.dataTables_length').addClass('bs-select');		
 		$('#database_table').css('width', '80%');
 
 		// Style the table
@@ -89,7 +96,7 @@ function load_downloads()
 		$('.dataTables_length', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
 		$('.dataTables_info', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
 		$('.pageinate_button', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
-		$('.dataTables_filter', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});
+		$('.dataTables_filter', table.table().container()).addClass('text-center').css({'font-family': "'Yanone Kaffeesatz', sans-serif", 'color': '#D9D9D9'});	
 		}).catch(function (error) {
                 alert(error);
         });
