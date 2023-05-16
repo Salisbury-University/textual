@@ -109,7 +109,11 @@ function downloadData() {
 	//user_str, will be the string passed in from the frontend
 	const user_opt = document.getElementById("user_download");
 	const user_text = user_opt.options[user_opt.selectedIndex].text;
-	const data = {collection: user_text};
+
+
+	const user_opt_count = document.getElementById("user_count");
+	const user_number = String(user_opt_count.value);
+	const data = {collection: user_text, count: user_number};
 
 	// Call the backend function to grab the specified content from the database.
 	fetch("/search_downloads", {method: "POST", headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(data => data.text()).then((documents) => {

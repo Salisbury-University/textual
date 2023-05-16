@@ -1019,6 +1019,11 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
+#user_count
+{
+	width: 50%;
+}
+
 .select-container {
 	display: inline-block;
 	margin-right: 2rem;

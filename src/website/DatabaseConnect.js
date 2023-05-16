@@ -73,7 +73,8 @@ app.post("/downloads", (req, res, next) => {
 app.post("/search_downloads", (req, res, next) => {
 	// Get the user input value from the frontend
 	const collection = String(req.body["collection"]); // Get the user's requested collection from the frontend
-
+	const user_count = parseInt(req.body["count"]); // Get the number of documents
+	
 	try
 	{
 		//Connect to the database
@@ -87,7 +88,7 @@ app.post("/search_downloads", (req, res, next) => {
 				return new Promise((resolve, reject) => {
 					//Query the database and convert the result to an array
 					//Use the user's requested collection
-					db.collection(collection).find(1000).toArray(function(err, data) {
+					db.collection(collection).find().limit(user_count).toArray(function(err, data) {
 						err ? reject(err) : resolve(data);
 					});
 				});
