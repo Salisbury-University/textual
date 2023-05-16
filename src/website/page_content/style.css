@@ -1011,6 +1011,21 @@
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
+#user_count_header
+{
+	margin-top: 2rem;
+	color: #D9D9D9;
+	font-size: 1rem;
+	font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+.select-container {
+	display: inline-block;
+	margin-right: 2rem;
+	margin-left: 2rem;
+	text-align: center;
+}
+
 #download_links
 {
 	width: 100%;
