@@ -1,6 +1,6 @@
 # SentimentAnalysisVADER.py: (Sentiment Analysis using VADER: LEXICON APPROACH):
 
-## What program does:
+## What this program does:
   * Reads YouTube comments from a json file
   * Uses VADER (Valence Aware Dictionary and sEntiment Reasoner) to evaluate the sentiment of YouTube Comments
   * Uses bounds to classify the sentiment of each comment
@@ -10,8 +10,9 @@
   * How to do sentiment analysis using a lexicon based approach
   * Pros and Cons of a lexicon based sentiment analysis approach
 
-# SentimentAnalysismlTOOL (Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
-## What this will teach:
+# SentimentAnalysisMLTOOL(NoteBookVersion).py (Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
+
+## What this program does:
 * Read comments from the json file downloaded from our database.
 * The preprocess function is called to apply the preprocessing steps on the input dataset. This includes detecting the language of comments, evaluating the sentiment using VADER  removing stopwords, converting letters to lowercase, and lemmatization.
 * The distribution of sentiment evaluated by VADER is plotted using a bar chart.
@@ -28,3 +29,9 @@
   * How to use VADER to create labels for an unlabeled textual dataset.
   * A general pipeline of sentiment analysis using machine learning, from data preprocessing to model training and evaluation steps. (Multinomial Logistic Regression).
   * Pros and cons of using a machine learning approach in this manner.
+
+
+# SentimentAnalysisMLTOOL(Parallelized) (Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
+
+## What this program does:
+* This is the same program as the notebook version except the preprocessing steps and the training steps have been parallelized using python's multiprocessing module.
