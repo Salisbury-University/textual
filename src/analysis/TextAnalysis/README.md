@@ -10,7 +10,8 @@
   * How to do sentiment analysis using a lexicon based approach
   * Pros and Cons of a lexicon based sentiment analysis approach
 
-# SentimentAnalysisMLTOOL(NoteBookVersion).py (Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
+# SentimentAnalysisMLTOOL(NoteBookVersion).py:
+(Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
 
 ## What this program does:
 * Read comments from the json file downloaded from our database.
@@ -31,7 +32,8 @@
   * Pros and cons of using a machine learning approach in this manner.
 
 
-# SentimentAnalysisMLTOOL(Parallelized) (Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
+# SentimentAnalysisMLTOOL(Parallelized).py:
+(Sentiment Analysis using VADER and Multinomial Logistic Regression: MACHINE LEARNING APPROACH):
 
 ## What this program does:
-* This is the same program as the notebook version except the preprocessing steps and the training steps have been parallelized using python's multiprocessing module.
+* This is the same program as the notebook version except the preprocessing steps and the training steps have been parallelized using python's multiprocessing module. May be faster for debugging.
