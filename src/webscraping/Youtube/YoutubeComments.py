@@ -3,15 +3,20 @@
 
 # This program uses the YouTube API v3 to scrape comments from a large amount
 # of YouTube videos. You can change the maximum number of comments that will
-# be requested from the API by changing the value of these two variables: 
+# be requested from the API by changing the value of these three variables: 
 # 
 # NUMBER_OF_VIDEOS
 # NUMBER_OF_COMMENTS
+# NUMBER_OF_SEARCHES
 # 
 # After running this program, up to <NUMBER_OF_VIDEOS> videos and up to
 # <NUMBER_OF_COMMENTS> comments will be added to the database for each video topic and category.
 # The videos will be stored in YoutubeVideo collection and the comments will be stored
 # in YoutubeComment collection in the textual Database.
+# 
+# There are a lot of youtube video categories however only about 10-16 of them are actually accessable on a given day (May 2023).
+#
+# This scraper will only search for the next <NUMBER_OF_SEARCHES> topics in the list of search topics.
 # <------------------------------------------------------------->
 
 import googleapiclient._auth
@@ -96,15 +101,15 @@ def get_database(client):
 # This function closes the connection to the database.
 # <--------------------------------------------------------------------->
 def close_database(client):
-    # Close the connection to the database
     client.close()
 
 # <--------------------------------------------------------------------->
 # Connects to the database and gets the number of documents in the
 # YoutubeComment collection and the YoutubeComment collection. Returns a
-# list of 2 integers. 
-# list[0] = number of videos
-# list[1] = number of comments
+# list of 2 integers.
+
+# list[0] = number of videos in the database
+# list[1] = number of comments in the database
 # <--------------------------------------------------------------------->
 def getDocumentCount():
     client = get_client()
@@ -138,7 +143,7 @@ def getDocumentCount():
 # howManyLeft: this variable is a string that contains the number of days the scraper
 # should wait until scraping from the most popular chart.
 #
-# This allows the scraper to only scrape from the most popular chart once every 5 days.
+# This allows the scraper to only scrape from the most popular chart once every 7 days.
 # This will save time and API quota.
 # <--------------------------------------------------------------------->
 def checkMostPopular():
@@ -150,7 +155,7 @@ def checkMostPopular():
 
         if YesOrNo == "yes":
             file.seek(0)
-            file.write("no  5")
+            file.write("no  7")
             return True
         
         else:
@@ -559,7 +564,7 @@ if __name__ == "__main__":
     totalC = 0
 
     if getMostPopular == True:
-        print("     Scraping Comments from Most Popular Video Charts>")
+        print("     <Scraping Comments using Most Popular Video Charts>")
         print("<-------------------------------------------------------->")
         # Make a partial function since using multiple parameters
         partial_scrape_comments = functools.partial(scrape_comments, youtube,)
@@ -578,7 +583,7 @@ if __name__ == "__main__":
     # get a list of Search topics from a txt file.
     topics = getSearchTopics()
 
-    print("     Scraping Comments from Search Queries>")
+    print("     <Scraping Comments using Search Queries>")
     print("<-------------------------------------------------------->")
     # Make a partial function since using multiple parameters
     partial_scrape_comments_by_search = functools.partial(scrape_comments_by_search, youtube, categories,)
@@ -593,7 +598,7 @@ if __name__ == "__main__":
         totalV += total[0]
         totalC += total[1]
     
-    print("                     <RESULTS>                           ")
+    print("                     <SCRAPING RESULTS>                           ")
     print("<-------------------------------------------------------->")
 
     print("Initial number of documents in YoutubeVideo Collection: ", DocumentCount[0])
@@ -604,6 +609,7 @@ if __name__ == "__main__":
     print("Total Comments inserted: ", totalC)
     print()
 
+    # Get the current number of documents in the YouTube Collections
     DocumentCount = getDocumentCount()
 
     print("Current number of documents in YoutubeVideo Collection: ", DocumentCount[0])
