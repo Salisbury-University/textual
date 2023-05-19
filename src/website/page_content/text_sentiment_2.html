@@ -67,9 +67,6 @@
 				  <a class="dropdown-item" href="review_analysis.html">Review Analysis</a>
 				</div>
 			      </li>
-				<li class="nav-item">
-                              		<a class="nav-link" href="search.html">Search</a>
-                      		</li>
 			      <!-- LINK TO THE GITHUB REPOSITORY -->
 			      <li class="nav-item">
 				<a class="nav-link" href="https://github.com/Salisbury-University/textual">GitHub</a>
@@ -112,7 +109,7 @@
 
 				<div id="review_analysis_text">
 
-					<p>If you are unfamiliar with Sentiment Analysis or VADER, it may be useful to check out the <a href="#">first part</a> of this guide before continuing with this guide. In this guide we will explain how to use VADER in conjunction with a machine learning model for sentiment classification.</p>
+					<p>If you are unfamiliar with Sentiment Analysis or VADER, it may be useful to check out the <a href="text_sentiment.html">first part</a> of this guide before continuing with this guide. In this guide we will explain how to use VADER in conjunction with a machine learning model for sentiment classification.</p>
 
 					<p>Machine learning is a subset of AI that involves training a computer model to make predictions or decisions based on data. The basic idea is to give the computer a set of inputs and desired outputs and then to teach it how to make predictions or decisions based on that data. Machine learning algorithms have a great variety of uses, including speech recognition, fraud detection and recommender systems.</p>
 				
@@ -163,7 +160,6 @@
 				<div class="container-fluid" id="">
 						<ul>
 						<li>pip install pandas<br></li>
-						<li>pip install numpy<br></li>
 						<li>pip install vaderSentiment</li>
 						<li>pip install mlxtend</li>
 						<li>pip install langdetect</li>
@@ -173,7 +169,7 @@
 				</div>
 
 				<div class="review_analysis_paragraph" style="width:85%">
-					<p>You may also need to run the following lines to download the nltk's tokenizer and set of stopwords:</p>
+					<p>You may also need to run these lines of code in your python interpreter to download NLTK's tokenizer and set of stopwords:</p>
 				</div>
 
 				<div class="container-fluid" id="notebook-cell1">
@@ -201,7 +197,7 @@
 	<span class="kn">import</span> <span class="nn">string</span>
 	<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 	<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-	<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span> <span class="c1">#, TfidfVectorizer </span>
+	<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
 	<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 	<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
 	<span class="kn">from</span> <span class="nn">langdetect</span> <span class="kn">import</span> <span class="n">detect</span> 
@@ -279,7 +275,7 @@
 	<span class="n">sia</span> <span class="o">=</span> <span class="n">SentimentIntensityAnalyzer</span><span class="p">()</span>
 
 	<span class="c1"># Evaluate sentiment of each comment.</span>
-	<span class="c1"># Apply VADER's <span class="variable-font">polarity_scores()</span> function to each comment</span>
+	<span class="c1"># Apply VADER's polarity_scores() function to each comment</span>
 
 	<span class="c1"># Create a new column with the output</span>
 	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Polarity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sia</span><span class="o">.</span><span class="n">polarity_scores</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="s2">&quot;compound&quot;</span><span class="p">])</span>
@@ -291,7 +287,6 @@
 	<span class="c1"># -1: Negative</span>
 	<span class="c1"># 0: Neutral</span>
 	<span class="c1"># 1: Positive</span>
-
 	<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Categorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 	<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Polarity&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;Categorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 	<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Polarity&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;Categorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -307,7 +302,8 @@
 				<div class="container-fluid" style="padding:0;">
 					<div style="width:100%;">
 						<p> Before we train the model, we must take preprocess the comments to minimize noise. Noise is any irrelevant information that inhibits the models ability to learn. To do this, we use <span class="variable-font">map()</span> to apply <span class="variable-font">lower()</span> to every comment in the dataset. This will turn all uppercase characters into lowercase characters in each comment. Then we do the same with <span class="variable-font">strip()</span> to remove all whitespace from each comment.</p>
-						<p>Then we can use the following function to preprocess our data. Using this function, we can remove stopwords to keep only the words that add the most meaning to the sentence and then lemmatize these words.</p>
+						<p>Then we can define the following functions and use them to perform important preprocessing tasks for natural language processing. Using these functions, we can remove stopwords to keep only the words that add the most meaning to the sentence and then lemmatize these words. Lemmatization is a process used to transform different variations of a word into a single, consistent form so that they can be analyzed as a group. For example, the words "runs", "running", and "ran" would all be converted to their base form "run". This allows the model to reduce variations and gain better insight about the text. </p>
+						<p>The two functons are defined below:</p>
 					</div>
 
 					<div class="container-fluid" id="notebook-cell1">
@@ -326,7 +322,7 @@
 		    <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">NOUN</span>
 
 	<span class="c1"># Tokenize the text and remove stop words to keep only the words that add meaning to the sentence</span>
-	<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">remove_stopwords</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
 	    <span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">))</span>
 	    <span class="n">word_tokens</span> <span class="o">=</span> <span class="n">word_tokenize</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 	    <span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
@@ -340,11 +336,11 @@
 		    	<span class="n">filtered_sentence</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
 	    <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_sentence</span><span class="p">)</span>
 
-	<span class="c1"># Build a string contianing punctuations except for "!", ".", and "?".</span>
+		<span class="c1"># Build a string contianing punctuations except for "!", ".", and "?".</span>
 	    <span class="n">puncts</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span>
 	    <span class="n">my_punct</span> <span class="o">=</span> <span class="n">puncts</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 	
-	<span class="c1"># Get rid of all punctuation except for "!", ".", and "?".</span>
+		<span class="c1"># Get rid of all punctuation except for "!", ".", and "?".</span>
 	    <span class="k">for</span> <span class="n">punct</span> <span class="ow">in</span> <span class="n">my_punct</span><span class="p">:</span>
 		    <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">punct</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
@@ -353,24 +349,23 @@
 					</div>					
 
 					<div style="width:100%;"></div>
-						<p><br>Lemmatization is a process used to transform different variations of a word into a single, consistent form so that they can be analyzed as a group. For example, the words "runs", "running", and "ran" would all be converted to their base form "run". This allows the model to reduce variations and gain better insight about the text.</p>
-						<p>Finally, we can get rid of any leftover word tokens to remove leftover noise in the comments. </p>
+						<p><br>Then we can use all of these functions discussed above to preprocess the comments in the dataset as shown below. </p>
 					</div>
 
 					
 					<div class="container-fluid" id="notebook-cell1">
 	
 <pre>
-	<span></span><span class="c1"># Preprocessing Steps:</span>
+	<span></span><span class="c1"># Preprocessing the YouTube Comments</span>
 
-	<span class="c1"># convert all letters to lowercase:</span>
+	<span class="c1"># convert all letters to lowercase</span>
 	<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 
 	<span class="c1"># get rid of trailing whitespace</span>
 	<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Comment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
-	<span class="c1"># Remove stopwords and lemmatize each comment.</span>
-	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;stopwords_removed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">preprocess</span><span class="p">)</span>
+	<span class="c1"># Apply the remove_stopwords function to remove stopwords and lemmatize each comment</span>
+	<span class="n">df</span><span class="p">[</span><span class="s2">&quot;stopwords_removed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">remove_stopwords</span><span class="p">)</span>
 </pre>
 					</div>
 				</div>
@@ -393,25 +388,19 @@
 					<div class="container-fluid" id="notebook-cell1">
 	
 <pre>
+	<span class="c1"># Choose stopwords_removed column as the feature for predicting the class of each comment </span>
 	<span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;stopwords_removed&quot;</span><span class="p">]</span>
 	<span class="n">Y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Categorization&quot;</span><span class="p">]</span>
 
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Splitting Dataset into testing and training set...&quot;</span><span class="p">)</span>
 	<span class="c1"># Split the dataset into a testing set and a training set</span>
 	<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">324</span><span class="p">)</span>
 
-	<span class="c1"># This is to test on the testing dataset</span>
-
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vectorizing Data...&quot;</span><span class="p">)</span>
-
-	<span class="c1"># Create Count Vectorizer Object</span>
-
+	<span class="c1"># Vectorize the data</span>
 	<span class="n">vect</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
 	<span class="n">tf_train</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 	<span class="n">tf_test</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">vect vocabulary: &quot;</span><span class="p">,</span> <span class="n">vect</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">)</span>
-
+	<span class="c1"># Initialize Multinomial Logistic Regression Model</span>
 	<span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">multi_class</span><span class="o">=</span><span class="s1">&#39;multinomial&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
 	<span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tf_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
 </pre>
@@ -420,6 +409,8 @@
 	
 	
 			</div>
+
+			
 
 			<!-- Check metrics section section-->
 			<div id="review_subheader"><p id="review_subheader_text">Evaluating the Model</p></div>
@@ -432,11 +423,9 @@
 						<div class="container-fluid" id="notebook-cell1">
 	
 <pre>
-	<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checking Accuracy of score on both datasets&quot;</span><span class="p">)</span>
 	<span class="c1"># Check accuracy score on both datasets</span>
 	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score on training dataset:&quot;</span><span class="p">,</span><span class="n">lr</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">tf_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">))</span>
 	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score on test dataset:&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">tf_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">))</span>
-	<span class="nb">print</span><span class="p">()</span>
 </pre>
 					</div>
 				
@@ -446,25 +435,21 @@
 <div class="container-fluid" id="notebook-cell1">
 	
 <pre>
-	<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making predictions on the test dataset...&quot;</span><span class="p">)</span>
 	<span class="c1"># Make predictions on the test dataset</span>
 	<span class="n">expected</span> <span class="o">=</span> <span class="n">y_test</span>
 	<span class="n">predicted</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tf_test</span><span class="p">)</span>
 
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Plotting confusion matrix for the test dataset...&quot;</span><span class="p">)</span>
-	<span class="c1">#Plot Confusion matrix for the test dataset</span>
+	<span class="c1">#Plot and show confusion matrix for the test dataset</span>
 	<span class="n">cf</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span><span class="n">predicted</span><span class="p">,</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-	<span class="nb">print</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
-
 	<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">conf_mat</span> <span class="o">=</span> <span class="n">cf</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 	<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Showing Classification report...&quot;</span><span class="p">)</span>
 	<span class="c1"># Print classification report</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Showing Classification report...&quot;</span><span class="p">)</span>
 	<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">predicted</span><span class="p">))</span>
 
+	<span class="c1"># Show F1 Score</span>
 	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Showing F1 Score.&quot;</span><span class="p">)</span>
-	<span class="c1"># Find F1 Score</span>
 	<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">predicted</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">))</span>
 </pre>
 					</div>
@@ -477,7 +462,7 @@
 					</div>	
 			</div>
 			
-			<div id="review_subheader"><p id="review_subheader_text">Strengths and Limitations (UNFINISHED)</p></div>
+			<div id="review_subheader"><p id="review_subheader_text">Strengths and Limitations</p></div>
 	
 			<div class="container" id="review_analysis_container_2">
 
@@ -496,7 +481,32 @@
 					
 				<div class="container-fluid" style="padding:0;">
 					<div class="container review_analysis_paragraph" id="review_analysis_text_3" style="margin-bottom: 0;">
-						<p>There is no easy or one-fits-all approach with machine learning. It's important to experiment on your models until you find the best approach to solve your specific problem. </p>
+
+						
+							<p>In this guide, we have explored the use of VADER in conjunction with a Multinomial Logistic Regression model for sentiment classification in machine learning. We have discussed how to preprocess textual data using natural language processing techniques such as lemmatization and stop word removal. We have built a model using labels assigned by VADER as a feature for machine learning. We have also discussed how to evaluate the model's performance to see how effective it is for sentiment classification. Now let's discuss the strengths and limitations of using this approach.</p>
+
+							<p style="font-weight:bold">Advantages:</p>
+							<ul>
+							<li><p>VADER allows for quick evaluation and scoring of the sentiment in a piece of text. By using VADER to label the dataset according to the sentiment score, we can overcome the challenge of manually labeling a large dataset. This saves time and effort in the labeling process.</p></li>
+							
+							<li><p>Multinomial Logistic Regression is well-suited for multi-class classification problems. It models the probabilities of multiple classes and finds the best decision boundaries to separate the data into three or more classes. This makes it effective for sentiment classification tasks where we want to classify comments into positive, negative, and neutral categories.</p></li>
+							</ul>
+
+							<p style="font-weight:bold">Disdvantages:</p>
+							<ul>
+							<li><p>This model can sometimes fail to recognize nuances and intricacies of natural language such as sarcasm and irony since it is rather basic and simple. In its current state it should only perform well for basic sentiment analysis tasks.</p></li>
+								
+							<li><p>This model relies heavily on VADER for labeling the dataset. VADER is a rule-based sentiment analysis tool that has been trained on specific data. While it performs well in many cases, it may not capture all nuances and subtleties of sentiment. It is important to be aware of its limitations and consider alternative sentiment analysis approaches if higher accuracy is required.</p></li>
+							
+							<li><p>The approach described in this guide is primarily designed for English sentiment analysis. It relies on the assumption that the input comments are in English and may not perform well on comments in other languages. Adapting this method to different languages would require modifications and adjustments.</p></li>
+							</ul>
+							
+							<p>It is important to note that this model is in no way perfect or complete. However, it provides a good starting point for creating a general-purpose sentiment analysis application. To enhance the model's performance for domain-specific applications, it is recommended to train the model using domain-specific features in addition to VADER labels. This augmentation would allow the model to better capture nuances and intricacies specific to the target domain, resulting in improved sentiment analysis outcomes.</p>
+							<p>There is no easy or one-fits-all approach with machine learning. It's important to experiment on your models until you find the best approach to solve your specific problem. </p>
+
+							<p>For a more detailed and hands-on version of this guide you can refer to this <a href="https://github.com/Salisbury-University/textual/blob/main/src/analysis/TextAnalysis/VADERTutorial2.ipynb">Jupyter Notebook</a>.</p>
+							<p>Click on this <a href="text_sentiment.html">link</a> to return to the first part of this guide.</p>
+
 
 					</div>
 						
