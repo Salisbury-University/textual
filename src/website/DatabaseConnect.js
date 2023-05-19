@@ -250,21 +250,21 @@ app.post('/search', function(req, res) {
 						});
                                         });*/
 					if(collections.length>0){
-					db.collection(collections[0]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes1){
+					db.collection(collections[0]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes1){
 						if(collections.length>1){
-						db.collection(collections[1]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes2){
+						db.collection(collections[1]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes2){
 							if(collections.length>2){
-							db.collection(collections[2]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes3){
+							db.collection(collections[2]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes3){
 								if(collections.length>3){
-								db.collection(collections[3]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes4){
+								db.collection(collections[3]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes4){
 									if(collections.length>4){
-									db.collection(collections[4]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes5){
+									db.collection(collections[4]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes5){
 										if(collections.length>5){
-										db.collection(collections[5]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes6){
+										db.collection(collections[5]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes6){
 											if(collections.length>6){
-											db.collection(collections[6]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes7){
+											db.collection(collections[6]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes7){
 												if(collections.length>7){
-												db.collection(collections[7]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(50).toArray(function(err,sRes8){
+												db.collection(collections[7]).find({text:{'$regex' : req.body.searchTerm, '$options' : 'i'}}).limit(10).toArray(function(err,sRes8){
 													if(collections.length>8){
 														console.log("uh oh");
 													}
