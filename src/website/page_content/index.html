@@ -112,7 +112,7 @@
 			<div class="container" id="page_tiles">
 				<!-- THESE TILES WILL HOLD CONTENT ON THE HOME PAGE -->
 				<div class="row justify-content-center">
-					<div class="col-md-3" id="page_tile">
+					<div class="col-md-4" id="page_tile">
 						<h2>Review Classification</h2>
 						<p id="page_tile_text">Reviews are often a showcase of how people really feel. The Yelp review site provides access to a large collection of reviews from various different categories ranging from restaurants to airlines. What can we learn from these reviews? This example showcases one possible area of research by attempting to classify reviews on a 5-star scale using Machine Learning.</p>
 						<div class="btn_holder">
@@ -120,7 +120,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-3" id="page_tile">
+					<div class="col-md-4" id="page_tile">
 						<h2>Text Sentiment</h2>
 						<p id="page_tile_text">Sentiment analysis is used to classify pieces of text into 3 categories of emotion: positive, neutral, and negative. This is useful for analyzing people’s opinions or sentiments about a certain topic or brand. Using a large, collection of textual data to train a model is usually preferred for sentiment analysis. However, what if you do not have access to a dataset labeled with these categories? This 2-part example demonstrates a method to classify YouTube comments purely based on their textual content using NLTK, VADER, and machine learning.</p>
 						<div class="btn_holder">
@@ -128,13 +128,22 @@
 						</div>
 					</div>
 					
-					<div class="col-md-3" id="page_tile">
+					<div class="col-md-4" id="page_tile">
 						<h2>Page Categorization</h2>
 						<p id="page_tile_text"> Page categorization helps understand what the content of each of the data collections is. Initially designed as a neural network, this now functions utilizing a tool called Latent Dirichlet Allocation. Topic modeling is a method for unsupervised classification of documents which is crucial for our project. This utilizes NLTK and gensim for the LDA classifier.</p>
 						<div class="btn_holder">
 							<p><a class="btn btn-primary" href="page_categorization.html" role="button" id="page_tile_btn">Page Categorization &raquo;</a></p>
 						</div>
 					</div>
+
+					<div class="col-md-4" id="page_tile">
+						<h2>Visualizations</h2>
+						<p id="page_tile_text">The Yelp review data dump contains a vast collection of reviews for various establishments. With approximately 7.5 million reviews, it includes the review text, metadata (such as posting date), and star ratings. The data was extracted using a Python script and stored in a MongoDB database. To create a representative subset, 1,000,000 reviews were extracted, evenly distributed across categories. This dataset offers valuable textual information and star ratings for analysis of customer experiences across different establishments.</p>
+						<div class="btn_holder">
+							<p><a class="btn btn-primary" href="visualizations.html" role="button" id="page_tile_btn">Visualizations &raquo;</a></p>
+						</div>
+					</div>
+
 				</div>
 			</div> <!-- END PAGE TILES -->
 			<div style="margin:40px"></div>
